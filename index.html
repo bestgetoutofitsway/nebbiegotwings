@@ -3,6 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Vercel Web Analytics & Speed Insights -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+
 <title>A Little Corner of the Clouds</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2504,58 +2512,88 @@
     mouse.y = null;
   });
 
-    // 1. STATIC PINK TWINKLING SHINY STARS (Glittering Diamond Star Sparkles)
+      // 1. STATIC PINK TWINKLING SHINY STARS (Radiant Diamond Star Sparkles with Glowing Halos)
   class StarNode {
     constructor() {
       this.x = Math.random() * window.innerWidth;
       this.y = Math.random() * window.innerHeight;
-      this.size = Math.random() * 2.2 + 1.2;
-      this.baseAlpha = Math.random() * 0.4 + 0.45;
+      this.size = Math.random() * 2.6 + 1.4;
+      this.baseAlpha = Math.random() * 0.35 + 0.65;
       this.alpha = this.baseAlpha;
       this.twinklePhase = Math.random() * Math.PI * 2;
-      this.twinkleSpeed = Math.random() * 0.035 + 0.02;
-      this.isDiamond = Math.random() < 0.45; // 45% are shiny 4-point diamond sparkles
-      const pinkHues = ['#FF4D8D', '#FF69B4', '#FF85A2', '#F472B6', '#FB7185', '#FDA4AF'];
-      this.color = pinkHues[Math.floor(Math.random() * pinkHues.length)];
+      this.twinkleSpeed = Math.random() * 0.04 + 0.02;
+      this.isDiamond = Math.random() < 0.65; // 65% are glowing 4-point diamond starbursts
+      
+      const palette = [
+        { core: '#FF2A85', glow: 'rgba(255, 42, 133, 0.45)', halo: 'rgba(255, 105, 180, 0.25)' },
+        { core: '#FF69B4', glow: 'rgba(255, 105, 180, 0.45)', halo: 'rgba(255, 182, 193, 0.25)' },
+        { core: '#F472B6', glow: 'rgba(244, 114, 182, 0.45)', halo: 'rgba(251, 207, 232, 0.25)' },
+        { core: '#FB7185', glow: 'rgba(251, 113, 133, 0.45)', halo: 'rgba(254, 205, 211, 0.25)' },
+        { core: '#FF80BF', glow: 'rgba(255, 128, 191, 0.45)', halo: 'rgba(255, 218, 233, 0.25)' }
+      ];
+      this.theme = palette[Math.floor(Math.random() * palette.length)];
     }
     update() {
       this.twinklePhase += this.twinkleSpeed;
-      this.alpha = this.baseAlpha + Math.sin(this.twinklePhase) * 0.35;
+      this.alpha = this.baseAlpha + Math.sin(this.twinklePhase) * 0.3;
     }
     draw() {
-      const a = Math.max(0.2, Math.min(1.0, this.alpha));
+      const a = Math.max(0.3, Math.min(1.0, this.alpha));
       ctx.save();
       ctx.globalAlpha = a;
       ctx.translate(this.x, this.y);
 
-      if (this.isDiamond && a > 0.45) {
-        // Shiny 4-Point Celestial Diamond Star
-        const sparkLen = this.size * 2.6;
-        ctx.strokeStyle = this.color;
-        ctx.lineWidth = 0.9;
-        ctx.beginPath();
-        ctx.moveTo(-sparkLen, 0);
-        ctx.lineTo(sparkLen, 0);
-        ctx.moveTo(0, -sparkLen);
-        ctx.lineTo(0, sparkLen);
-        ctx.stroke();
+      // 1. Outer Luminous Soft Glow Aura
+      const glowR = this.size * 3.6;
+      const glowGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, glowR);
+      glowGrad.addColorStop(0, this.theme.glow);
+      glowGrad.addColorStop(0.55, this.theme.halo);
+      glowGrad.addColorStop(1, 'rgba(255, 182, 193, 0)');
+      ctx.fillStyle = glowGrad;
+      ctx.beginPath();
+      ctx.arc(0, 0, glowR, 0, Math.PI * 2);
+      ctx.fill();
 
-        // Shiny White Central Core
+      if (this.isDiamond) {
+        // 2. Radiant 4-Point Diamond Sparkle Beams
+        const pulse = 1 + Math.sin(this.twinklePhase) * 0.25;
+        const rayLen = this.size * 3.2 * pulse;
+        const rayW = this.size * 0.48;
+
+        ctx.fillStyle = this.theme.core;
+        // Horizontal tapered ray
+        ctx.beginPath();
+        ctx.moveTo(-rayLen, 0);
+        ctx.lineTo(0, -rayW);
+        ctx.lineTo(rayLen, 0);
+        ctx.lineTo(0, rayW);
+        ctx.closePath();
+        ctx.fill();
+
+        // Vertical tapered ray
+        ctx.beginPath();
+        ctx.moveTo(0, -rayLen);
+        ctx.lineTo(-rayW, 0);
+        ctx.lineTo(0, rayLen);
+        ctx.lineTo(rayW, 0);
+        ctx.closePath();
+        ctx.fill();
+
+        // 3. Glistening Bright White Diamond Core
         ctx.fillStyle = '#FFFFFF';
         ctx.beginPath();
         ctx.arc(0, 0, this.size * 0.7, 0, Math.PI * 2);
         ctx.fill();
       } else {
-        // Glowing Round Star
-        ctx.fillStyle = this.color;
+        // Glowing Round Star with White Sparkle Core
+        ctx.fillStyle = this.theme.core;
         ctx.beginPath();
         ctx.arc(0, 0, this.size, 0, Math.PI * 2);
         ctx.fill();
 
-        // White Glistening Center
         ctx.fillStyle = '#FFFFFF';
         ctx.beginPath();
-        ctx.arc(0, 0, this.size * 0.45, 0, Math.PI * 2);
+        ctx.arc(0, 0, this.size * 0.55, 0, Math.PI * 2);
         ctx.fill();
       }
 
@@ -2633,14 +2671,14 @@
       this.reset(true);
     }
     reset(initial = false) {
-      this.x = Math.random() * canvas.width;
-      this.y = initial ? Math.random() * canvas.height : canvas.height + 60;
-      this.scale = Math.random() * 0.35 + 0.32;
-      this.opacity = Math.random() * 0.22 + 0.14;
-      this.baseVy = -(Math.random() * 0.24 + 0.16);
-      this.vx = 0;
+      this.x = Math.random() * window.innerWidth;
+      this.y = initial ? Math.random() * window.innerHeight : window.innerHeight + 80;
+      this.scale = Math.random() * 0.32 + 0.28;
+      this.opacity = Math.random() * 0.25 + 0.18;
+      this.baseVy = -(Math.random() * 0.26 + 0.15);
+      this.vx = (Math.random() - 0.5) * 0.2;
       this.extraVy = 0;
-      this.angle = (Math.random() - 0.5) * 0.15;
+      this.angle = (Math.random() - 0.5) * 0.18;
       this.tiltAngle = 0;
       this.flutter = Math.random() * Math.PI * 2;
       this.flapEnergy = 0;
@@ -2666,7 +2704,7 @@
       this.flapEnergy *= 0.95;
       this.tiltAngle *= 0.94;
 
-      if (this.y < -150 || this.x < -180 || this.x > canvas.width + 180) {
+      if (this.y < -150 || this.x < -180 || this.x > window.innerWidth + 180) {
         this.reset(false);
       }
     }
@@ -2884,20 +2922,23 @@
     }
   }
 
-    function initElements() {
+      function initElements() {
     stars = [];
     petals = [];
     feathers = [];
     shootingStars = [];
     angelWings = [];
 
-    // Generous constellation star density across all screen sizes
-    const starCount = Math.min(95, Math.max(55, Math.floor((canvas.width * canvas.height) / 14000)));
+    // Rich glowing constellation star density
+    const starCount = Math.min(105, Math.max(65, Math.floor((window.innerWidth * window.innerHeight) / 13000)));
     for (let i = 0; i < starCount; i++) stars.push(new StarNode());
 
-    for (let i = 0; i < 14; i++) petals.push(new LilyPetal());
-    for (let i = 0; i < 8; i++) feathers.push(new WingFeather());
-    for (let i = 0; i < 3; i++) angelWings.push(new BackgroundAngelWing());
+    for (let i = 0; i < 16; i++) petals.push(new LilyPetal());
+    for (let i = 0; i < 12; i++) feathers.push(new WingFeather());
+    
+    // Increased Ethereal Angel Wings (8 drifting celestial pairs across depths)
+    for (let i = 0; i < 8; i++) angelWings.push(new BackgroundAngelWing());
+    
     for (let i = 0; i < 6; i++) shootingStars.push(new ShootingStar());
   }
 
