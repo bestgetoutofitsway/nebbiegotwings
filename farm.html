@@ -7,7 +7,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Playfair+Display:ital,wght@0,700;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Dancing+Script:wght@600;700&family=Great+Vibes&family=Sacramento&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Playfair+Display:ital,wght@0,700;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
@@ -509,9 +509,35 @@
   @media (prefers-reduced-motion: reduce) {
     .bobbing, .bulb, .sky-star, .cloud-drift, .firefly, .shooting-star { animation: none !important; }
   }
+  /* Mini Spinning Vinyl */
+  @keyframes spinFarmVinyl {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .farm-spinning-vinyl {
+    animation: spinFarmVinyl 4s linear infinite;
+  }
+  .farm-paused-vinyl {
+    animation-play-state: paused !important;
+  }
+  /* European Street Lampposts */
+  .lamppost-wrap {
+    transition: transform 0.3s ease, filter 0.3s ease;
+  }
+  .lamppost-wrap:hover {
+    transform: scale(1.03);
+  }
+  .lamp-off .lamp-glow-aura, .lamp-off .lamp-ground-light {
+    opacity: 0.1 !important;
+  }
+  .lamp-off circle[fill*="url(#lampBulbGlow)"] {
+    fill: #78716c !important;
+  }
 </style>
 </head>
 <body>
+
+<audio id="farm-audio" preload="auto"></audio>
 
 <!-- ==================== RESPONSIVE HEADER BAR ==================== -->
 <header class="fixed top-2.5 inset-x-0 z-50 px-3 sm:px-5 pointer-events-none">
@@ -537,6 +563,32 @@
         <span id="fed-count" class="font-bold text-amber-200">0</span>
         <span>hellos said today</span>
         <span>🌾</span>
+      </div>
+    </div>
+
+        <!-- Farm Continuous Music Glass Player -->
+    <div class="pointer-events-auto">
+      <div id="farm-music-pill" class="glass rounded-full px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-white text-[11px] sm:text-xs shadow-md flex items-center gap-2 max-w-[200px] sm:max-w-[260px] border border-white/40">
+        <!-- Mini Spinning Vinyl -->
+        <div id="farm-vinyl-icon" class="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-stone-900 border border-white/50 flex items-center justify-center text-[9px] sm:text-[10px] text-amber-200 shrink-0 shadow-inner">
+          <span>🎵</span>
+        </div>
+        
+        <!-- Track Info -->
+        <div class="truncate flex-1 min-w-0 text-left cursor-pointer" onclick="toggleFarmAudio()">
+          <p id="farm-track-title" class="truncate font-medium leading-tight text-white text-[10px] sm:text-xs">PPP</p>
+          <p id="farm-track-artist" class="text-[8px] sm:text-[9px] text-amber-100/75 truncate">Beach House</p>
+        </div>
+
+        <!-- Controls -->
+        <div class="flex items-center gap-1 shrink-0">
+          <button onclick="toggleFarmAudio()" id="farm-play-btn" title="Play/Pause" class="w-6 h-6 rounded-full hover:bg-white/20 flex items-center justify-center text-xs text-amber-200 transition-all active:scale-90">
+            ▶
+          </button>
+          <button onclick="nextFarmTrack()" title="Next Track" class="w-5 h-5 rounded-full hover:bg-white/20 flex items-center justify-center text-[10px] text-white/80 transition-all active:scale-90">
+            ⏭
+          </button>
+        </div>
       </div>
     </div>
 
@@ -760,30 +812,157 @@
   <div id="pasture"></div>
   <div id="pond" onclick="createPondRipple(event)" title="Click pond to make ripples 🦆"></div>
   <div id="fence-layer"></div>
+  <!-- ==================== EUROPEAN PARISIAN STREET LAMPPOST (LEFT) ==================== -->
+  <div id="lamppost-left" onclick="toggleLamppostLight(this, event)" title="Parisian Street Lamp — Tap to toggle light ✨" class="lamppost-wrap absolute cursor-pointer select-none" style="left: 8%; bottom: 20%; z-index: 25; transform-origin: bottom center;">
+    <div class="lamp-ground-light absolute -bottom-3 left-1/2 -translate-x-1/2 w-48 h-16 rounded-[50%] bg-gradient-to-t from-amber-300/30 via-amber-200/15 to-transparent blur-md pointer-events-none transition-opacity duration-500"></div>
 
-      <!-- ==================== RUSTIC ENAMELED FIELD SIGN (WHITE & PINK "ZARA'S FARM") ==================== -->
-  <div id="farm-sign-wrap" onclick="popSignSparkles(event)" title="Welcome to Zara's Farm! 🌾" class="absolute cursor-pointer transition-transform hover:scale-105 select-none" style="left: 50%; bottom: 35%; transform: translateX(-50%); z-index: 28;">
-    <svg width="250" height="115" viewBox="0 0 250 115" xmlns="http://www.w3.org/2000/svg" class="filter drop-shadow-xl">
+    <svg width="90" height="250" viewBox="0 0 90 250" xmlns="http://www.w3.org/2000/svg" class="filter drop-shadow-md overflow-visible">
+      <defs>
+        <linearGradient id="ironMastL" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#141013"/>
+          <stop offset="40%" stop-color="#3b3238"/>
+          <stop offset="70%" stop-color="#261f24"/>
+          <stop offset="100%" stop-color="#100c0f"/>
+        </linearGradient>
+        <radialGradient id="lampBulbGlowL" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="25%" stop-color="#fff8b3"/>
+          <stop offset="60%" stop-color="#ffca28"/>
+          <stop offset="90%" stop-color="#ff9800" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#ff9800" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="lampAuraL" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#ffe082" stop-opacity="0.85"/>
+          <stop offset="40%" stop-color="#ffd54f" stop-opacity="0.45"/>
+          <stop offset="75%" stop-color="#ffb300" stop-opacity="0.15"/>
+          <stop offset="100%" stop-color="#ffa000" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <!-- Warm European Yellow Light Auras -->
+      <circle cx="45" cy="40" r="50" fill="url(#lampAuraL)" class="lamp-glow-aura transition-opacity duration-500 pointer-events-none"/>
+      <circle cx="62" cy="58" r="34" fill="url(#lampAuraL)" class="lamp-glow-aura transition-opacity duration-500 pointer-events-none"/>
+
+      <!-- Ornate Fluted Iron Pedestal Base -->
+      <polygon points="32,246 58,246 54,232 36,232" fill="url(#ironMastL)" stroke="#0d090b" stroke-width="1.2"/>
+      <rect x="34" y="224" width="22" height="8" rx="2" fill="url(#ironMastL)" stroke="#0d090b" stroke-width="1"/>
+      <rect x="38" y="210" width="14" height="14" rx="2" fill="url(#ironMastL)" stroke="#0d090b" stroke-width="1"/>
+      <ellipse cx="45" cy="210" rx="9" ry="2.2" fill="#4a3e46" stroke="#0d090b" stroke-width="0.8"/>
+      <ellipse cx="45" cy="224" rx="12" ry="2.5" fill="#4a3e46" stroke="#0d090b" stroke-width="0.8"/>
+
+      <!-- Slender Iron Mast -->
+      <rect x="42.5" y="44" width="5" height="166" fill="url(#ironMastL)" stroke="#0d090b" stroke-width="0.8"/>
+      <ellipse cx="45" cy="148" rx="4.5" ry="1.4" fill="#4a3e46" stroke="#0d090b" stroke-width="0.8"/>
+      <ellipse cx="45" cy="105" rx="5" ry="1.5" fill="#4a3e46" stroke="#0d090b" stroke-width="0.8"/>
+
+      <!-- Side Lantern Bracket (Right) -->
+      <path d="M45,72 C54,72 62,67 62,58" fill="none" stroke="url(#ironMastL)" stroke-width="2.5" stroke-linecap="round"/>
+
+      <!-- Top Finial of Main Mast -->
+      <path d="M45,44 L45,22" fill="none" stroke="url(#ironMastL)" stroke-width="3" stroke-linecap="round"/>
+      <polygon points="41,24 49,24 45,14" fill="#2d242a" stroke="#0d090b" stroke-width="1"/>
+      <circle cx="45" cy="13" r="2.2" fill="#ffc107"/>
+
+      <!-- LOWER SIDE LANTERN -->
+      <g>
+        <polygon points="54,52 70,52 66,46 58,46" fill="#2d242a" stroke="#0d090b" stroke-width="1"/>
+        <path d="M56,52 L68,52 L65,64 L59,64 Z" fill="rgba(255, 248, 225, 0.4)" stroke="#1a1216" stroke-width="0.8"/>
+        <circle cx="62" cy="58" r="4.8" fill="url(#lampBulbGlowL)"/>
+        <polygon points="60,64 64,64 62,68" fill="#2d242a"/>
+      </g>
+
+      <!-- UPPER MAIN LANTERN -->
+      <g>
+        <path d="M33,34 C33,28 57,28 57,34 Z" fill="#2d242a" stroke="#0d090b" stroke-width="1"/>
+        <ellipse cx="45" cy="34" rx="12" ry="2.8" fill="#362d33" stroke="#0d090b" stroke-width="0.8"/>
+        <path d="M35,34 L55,34 L51,46 L39,46 Z" fill="rgba(255, 248, 225, 0.4)" stroke="#1a1216" stroke-width="0.8"/>
+        <circle cx="45" cy="40" r="6" fill="url(#lampBulbGlowL)"/>
+        <polygon points="40,46 50,46 45,51" fill="#2d242a" stroke="#0d090b" stroke-width="0.8"/>
+      </g>
+    </svg>
+  </div>
+  <!-- ==================== EUROPEAN PARISIAN STREET LAMPPOST (RIGHT) ==================== -->
+  <div id="lamppost-right" onclick="toggleLamppostLight(this, event)" title="Parisian Street Lamp — Tap to toggle light ✨" class="lamppost-wrap absolute cursor-pointer select-none" style="right: 8%; bottom: 22%; z-index: 25; transform-origin: bottom center;">
+    <div class="lamp-ground-light absolute -bottom-3 left-1/2 -translate-x-1/2 w-44 h-16 rounded-[50%] bg-gradient-to-t from-amber-300/30 via-amber-200/15 to-transparent blur-md pointer-events-none transition-opacity duration-500"></div>
+
+    <svg width="85" height="235" viewBox="0 0 85 235" xmlns="http://www.w3.org/2000/svg" class="filter drop-shadow-md overflow-visible">
+      <defs>
+        <linearGradient id="ironMastR" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#141013"/>
+          <stop offset="40%" stop-color="#3b3238"/>
+          <stop offset="70%" stop-color="#261f24"/>
+          <stop offset="100%" stop-color="#100c0f"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Warm European Yellow Light Auras -->
+      <circle cx="42" cy="38" r="48" fill="url(#lampAuraL)" class="lamp-glow-aura transition-opacity duration-500 pointer-events-none"/>
+      <circle cx="25" cy="54" r="32" fill="url(#lampAuraL)" class="lamp-glow-aura transition-opacity duration-500 pointer-events-none"/>
+
+      <!-- Ornate Fluted Iron Pedestal Base -->
+      <polygon points="30,231 54,231 50,218 34,218" fill="url(#ironMastR)" stroke="#0d090b" stroke-width="1.2"/>
+      <rect x="32" y="210" width="20" height="8" rx="2" fill="url(#ironMastR)" stroke="#0d090b" stroke-width="1"/>
+      <rect x="36" y="198" width="12" height="12" rx="2" fill="url(#ironMastR)" stroke="#0d090b" stroke-width="1"/>
+      <ellipse cx="42" cy="198" rx="8" ry="2" fill="#4a3e46" stroke="#0d090b" stroke-width="0.8"/>
+      <ellipse cx="42" cy="210" rx="11" ry="2.2" fill="#4a3e46" stroke="#0d090b" stroke-width="0.8"/>
+
+      <!-- Slender Iron Mast -->
+      <rect x="39.5" y="42" width="5" height="156" fill="url(#ironMastR)" stroke="#0d090b" stroke-width="0.8"/>
+      <ellipse cx="42" cy="138" rx="4.2" ry="1.3" fill="#4a3e46" stroke="#0d090b" stroke-width="0.8"/>
+      <ellipse cx="42" cy="98" rx="4.6" ry="1.4" fill="#4a3e46" stroke="#0d090b" stroke-width="0.8"/>
+
+      <!-- Side Lantern Bracket (Left) -->
+      <path d="M42,68 C33,68 25,63 25,54" fill="none" stroke="url(#ironMastR)" stroke-width="2.5" stroke-linecap="round"/>
+
+      <!-- Top Finial -->
+      <path d="M42,42 L42,20" fill="none" stroke="url(#ironMastR)" stroke-width="3" stroke-linecap="round"/>
+      <polygon points="38,22 46,22 42,13" fill="#2d242a" stroke="#0d090b" stroke-width="1"/>
+      <circle cx="42" cy="12" r="2" fill="#ffc107"/>
+
+      <!-- LOWER SIDE LANTERN (Left) -->
+      <g>
+        <polygon points="17,48 33,48 29,42 21,42" fill="#2d242a" stroke="#0d090b" stroke-width="1"/>
+        <path d="M19,48 L31,48 L28,60 L22,60 Z" fill="rgba(255, 248, 225, 0.4)" stroke="#1a1216" stroke-width="0.8"/>
+        <circle cx="25" cy="54" r="4.5" fill="url(#lampBulbGlowL)"/>
+        <polygon points="23,60 27,60 25,64" fill="#2d242a"/>
+      </g>
+
+      <!-- UPPER MAIN LANTERN -->
+      <g>
+        <path d="M30,32 C30,26 54,26 54,32 Z" fill="#2d242a" stroke="#0d090b" stroke-width="1"/>
+        <ellipse cx="42" cy="32" rx="12" ry="2.6" fill="#362d33" stroke="#0d090b" stroke-width="0.8"/>
+        <path d="M32,32 L52,32 L48,44 L36,44 Z" fill="rgba(255, 248, 225, 0.4)" stroke="#1a1216" stroke-width="0.8"/>
+        <circle cx="42" cy="38" r="5.8" fill="url(#lampBulbGlowL)"/>
+        <polygon points="37,44 47,44 42,49" fill="#2d242a" stroke="#0d090b" stroke-width="0.8"/>
+      </g>
+    </svg>
+  </div>
+
+            <!-- ==================== RUSTIC ENAMELED FIELD SIGN (LARGER & WIDER WITH PASTEL PINK CURSIVE) ==================== -->
+  <div id="farm-sign-wrap" onclick="popSignSparkles(event)" title="Welcome to Zara's Farm! 🌾" class="absolute cursor-pointer transition-transform hover:scale-105 select-none" style="left: 50%; bottom: 34%; transform: translateX(-50%); z-index: 28;">
+    <svg width="360" height="135" viewBox="0 0 360 135" xmlns="http://www.w3.org/2000/svg" class="filter drop-shadow-2xl max-w-[90vw] sm:max-w-none h-auto">
       <defs>
         <!-- Timber Post Gradient -->
         <linearGradient id="postWood" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#422515"/>
-          <stop offset="40%" stop-color="#704427"/>
-          <stop offset="100%" stop-color="#361c0e"/>
+          <stop offset="0%" stop-color="#3d2112"/>
+          <stop offset="35%" stop-color="#6e4225"/>
+          <stop offset="70%" stop-color="#543019"/>
+          <stop offset="100%" stop-color="#30180c"/>
         </linearGradient>
 
         <!-- White Pearl Enamel Board Gradient -->
         <linearGradient id="whiteBoard" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#FFFFFF"/>
-          <stop offset="60%" stop-color="#FFF5F8"/>
-          <stop offset="100%" stop-color="#FFEBF2"/>
+          <stop offset="55%" stop-color="#FFF5F8"/>
+          <stop offset="100%" stop-color="#FFE8F1"/>
         </linearGradient>
 
-        <!-- Rich Romantic Pink Text Gradient -->
-        <linearGradient id="pinkTextGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#be185d"/>
-          <stop offset="45%" stop-color="#e11d48"/>
-          <stop offset="100%" stop-color="#9f1239"/>
+        <!-- Light Pastel Pink Text Gradient -->
+        <linearGradient id="pastelPinkTextGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fdf2f8"/>
+          <stop offset="30%" stop-color="#fbcfe8"/>
+          <stop offset="70%" stop-color="#f472b6"/>
+          <stop offset="100%" stop-color="#ec4899"/>
         </linearGradient>
 
         <radialGradient id="lanternGlow" cx="50%" cy="50%" r="50%">
@@ -794,68 +973,67 @@
       </defs>
 
       <!-- Left Timber Post (Rooted into ground) -->
-      <rect x="22" y="6" width="13" height="104" rx="2.5" fill="url(#postWood)" stroke="#2b1509" stroke-width="1.3"/>
-      <polygon points="20,6 28.5,-2 37,6" fill="#59321b" stroke="#2b1509" stroke-width="1.1"/>
+      <rect x="22" y="8" width="16" height="122" rx="3.5" fill="url(#postWood)" stroke="#220e06" stroke-width="1.5"/>
+      <polygon points="19,8 30,-2 41,8" fill="#522c16" stroke="#220e06" stroke-width="1.2"/>
       
       <!-- Right Timber Post (Rooted into ground) -->
-      <rect x="214" y="6" width="13" height="104" rx="2.5" fill="url(#postWood)" stroke="#2b1509" stroke-width="1.3"/>
-      <polygon points="212,6 220.5,-2 229,6" fill="#59321b" stroke="#2b1509" stroke-width="1.1"/>
+      <rect x="322" y="8" width="16" height="122" rx="3.5" fill="url(#postWood)" stroke="#220e06" stroke-width="1.5"/>
+      <polygon points="319,8 330,-2 341,8" fill="#522c16" stroke="#220e06" stroke-width="1.2"/>
 
       <!-- Cross Timber Support Beam at top -->
-      <rect x="18" y="8" width="212" height="8.5" rx="2" fill="url(#postWood)" stroke="#2b1509" stroke-width="1.1"/>
+      <rect x="16" y="10" width="328" height="11" rx="2.5" fill="url(#postWood)" stroke="#220e06" stroke-width="1.3"/>
 
       <!-- Iron Hanging Chains -->
-      <line x1="48" y1="14" x2="48" y2="28" stroke="#1f1109" stroke-width="2.5" stroke-dasharray="3,2"/>
-      <line x1="202" y1="14" x2="202" y2="28" stroke="#1f1109" stroke-width="2.5" stroke-dasharray="3,2"/>
-      <circle cx="48" cy="14" r="3.2" fill="none" stroke="#1f1109" stroke-width="1.8"/>
-      <circle cx="202" cy="14" r="3.2" fill="none" stroke="#1f1109" stroke-width="1.8"/>
+      <line x1="68" y1="18" x2="68" y2="34" stroke="#1f1109" stroke-width="3" stroke-dasharray="3.5,2"/>
+      <line x1="292" y1="18" x2="292" y2="34" stroke="#1f1109" stroke-width="3" stroke-dasharray="3.5,2"/>
+      <circle cx="68" cy="18" r="4" fill="none" stroke="#1f1109" stroke-width="2"/>
+      <circle cx="292" cy="18" r="4" fill="none" stroke="#1f1109" stroke-width="2"/>
 
-      <!-- Main Sign Board (White Pearl Enamel with Gold/Pink Rim) -->
-      <!-- Soft Ambient Glow & Shadow -->
-      <rect x="31" y="26" width="188" height="50" rx="12" fill="#000000" opacity="0.32" filter="blur(3px)"/>
+      <!-- Main Sign Board (Wider & Longer White Pearl Enamel Board) -->
+      <!-- Soft Ambient Shadow -->
+      <rect x="37" y="32" width="286" height="58" rx="15" fill="#000000" opacity="0.3" filter="blur(4px)"/>
       
-      <!-- White Enamel Board Plate -->
-      <rect x="30" y="24" width="190" height="48" rx="11" fill="url(#whiteBoard)" stroke="#f472b6" stroke-width="2.4"/>
+      <!-- White Enamel Board Plate with Delicate Pastel Pink Border -->
+      <rect x="36" y="30" width="288" height="56" rx="14" fill="url(#whiteBoard)" stroke="#f472b6" stroke-width="2.6"/>
       
-      <!-- Inner Romantic Rose-Gold Inset Border -->
-      <rect x="34" y="28" width="182" height="40" rx="8" fill="none" stroke="#fda4af" stroke-width="1.2" stroke-dasharray="4,2"/>
+      <!-- Inner Romantic Rose-Pink Inset Stitch Border -->
+      <rect x="41" y="35" width="278" height="46" rx="10" fill="none" stroke="#fbcfe8" stroke-width="1.4" stroke-dasharray="5,2.5"/>
 
       <!-- Corner Rose Gold Rivets -->
-      <circle cx="40" cy="34" r="2.2" fill="#f43f5e" stroke="#ffe4e6" stroke-width="0.8"/>
-      <circle cx="210" cy="34" r="2.2" fill="#f43f5e" stroke="#ffe4e6" stroke-width="0.8"/>
-      <circle cx="40" cy="62" r="2.2" fill="#f43f5e" stroke="#ffe4e6" stroke-width="0.8"/>
-      <circle cx="210" cy="62" r="2.2" fill="#f43f5e" stroke="#ffe4e6" stroke-width="0.8"/>
+      <circle cx="49" cy="43" r="2.6" fill="#f43f5e" stroke="#ffe4e6" stroke-width="0.9"/>
+      <circle cx="311" cy="43" r="2.6" fill="#f43f5e" stroke="#ffe4e6" stroke-width="0.9"/>
+      <circle cx="49" cy="73" r="2.6" fill="#f43f5e" stroke="#ffe4e6" stroke-width="0.9"/>
+      <circle cx="311" cy="73" r="2.6" fill="#f43f5e" stroke="#ffe4e6" stroke-width="0.9"/>
 
       <!-- Hanging Lantern on Left Post -->
-      <g transform="translate(10, 14)">
-        <circle cx="5" cy="16" r="16" fill="url(#lanternGlow)"/>
-        <path d="M11,0 L0,5 L0,10" fill="none" stroke="#221108" stroke-width="2"/>
-        <rect x="-1" y="8" width="12" height="14" rx="2" fill="#fff3c4" stroke="#33180a" stroke-width="1.2"/>
-        <polygon points="5,4 -3,9 13,9" fill="#221108"/>
-        <rect x="1" y="22" width="8" height="2.5" fill="#221108"/>
-        <circle cx="5" cy="15" r="2.8" fill="#f59e0b"/>
+      <g transform="translate(8, 16)">
+        <circle cx="6" cy="18" r="18" fill="url(#lanternGlow)"/>
+        <path d="M14,0 L0,6 L0,12" fill="none" stroke="#1a0b04" stroke-width="2.2"/>
+        <rect x="-2" y="10" width="15" height="18" rx="2.5" fill="#fff3c4" stroke="#2b1408" stroke-width="1.4"/>
+        <polygon points="5.5,5 -4,11 15,11" fill="#1a0b04"/>
+        <rect x="0.5" y="28" width="10" height="3" fill="#1a0b04"/>
+        <circle cx="5.5" cy="19" r="3.5" fill="#f59e0b"/>
       </g>
 
       <!-- Trailing Ivy on Right Post -->
-      <path d="M216,104 Q221,72 218,40" fill="none" stroke="#385e32" stroke-width="1.8"/>
-      <circle cx="215" cy="88" r="3.5" fill="#4d7c45"/>
-      <circle cx="222" cy="70" r="3.5" fill="#5f9755"/>
-      <circle cx="215" cy="52" r="3" fill="#75b56a"/>
-      <circle cx="221" cy="36" r="2.5" fill="#8ed182"/>
+      <path d="M325,124 Q332,84 328,45" fill="none" stroke="#2d5227" stroke-width="2.2"/>
+      <circle cx="324" cy="106" r="4.2" fill="#3f6c37"/>
+      <circle cx="333" cy="84" r="4.2" fill="#528a48"/>
+      <circle cx="325" cy="62" r="3.8" fill="#68a85c"/>
+      <circle cx="332" cy="42" r="3.2" fill="#84cb76"/>
 
       <!-- Base Grass Tufts around Posts -->
-      <path d="M16,108 Q22,98 26,108 Q30,95 34,108" fill="none" stroke="#557c4a" stroke-width="2" stroke-linecap="round"/>
-      <path d="M208,108 Q214,98 218,108 Q224,95 230,108" fill="none" stroke="#557c4a" stroke-width="2" stroke-linecap="round"/>
+      <path d="M14,130 Q22,118 28,130 Q33,114 38,130" fill="none" stroke="#486e3f" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M314,130 Q322,118 328,130 Q335,114 342,130" fill="none" stroke="#486e3f" stroke-width="2.2" stroke-linecap="round"/>
 
-      <!-- Bold Pink Text: Zara's Farm -->
-      <text x="125" y="55" 
+      <!-- Lowkey Cursive Handwriting in Light Pastel Pink (No Glow) -->
+      <text x="180" y="65" 
             text-anchor="middle" 
-            font-family="'Playfair Display', 'Cormorant Garamond', serif" 
-            font-size="22" 
-            font-weight="bold" 
-            letter-spacing="0.8" 
-            fill="url(#pinkTextGrad)" 
-            filter="drop-shadow(0 1px 2px rgba(244, 63, 94, 0.35))">
+            font-family="'Caveat', 'Dancing Script', 'Sacramento', cursive" 
+            font-size="33" 
+            font-weight="600" 
+            letter-spacing="0.5" 
+            fill="#f472b6">
         ✧ Zara's Farm ✧
       </text>
     </svg>
@@ -990,8 +1168,22 @@
   // ==================== INTRO DISMISSAL ====================
   function dismissIntro() {
     const overlay = document.getElementById('intro-overlay');
-    overlay.style.opacity = '0';
-    setTimeout(() => overlay.remove(), 600);
+    if (overlay) {
+      overlay.style.opacity = '0';
+      setTimeout(() => overlay.remove(), 600);
+    }
+    // Resume music if it was playing in sanctuary
+    if (farmAudio && farmAudio.paused) {
+      try {
+        const saved = localStorage.getItem('nebbie_music_state');
+        if (saved) {
+          const state = JSON.parse(saved);
+          if (state.isPlaying) {
+            farmAudio.play().then(() => updateFarmMusicUI(true)).catch(() => {});
+          }
+        }
+      } catch(e) {}
+    }
   }
 
   // ==================== STARS ====================
@@ -1231,6 +1423,41 @@
   }
 
   // ==================== SIGN SPARKLE BURST ====================
+    // ==================== INTERACTIVE EUROPEAN LAMPPOST TOGGLE ====================
+  function toggleLamppostLight(el, e) {
+    if (!el) return;
+    el.classList.toggle('lamp-off');
+    
+    // Spawn warm golden light sparks on tap
+    if (e) {
+      const rect = el.getBoundingClientRect();
+      const originX = rect.left + rect.width / 2;
+      const originY = rect.top + 40;
+      
+      const lightSparks = ['✨', '💡', '🌟', '💛'];
+      for (let i = 0; i < 8; i++) {
+        setTimeout(() => {
+          const p = document.createElement('div');
+          p.className = 'eiffel-sparkle select-none pointer-events-none';
+          p.innerText = lightSparks[Math.floor(Math.random() * lightSparks.length)];
+          p.style.position = 'fixed';
+          p.style.left = originX + 'px';
+          p.style.top = originY + 'px';
+          p.style.fontSize = (12 + Math.random() * 8) + 'px';
+          p.style.zIndex = '9999';
+
+          const tx = (Math.random() - 0.5) * 80 + 'px';
+          const ty = (Math.random() - 0.5) * 80 + 'px';
+          p.style.setProperty('--tx', tx);
+          p.style.setProperty('--ty', ty);
+
+          document.body.appendChild(p);
+          setTimeout(() => p.remove(), 1000);
+        }, i * 30);
+      }
+    }
+  }
+
   function popSignSparkles(e) {
     const sign = document.getElementById('farm-sign-wrap');
     if (!sign) return;
@@ -1493,6 +1720,180 @@
     clearTimeout(window._resizeTimer);
     window._resizeTimer = setTimeout(layoutAnimals, 200);
   });
+
+    // ==================== CONTINUOUS CROSS-PAGE MUSIC ENGINE ====================
+  const playlist = [
+    {
+      title: "PPP",
+      artist: "Beach House",
+      src: "assets/song2.mp3"
+    },
+    {
+      title: "Affection",
+      artist: "BETWEEN FRIENDS",
+      src: "assets/song4.mp3"
+    },
+    {
+      title: "Lemon Glow",
+      artist: "Beach House",
+      src: "assets/song6.mp3"
+    },
+    {
+      title: "About You",
+      artist: "The 1975",
+      src: "assets/song3.mp3"
+    },
+    {
+      title: "Die For You",
+      artist: "The Weeknd",
+      src: "assets/song1.mp3"
+    },
+    {
+      title: "Stargirl Interlude",
+      artist: "The Weeknd ft. Lana Del Rey",
+      src: "assets/song5.mp3"
+    }
+  ];
+
+  let currentTrackIdx = 0;
+  const farmAudio = document.getElementById('farm-audio');
+
+  function saveFarmMusicState() {
+    try {
+      const state = {
+        trackIdx: currentTrackIdx,
+        currentTime: farmAudio.currentTime || 0,
+        isPlaying: !farmAudio.paused,
+        volume: farmAudio.volume !== undefined ? farmAudio.volume : 0.85,
+        savedAt: Date.now()
+      };
+      localStorage.setItem('nebbie_music_state', JSON.stringify(state));
+    } catch(e) {}
+  }
+
+  function updateFarmMusicUI(isPlaying) {
+    const track = playlist[currentTrackIdx];
+    const titleEl = document.getElementById('farm-track-title');
+    const artistEl = document.getElementById('farm-track-artist');
+    const playBtn = document.getElementById('farm-play-btn');
+    const vinylIcon = document.getElementById('farm-vinyl-icon');
+
+    if (titleEl) titleEl.innerText = track.title;
+    if (artistEl) artistEl.innerText = track.artist;
+
+    if (playBtn) playBtn.innerText = isPlaying ? "⏸" : "▶";
+    if (vinylIcon) {
+      if (isPlaying) {
+        vinylIcon.classList.remove('farm-paused-vinyl');
+        vinylIcon.classList.add('farm-spinning-vinyl');
+      } else {
+        vinylIcon.classList.add('farm-paused-vinyl');
+      }
+    }
+  }
+
+  function loadFarmTrack(idx) {
+    currentTrackIdx = idx;
+    farmAudio.src = playlist[currentTrackIdx].src;
+    updateFarmMusicUI(!farmAudio.paused);
+  }
+
+  function toggleFarmAudio() {
+    if (farmAudio.paused) {
+      farmAudio.play().then(() => {
+        updateFarmMusicUI(true);
+        saveFarmMusicState();
+      }).catch(() => {});
+    } else {
+      farmAudio.pause();
+      updateFarmMusicUI(false);
+      saveFarmMusicState();
+    }
+  }
+
+  function nextFarmTrack() {
+    currentTrackIdx = (currentTrackIdx + 1) % playlist.length;
+    loadFarmTrack(currentTrackIdx);
+    farmAudio.play().then(() => {
+      updateFarmMusicUI(true);
+      saveFarmMusicState();
+    }).catch(() => {});
+  }
+
+  function initFarmMusic() {
+    let shouldAutoplay = false;
+    let resumeTime = 0;
+
+    try {
+      const saved = localStorage.getItem('nebbie_music_state');
+      if (saved) {
+        const state = JSON.parse(saved);
+        if (typeof state.trackIdx === 'number' && state.trackIdx >= 0 && state.trackIdx < playlist.length) {
+          currentTrackIdx = state.trackIdx;
+        }
+        if (typeof state.volume === 'number') {
+          farmAudio.volume = state.volume;
+        }
+        if (state.isPlaying) {
+          shouldAutoplay = true;
+          const elapsedSec = (Date.now() - (state.savedAt || Date.now())) / 1000;
+          resumeTime = (state.currentTime || 0) + (elapsedSec < 30 ? elapsedSec : 0);
+        }
+      }
+    } catch(e) {}
+
+    loadFarmTrack(currentTrackIdx);
+
+    if (shouldAutoplay) {
+      farmAudio.addEventListener('loadedmetadata', function onMeta() {
+        farmAudio.removeEventListener('loadedmetadata', onMeta);
+        if (farmAudio.duration && resumeTime < farmAudio.duration) {
+          farmAudio.currentTime = resumeTime;
+        }
+        farmAudio.play().then(() => {
+          updateFarmMusicUI(true);
+        }).catch(() => {
+          // In case browser autoplay policy requires user gesture, play on first pointerdown
+          window.addEventListener('pointerdown', function onFirstGesture() {
+            window.removeEventListener('pointerdown', onFirstGesture);
+            farmAudio.play().then(() => updateFarmMusicUI(true)).catch(() => {});
+          }, { once: true });
+        });
+      });
+
+      // Also try immediately
+      farmAudio.play().then(() => {
+        if (resumeTime) farmAudio.currentTime = resumeTime;
+        updateFarmMusicUI(true);
+      }).catch(() => {
+        window.addEventListener('pointerdown', function onFirstGesture() {
+          window.removeEventListener('pointerdown', onFirstGesture);
+          farmAudio.play().then(() => updateFarmMusicUI(true)).catch(() => {});
+        }, { once: true });
+      });
+    }
+  }
+
+  let farmSaveStateTimer = null;
+  function throttledSaveFarmMusicState() {
+    if (!farmSaveStateTimer) {
+      farmSaveStateTimer = setTimeout(() => {
+        saveFarmMusicState();
+        farmSaveStateTimer = null;
+      }, 2500);
+    }
+  }
+
+  farmAudio.addEventListener('timeupdate', throttledSaveFarmMusicState);
+  farmAudio.addEventListener('play', () => { updateFarmMusicUI(true); saveFarmMusicState(); });
+  farmAudio.addEventListener('pause', () => { updateFarmMusicUI(false); saveFarmMusicState(); });
+  farmAudio.addEventListener('ended', nextFarmTrack);
+  window.addEventListener('beforeunload', saveFarmMusicState);
+  window.addEventListener('pagehide', saveFarmMusicState);
+
+  // Initialize music on load
+  initFarmMusic();
+
 </script>
 </body>
 </html>
