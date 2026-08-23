@@ -457,11 +457,20 @@
   }
 
   /* Glass Panels */
-  .glass {
-    background: rgba(255,255,255,0.2);
-    backdrop-filter: blur(16px) saturate(160%);
-    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    .glass {
+    background: rgba(255,255,255,0.22);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
     border: 1px solid rgba(255,255,255,0.45);
+    isolation: isolate;
+    transform: translateZ(0);
+  }
+  @media (max-width: 640px) {
+    .glass {
+      background: rgba(255,255,255,0.28);
+      backdrop-filter: blur(6px) saturate(120%);
+      -webkit-backdrop-filter: blur(6px) saturate(120%);
+    }
   }
   .glass-dark {
     background: rgba(25, 16, 32, 0.72);
@@ -1202,8 +1211,13 @@
   const skyCtx = skyCanvas.getContext('2d');
 
   function resizeSkyCanvas() {
-    skyCanvas.width = window.innerWidth;
-    skyCanvas.height = window.innerHeight;
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
+    skyCanvas.width = Math.floor(window.innerWidth * dpr);
+    skyCanvas.height = Math.floor(window.innerHeight * dpr);
+    skyCanvas.style.width = window.innerWidth + 'px';
+    skyCanvas.style.height = window.innerHeight + 'px';
+    skyCtx.setTransform(1, 0, 0, 1, 0, 0);
+    skyCtx.scale(dpr, dpr);
   }
   resizeSkyCanvas();
   window.addEventListener('resize', resizeSkyCanvas);
@@ -1282,7 +1296,7 @@
 
   // Animate Canvas Loop
   function renderSky() {
-    skyCtx.clearRect(0, 0, skyCanvas.width, skyCanvas.height);
+    skyCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
     for (let i = 0; i < shootingStars.length; i++) {
       shootingStars[i].update();
       shootingStars[i].draw();

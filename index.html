@@ -248,12 +248,23 @@
     transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .macos-glass {
-    background: rgba(255, 255, 255, 0.78);
-    backdrop-filter: blur(28px) saturate(190%);
-    -webkit-backdrop-filter: blur(28px) saturate(190%);
-    border: 1px solid rgba(255, 255, 255, 0.9);
-    box-shadow: 0 16px 36px -8px rgba(220, 150, 175, 0.22), 0 0 1px 1px rgba(255, 255, 255, 0.6) inset;
+    .macos-glass {
+    background: rgba(255, 255, 255, 0.76);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 16px 36px -8px rgba(220, 150, 175, 0.18), 0 0 1px 1px rgba(255, 255, 255, 0.6) inset;
+    isolation: isolate;
+    transform: translateZ(0);
+  }
+
+  @media (max-width: 640px) {
+    .macos-glass {
+      background: rgba(255, 255, 255, 0.84);
+      backdrop-filter: blur(8px) saturate(120%);
+      -webkit-backdrop-filter: blur(8px) saturate(120%);
+      box-shadow: 0 8px 24px -6px rgba(220, 150, 175, 0.14);
+    }
   }
 
   .macos-app-icon {
@@ -2370,9 +2381,13 @@
   const mouse = { x: null, y: null, radius: 150 };
 
   function resizeCanvas() {
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
+    canvas.width = Math.floor(window.innerWidth * dpr);
+    canvas.height = Math.floor(window.innerHeight * dpr);
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
     initElements();
   }
   window.addEventListener('resize', resizeCanvas);
@@ -2492,8 +2507,8 @@
     // 1. STATIC PINK TWINKLING SHINY STARS (Glittering Diamond Star Sparkles)
   class StarNode {
     constructor() {
-      this.x = Math.random() * canvas.width;
-      this.y = Math.random() * canvas.height;
+      this.x = Math.random() * window.innerWidth;
+      this.y = Math.random() * window.innerHeight;
       this.size = Math.random() * 2.2 + 1.2;
       this.baseAlpha = Math.random() * 0.4 + 0.45;
       this.alpha = this.baseAlpha;
@@ -2895,7 +2910,7 @@
   }, 700);
 
       function renderEtherealCanvas() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
     for (let i = 0; i < angelWings.length; i++) {
       angelWings[i].update();
