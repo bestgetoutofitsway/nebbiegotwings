@@ -2489,30 +2489,61 @@
     mouse.y = null;
   });
 
-  // 1. STATIC PINK TWINKLING STARS (Optimized GPU-friendly draw)
+    // 1. STATIC PINK TWINKLING SHINY STARS (Glittering Diamond Star Sparkles)
   class StarNode {
     constructor() {
       this.x = Math.random() * canvas.width;
       this.y = Math.random() * canvas.height;
-      this.size = Math.random() * 1.8 + 0.8;
-      this.baseAlpha = Math.random() * 0.45 + 0.35;
+      this.size = Math.random() * 2.2 + 1.2;
+      this.baseAlpha = Math.random() * 0.4 + 0.45;
       this.alpha = this.baseAlpha;
       this.twinklePhase = Math.random() * Math.PI * 2;
-      this.twinkleSpeed = Math.random() * 0.03 + 0.015;
-      const pinkHues = ['#FF69B4', '#FFB6C1', '#F09CB3', '#FCE4EC', '#FFA6C9'];
+      this.twinkleSpeed = Math.random() * 0.035 + 0.02;
+      this.isDiamond = Math.random() < 0.45; // 45% are shiny 4-point diamond sparkles
+      const pinkHues = ['#FF4D8D', '#FF69B4', '#FF85A2', '#F472B6', '#FB7185', '#FDA4AF'];
       this.color = pinkHues[Math.floor(Math.random() * pinkHues.length)];
     }
     update() {
       this.twinklePhase += this.twinkleSpeed;
-      this.alpha = this.baseAlpha + Math.sin(this.twinklePhase) * 0.3;
+      this.alpha = this.baseAlpha + Math.sin(this.twinklePhase) * 0.35;
     }
     draw() {
+      const a = Math.max(0.2, Math.min(1.0, this.alpha));
       ctx.save();
-      ctx.globalAlpha = Math.max(0.15, Math.min(1, this.alpha));
-      ctx.fillStyle = this.color;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.globalAlpha = a;
+      ctx.translate(this.x, this.y);
+
+      if (this.isDiamond && a > 0.45) {
+        // Shiny 4-Point Celestial Diamond Star
+        const sparkLen = this.size * 2.6;
+        ctx.strokeStyle = this.color;
+        ctx.lineWidth = 0.9;
+        ctx.beginPath();
+        ctx.moveTo(-sparkLen, 0);
+        ctx.lineTo(sparkLen, 0);
+        ctx.moveTo(0, -sparkLen);
+        ctx.lineTo(0, sparkLen);
+        ctx.stroke();
+
+        // Shiny White Central Core
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.arc(0, 0, this.size * 0.7, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        // Glowing Round Star
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        // White Glistening Center
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.arc(0, 0, this.size * 0.45, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
       ctx.restore();
     }
   }
@@ -2838,21 +2869,21 @@
     }
   }
 
-  function initElements() {
+    function initElements() {
     stars = [];
     petals = [];
     feathers = [];
     shootingStars = [];
     angelWings = [];
 
-    // Capped lightweight star count for locked 60/120 FPS
-    const starCount = Math.min(42, Math.max(24, Math.floor((canvas.width * canvas.height) / 32000)));
+    // Generous constellation star density across all screen sizes
+    const starCount = Math.min(95, Math.max(55, Math.floor((canvas.width * canvas.height) / 14000)));
     for (let i = 0; i < starCount; i++) stars.push(new StarNode());
 
-    for (let i = 0; i < 12; i++) petals.push(new LilyPetal());
-    for (let i = 0; i < 6; i++) feathers.push(new WingFeather());
+    for (let i = 0; i < 14; i++) petals.push(new LilyPetal());
+    for (let i = 0; i < 8; i++) feathers.push(new WingFeather());
     for (let i = 0; i < 3; i++) angelWings.push(new BackgroundAngelWing());
-    for (let i = 0; i < 5; i++) shootingStars.push(new ShootingStar());
+    for (let i = 0; i < 6; i++) shootingStars.push(new ShootingStar());
   }
 
   // Frequent Celestial Shooting Stars
@@ -2863,7 +2894,7 @@
     }
   }, 700);
 
-    function renderEtherealCanvas() {
+      function renderEtherealCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     for (let i = 0; i < angelWings.length; i++) {
@@ -2872,22 +2903,18 @@
     }
 
     const starLen = stars.length;
-    for (let i = 0; i < starLen; i++) {
-      stars[i].update();
-      stars[i].draw();
-    }
 
-    // Batched star constellation lines (single stroke pass)
+    // 1. Draw Constellation Interconnecting Web Lines (Soft Glowing Pink Web)
     ctx.beginPath();
-    ctx.strokeStyle = 'rgba(240, 156, 179, 0.12)';
-    ctx.lineWidth = 0.6;
+    ctx.strokeStyle = 'rgba(244, 114, 182, 0.28)';
+    ctx.lineWidth = 0.75;
     for (let i = 0; i < starLen; i++) {
       const s1 = stars[i];
       for (let j = i + 1; j < starLen; j++) {
         const s2 = stars[j];
         const dx = s1.x - s2.x;
         const dy = s1.y - s2.y;
-        if (dx * dx + dy * dy < 7225) { // 85^2
+        if (dx * dx + dy * dy < 12100) { // 110px radius
           ctx.moveTo(s1.x, s1.y);
           ctx.lineTo(s2.x, s2.y);
         }
@@ -2895,21 +2922,27 @@
     }
     ctx.stroke();
 
-    // Batched mouse star interactive beams
+    // 2. Draw Interactive Mouse Constellation Beams (Vibrant Radiant Tether)
     if (mouse.x !== null && mouse.y !== null) {
       ctx.beginPath();
-      ctx.strokeStyle = 'rgba(255, 45, 135, 0.45)';
-      ctx.lineWidth = 1.0;
+      ctx.strokeStyle = 'rgba(255, 45, 135, 0.65)';
+      ctx.lineWidth = 1.1;
       for (let i = 0; i < starLen; i++) {
         const s1 = stars[i];
         const dx = s1.x - mouse.x;
         const dy = s1.y - mouse.y;
-        if (dx * dx + dy * dy < 16900) { // 130^2
+        if (dx * dx + dy * dy < 22500) { // 150px radius
           ctx.moveTo(s1.x, s1.y);
           ctx.lineTo(mouse.x, mouse.y);
         }
       }
       ctx.stroke();
+    }
+
+    // 3. Draw Shiny Pink Stars
+    for (let i = 0; i < starLen; i++) {
+      stars[i].update();
+      stars[i].draw();
     }
 
     for (let i = 0; i < shootingStars.length; i++) {
