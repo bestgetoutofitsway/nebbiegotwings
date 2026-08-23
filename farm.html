@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Her Little Farm — Somewhere in Paris</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Playfair+Display:ital,wght@0,700;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    height: 100dvh;
+    width: 100vw;
+    position: relative;
+    color: #4a2f3a;
+    background: linear-gradient(to bottom, #2b2144 0%, #5a3d6b 20%, #9a5a86 42%, #e08a7e 62%, #f6b97a 78%, #fbd48a 100%);
+    transition: background 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  body.midnight-theme {
+    background: linear-gradient(to bottom, #070714 0%, #100e26 22%, #19163d 45%, #251e4a 68%, #312147 85%, #3d2345 100%);
+    color: #ffd6e0;
+  }
+
+  .serif { font-family: 'Cormorant Garamond', serif; }
+  .playfair { font-family: 'Playfair Display', serif; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Sky Canvas for Silky Smooth Shooting Stars & Atmosphere */
+  #sky-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 4;
+  }
+
+  /* Stars in the upper sky */
+  .sky-star {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: #fff;
+    border-radius: 50%;
+    animation: twinkle 3s ease-in-out infinite;
+    transition: opacity 1s ease;
+  }
+  @keyframes twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+
+  
+    15% {
+      opacity: 1;
+    }
+    75% {
+      opacity: 0.9;
+    }
+    100% {
+      transform: translate(var(--dx, -240px), var(--dy, 130px)) rotate(var(--angle, -28deg)) scaleX(1.5);
+      opacity: 0;
+    }
+  }
+
+  /* String lights */
+  .light-string {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 110px;
+    z-index: 15;
+    pointer-events: none;
+  }
+  .bulb {
+    position: absolute;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff8d6 0%, #ffd76b 55%, #ffb84d 100%);
+    box-shadow: 0 0 10px 3px rgba(255, 210, 100, 0.8), 0 0 20px 6px rgba(255, 190, 90, 0.35);
+    animation: glow-bulb 2.4s ease-in-out infinite;
+    transition: box-shadow 1.5s ease;
+  }
+  body.midnight-theme .bulb {
+    box-shadow: 0 0 14px 5px rgba(255, 220, 120, 0.95), 0 0 28px 10px rgba(255, 190, 90, 0.6);
+  }
+  @keyframes glow-bulb { 0%, 100% { opacity: 0.6; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
+
+  /* ==================== ARCHITECTURAL MAJESTIC EIFFEL TOWER ==================== */
+  #eiffel-wrap {
+    position: absolute;
+    right: 1%;
+    bottom: 37%;
+    width: 175px;
+    aspect-ratio: 240 / 340;
+    z-index: 6;
+    cursor: pointer;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  #eiffel-wrap:hover {
+    transform: scale(1.04) translateY(-3px);
+  }
+  @media (min-width: 640px) {
+    #eiffel-wrap { width: 270px; bottom: 36%; right: 4%; }
+  }
+  #eiffel-glow {
+    position: absolute;
+    left: 50%; top: -22%;
+    width: 230%; height: 90%;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(255, 230, 160, 0.75) 0%, rgba(255, 180, 130, 0.3) 42%, transparent 74%);
+    filter: blur(10px);
+    animation: eiffelPulse 4.5s ease-in-out infinite;
+    transition: opacity 1.5s ease, background 1.5s ease;
+    pointer-events: none;
+  }
+  body.midnight-theme #eiffel-glow {
+    background: radial-gradient(circle, rgba(255, 240, 180, 0.92) 0%, rgba(255, 195, 130, 0.5) 46%, transparent 78%);
+  }
+  @keyframes eiffelPulse { 0%, 100% { opacity: 0.75; transform: translateX(-50%) scale(0.98); } 50% { opacity: 1; transform: translateX(-50%) scale(1.03); } }
+  
+  #eiffel-svg {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 14px rgba(255, 190, 110, 0.55)) drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
+  }
+  .beam {
+    mix-blend-mode: screen;
+    transform-origin: 120px 24px;
+    animation: beamSweepLeft 6s ease-in-out infinite alternate;
+  }
+  .beam-2 {
+    transform-origin: 120px 24px;
+    animation: beamSweepRight 6s ease-in-out infinite alternate;
+  }
+  @keyframes beamSweepLeft {
+    0% { opacity: 0.35; transform: rotate(-8deg); }
+    50% { opacity: 0.8; transform: rotate(5deg); }
+    100% { opacity: 0.4; transform: rotate(-12deg); }
+  }
+  @keyframes beamSweepRight {
+    0% { opacity: 0.35; transform: rotate(8deg); }
+    50% { opacity: 0.85; transform: rotate(-4deg); }
+    100% { opacity: 0.45; transform: rotate(14deg); }
+  }
+
+  /* Eiffel Sparkle Effect */
+  .eiffel-sparkle {
+    position: absolute;
+    pointer-events: none;
+    font-size: 15px;
+    z-index: 30;
+    animation: sparkleBurst 1.2s ease-out forwards;
+  }
+  @keyframes sparkleBurst {
+    0% { opacity: 1; transform: translate(0, 0) scale(0.3); }
+    50% { opacity: 1; transform: translate(var(--tx), var(--ty)) scale(1.4) rotate(180deg); }
+    100% { opacity: 0; transform: translate(calc(var(--tx) * 1.3), calc(var(--ty) * 1.3)) scale(0.2) rotate(360deg); }
+  }
+
+  /* Distant hills for depth */
+  #hills {
+    position: absolute;
+    left: 0; bottom: 36%;
+    width: 100%;
+    height: 14%;
+    z-index: 4;
+    pointer-events: none;
+    transition: filter 1.5s ease;
+  }
+  body.midnight-theme #hills {
+    filter: brightness(0.5) hue-rotate(-20deg);
+  }
+
+  /* Windmill */
+  #windmill {
+    position: absolute;
+    left: 3%;
+    bottom: 37%;
+    width: 55px;
+    z-index: 5;
+    opacity: 0.85;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  #windmill:hover { transform: scale(1.08); }
+  @media (min-width: 640px) { #windmill { width: 75px; bottom: 37%; left: 5%; } }
+  #windmill-blades {
+    transform-origin: 50px 34px;
+    animation: spinBlades 7s linear infinite;
+  }
+  #windmill-blades.fast-spin {
+    animation: spinBlades 0.8s linear infinite !important;
+  }
+  @keyframes spinBlades { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+  /* Barn & Chimney Smoke */
+  #barn {
+    position: absolute;
+    left: 12%;
+    bottom: 37%;
+    width: 95px;
+    z-index: 9;
+    filter: drop-shadow(0 6px 6px rgba(0,0,0,0.25));
+    transition: filter 1.5s ease;
+  }
+  @media (min-width: 640px) { #barn { width: 140px; bottom: 37%; left: 13%; } }
+
+  .smoke-puff {
+    position: absolute;
+    width: 10px; height: 10px;
+    background: radial-gradient(circle, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.1) 70%, transparent 100%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 8;
+    animation: riseSmoke 3.5s ease-out forwards;
+  }
+  @keyframes riseSmoke {
+    0% { opacity: 0.7; transform: translate(0, 0) scale(0.6); }
+    50% { opacity: 0.4; transform: translate(-15px, -30px) scale(1.6); }
+    100% { opacity: 0; transform: translate(-30px, -65px) scale(2.8); }
+  }
+
+  /* Hay bales */
+  .hay-bale {
+    position: absolute;
+    z-index: 13;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #e8c169 0%, #d1a04a 55%, #a9782f 100%);
+    box-shadow: inset -3px -3px 5px rgba(0,0,0,0.25), 0 3px 4px rgba(0,0,0,0.25);
+  }
+  .hay-bale::after {
+    content: "";
+    position: absolute;
+    inset: 15%;
+    border: 1.5px dashed rgba(90, 60, 20, 0.5);
+    border-radius: 50%;
+  }
+
+  /* Trees */
+  .tree {
+    position: absolute;
+    z-index: 8;
+    pointer-events: none;
+  }
+
+  /* Grass tufts & flowers */
+  .grass-tuft {
+    position: absolute;
+    z-index: 11;
+    pointer-events: none;
+  }
+  .flower-dot {
+    position: absolute;
+    z-index: 11;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  /* ==================== GROUND / PASTURE FULL BLEED ==================== */
+  #pasture {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 38%;
+    background: linear-gradient(to bottom, #6b8f5a 0%, #557048 55%, #3f5636 100%);
+    z-index: 10;
+    border-top: 4px solid #7fa568;
+    transition: filter 1.5s ease;
+  }
+  body.midnight-theme #pasture {
+    filter: brightness(0.65) saturate(0.85);
+  }
+  #pasture::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 14px 14px;
+  }
+
+  /* Pond & Interactive Ripples */
+  #pond {
+    position: absolute;
+    left: 4%;
+    bottom: 6%;
+    width: 44%;
+    height: 18%;
+    max-width: 320px;
+    z-index: 12;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at 35% 30%, #a9d7d8 0%, #6fb3bd 35%, #3f7d94 70%, #2c5f76 100%);
+    box-shadow: inset 0 6px 14px rgba(0,0,0,0.25), 0 0 22px rgba(120, 200, 210, 0.35);
+    overflow: hidden;
+    cursor: pointer;
+  }
+  @media (min-width: 640px) {
+    #pond { left: 8%; width: 34%; height: 16%; }
+  }
+  #pond::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(100deg, rgba(255,255,255,0.12) 0px, rgba(255,255,255,0.12) 2px, transparent 2px, transparent 14px);
+    animation: pondShimmer 5s linear infinite;
+    opacity: 0.5;
+  }
+  @keyframes pondShimmer { from { background-position: 0 0; } to { background-position: 60px 0; } }
+
+  .pond-ripple {
+    position: absolute;
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    animation: rippleExpand 1.4s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+  }
+  @keyframes rippleExpand {
+    0% { width: 0; height: 0; opacity: 0.9; }
+    100% { width: 140px; height: 70px; opacity: 0; }
+  }
+
+  /* Fence */
+  .fence-post {
+    position: absolute;
+    bottom: 38%;
+    width: 6px;
+    height: 32px;
+    background: #8a6446;
+    border-radius: 2px;
+    z-index: 11;
+    box-shadow: inset -2px 0 0 rgba(0,0,0,0.15);
+  }
+  .fence-rail {
+    position: absolute;
+    bottom: calc(38% + 18px);
+    height: 5px;
+    background: #8a6446;
+    z-index: 11;
+    border-radius: 2px;
+  }
+
+  /* Animal sprite */
+  .animal {
+    position: absolute;
+    font-size: 26px;
+    cursor: pointer;
+    z-index: 20;
+    user-select: none;
+    filter: drop-shadow(0 4px 4px rgba(0,0,0,0.25));
+    transition: transform 0.15s ease;
+    touch-action: manipulation;
+  }
+  @media (min-width: 640px) {
+    .animal { font-size: 30px; }
+  }
+  .animal:hover { transform: scale(1.18); }
+  .animal:active { transform: scale(0.92); }
+
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+  .bobbing { animation: bob 2.6s ease-in-out infinite; }
+
+  @keyframes happyBounce {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.35) rotate(-10deg); }
+    60% { transform: scale(1.35) rotate(10deg); }
+    100% { transform: scale(1) rotate(0deg); }
+  }
+  .happy { animation: happyBounce 0.5s ease; }
+
+  /* Speech / Thought Bubble */
+  .speech-bubble {
+    position: absolute;
+    pointer-events: none;
+    z-index: 35;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 230, 240, 0.9);
+    color: #4a2f3a;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.18), 0 0 0 1px rgba(255,255,255,0.8);
+    white-space: nowrap;
+    animation: bubblePop 2.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    transform: translate(-50%, -100%);
+  }
+  .speech-bubble::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px 5px 0;
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.95) transparent transparent;
+  }
+  @keyframes bubblePop {
+    0% { opacity: 0; transform: translate(-50%, -70%) scale(0.6); }
+    15% { opacity: 1; transform: translate(-50%, -115%) scale(1.05); }
+    30% { transform: translate(-50%, -110%) scale(1); }
+    80% { opacity: 1; transform: translate(-50%, -125%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -145%) scale(0.85); }
+  }
+
+  .heart-pop {
+    position: absolute;
+    pointer-events: none;
+    font-size: 16px;
+    animation: floatHeart 1.1s ease-out forwards;
+    z-index: 30;
+  }
+  @keyframes floatHeart {
+    0% { opacity: 1; transform: translateY(0) scale(0.6); }
+    100% { opacity: 0; transform: translateY(-42px) scale(1.2); }
+  }
+
+  .seed {
+    position: absolute;
+    font-size: 14px;
+    pointer-events: none;
+    z-index: 18;
+    animation: seedFall 0.6s ease-out forwards;
+  }
+  @keyframes seedFall {
+    0% { opacity: 1; transform: translateY(-25px) scale(0.6); }
+    100% { opacity: 0.95; transform: translateY(10px) scale(1); }
+  }
+
+  /* Fireflies */
+  .firefly {
+    position: absolute;
+    width: 4px; height: 4px;
+    background: #fff888;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 14;
+    box-shadow: 0 0 8px 3px rgba(255, 240, 100, 0.9);
+    animation: fireflyGlow 2.5s ease-in-out infinite alternate;
+    transition: transform 0.5s ease-out;
+  }
+  @keyframes fireflyGlow {
+    0% { opacity: 0.2; transform: scale(0.7); }
+    100% { opacity: 1; transform: scale(1.3); }
+  }
+
+  /* Glass Panels */
+  .glass {
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid rgba(255,255,255,0.45);
+  }
+  .glass-dark {
+    background: rgba(25, 16, 32, 0.72);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border: 1px solid rgba(255,255,255,0.28);
+  }
+
+  /* Directional Glow */
+  .glass, .treat-btn, button, a {
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, border-color 0.2s ease !important;
+  }
+  .glass:hover, .treat-btn:hover {
+    border-color: #ffd27a !important;
+    box-shadow: 
+      var(--glow-dx, 0px) var(--glow-dy, 0px) 20px rgba(255, 210, 100, 0.6), 
+      0 8px 24px rgba(0,0,0,0.18) !important;
+  }
+
+  #intro-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(20, 12, 28, 0.82);
+    backdrop-filter: blur(8px);
+    transition: opacity 0.6s ease;
+    padding: 16px;
+  }
+
+  .cloud-drift {
+    position: absolute;
+    top: 10%;
+    opacity: 0.5;
+    z-index: 5;
+    animation: driftAcross linear infinite;
+  }
+  @keyframes driftAcross {
+    from { transform: translateX(-15vw); }
+    to { transform: translateX(115vw); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bobbing, .bulb, .sky-star, .cloud-drift, .firefly, .shooting-star { animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== RESPONSIVE HEADER BAR ==================== -->
+<header class="fixed top-2.5 inset-x-0 z-50 px-3 sm:px-5 pointer-events-none">
+  <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+    
+    <!-- Top Row on Mobile: Back Button & Theme Button -->
+    <div class="w-full sm:w-auto flex items-center justify-between sm:justify-start gap-2 pointer-events-auto">
+      <a href="index.html" class="glass rounded-full px-3.5 py-1.5 text-white text-xs font-medium flex items-center gap-1.5 hover:bg-white/30 shadow-md active:scale-95 transition-all">
+        <span>← Sanctuary</span>
+        <span class="text-amber-200">໒꒱</span>
+      </a>
+
+      <!-- Theme Button on Mobile -->
+      <button onclick="toggleSkyTheme()" class="sm:hidden glass rounded-full px-3.5 py-1.5 text-white text-xs font-medium flex items-center gap-1 hover:bg-white/30 shadow-md active:scale-95 transition-all">
+        <span id="theme-icon-m">🌙</span>
+        <span id="theme-label-m">Midnight</span>
+      </button>
+    </div>
+
+    <!-- Center HUD Counter -->
+    <div class="pointer-events-auto">
+      <div class="glass rounded-full px-4 py-1 sm:py-1.5 text-white text-[11px] sm:text-xs tracking-wide shadow-md flex items-center gap-1.5">
+        <span id="fed-count" class="font-bold text-amber-200">0</span>
+        <span>hellos said today</span>
+        <span>🌾</span>
+      </div>
+    </div>
+
+    <!-- Desktop Theme Toggle -->
+    <div class="hidden sm:block pointer-events-auto">
+      <button onclick="toggleSkyTheme()" class="glass rounded-full px-4 py-1.5 text-white text-xs font-medium flex items-center gap-1.5 hover:bg-white/30 shadow-md active:scale-95 transition-all">
+        <span id="theme-icon">🌙</span>
+        <span id="theme-label">Starry Midnight</span>
+      </button>
+    </div>
+
+  </div>
+</header>
+
+<!-- INTRO MODAL -->
+<div id="intro-overlay">
+  <div class="glass-dark rounded-[36px] p-7 sm:p-8 max-w-sm w-full text-center shadow-2xl border border-white/30 relative overflow-hidden">
+    <div class="w-14 h-14 mx-auto mb-3 rounded-2xl glass flex items-center justify-center text-3xl shadow-sm">
+      <span>🐐</span>
+    </div>
+    <h1 class="serif text-2xl sm:text-3xl text-white mb-2 font-normal tracking-wide">Somewhere in France, someday</h1>
+    <p class="text-white/85 text-xs sm:text-sm font-light leading-relaxed mb-6">
+      5 cats. 3 baby goats. 5 ducks. A raccoon. A horse. 3 golden retrievers. 10 bunnies. And the yellow lights at night.
+      This is a tiny piece of it, just to hold onto for now.
+    </p>
+    <button onclick="dismissIntro()" class="w-full py-3 rounded-2xl bg-gradient-to-r from-amber-200 via-amber-300 to-amber-400 text-[#3b232e] text-xs font-bold tracking-wider uppercase shadow-lg hover:brightness-105 active:scale-95 transition-all">
+      Go say hi ✨
+    </button>
+  </div>
+</div>
+
+<!-- SCENE -->
+<div id="scene" class="relative w-full h-full overflow-hidden">
+  <canvas id="sky-canvas"></canvas>
+  <div id="stars-layer"></div>
+  <div id="clouds-layer"></div>
+  <div id="light-string" class="light-string"></div>
+  <div id="fireflies-layer"></div>
+
+  <svg id="hills" viewBox="0 0 800 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 100 L0 55 Q100 20 220 50 T430 40 Q560 15 650 45 T800 35 L800 100 Z" fill="#5c6a8f" opacity="0.55"/>
+    <path d="M0 100 L0 70 Q140 45 260 68 T520 60 Q650 40 800 65 L800 100 Z" fill="#7a6f96" opacity="0.5"/>
+  </svg>
+
+  <!-- WINDMILL -->
+  <svg id="windmill" onclick="spinWindmillFast()" title="Tap to spin faster!" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+    <rect x="46" y="34" width="8" height="100" fill="#8a6446"/>
+    <polygon points="30,134 70,134 60,140 40,140" fill="#6b4c34"/>
+    <g id="windmill-blades">
+      <rect x="47" y="4" width="6" height="60" rx="3" fill="#f4ede0" transform="rotate(0 50 34)"/>
+      <rect x="47" y="4" width="6" height="60" rx="3" fill="#f4ede0" transform="rotate(90 50 34)"/>
+      <rect x="47" y="4" width="6" height="60" rx="3" fill="#f4ede0" transform="rotate(180 50 34)"/>
+      <rect x="47" y="4" width="6" height="60" rx="3" fill="#f4ede0" transform="rotate(270 50 34)"/>
+      <circle cx="50" cy="34" r="5" fill="#8a6446"/>
+    </g>
+  </svg>
+
+  <!-- BARN WITH SMOKE PUFFS -->
+  <div id="barn-wrapper">
+    <svg id="barn" viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+      <rect x="120" y="20" width="14" height="25" fill="#5c2b26"/>
+      <polygon points="10,55 80,10 150,55" fill="#7a3b34"/>
+      <rect x="18" y="55" width="124" height="55" fill="#a8493d"/>
+      <rect x="18" y="55" width="124" height="55" fill="url(#barnStripes)" opacity="0.15"/>
+      <polygon points="70,110 70,72 90,72 90,110" fill="#4a2a24"/>
+      <rect x="30" y="65" width="20" height="20" fill="#e8d9b0" opacity="0.9"/>
+      <rect x="110" y="65" width="20" height="20" fill="#e8d9b0" opacity="0.9"/>
+      <rect x="8" y="53" width="144" height="6" fill="#5c2b26"/>
+      <defs>
+        <pattern id="barnStripes" width="10" height="10" patternUnits="userSpaceOnUse">
+          <rect width="10" height="5" fill="#000"/>
+        </pattern>
+      </defs>
+    </svg>
+  </div>
+
+  <!-- EIFFEL TOWER -->
+  <div id="eiffel-wrap" onclick="triggerEiffelSparkles()" title="Click for Paris Sparkle Show ✨">
+    <div id="eiffel-glow"></div>
+    <svg id="eiffel-svg" viewBox="0 0 240 340" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="eiffelGold" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fff8d6"/>
+          <stop offset="12%" stop-color="#fed776"/>
+          <stop offset="35%" stop-color="#f5a64b"/>
+          <stop offset="65%" stop-color="#d96c4a"/>
+          <stop offset="85%" stop-color="#a84351"/>
+          <stop offset="100%" stop-color="#5c2635"/>
+        </linearGradient>
+        <linearGradient id="steelTrim" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fce29d"/>
+          <stop offset="50%" stop-color="#d47942"/>
+          <stop offset="100%" stop-color="#4a1f2b"/>
+        </linearGradient>
+        <linearGradient id="searchBeam" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+          <stop offset="30%" stop-color="#ffebb0" stop-opacity="0.6"/>
+          <stop offset="70%" stop-color="#ffb86c" stop-opacity="0.2"/>
+          <stop offset="100%" stop-color="#ffd194" stop-opacity="0"/>
+        </linearGradient>
+        <radialGradient id="topHalo" cx="50%" cy="12%" r="45%">
+          <stop offset="0%" stop-color="#fff5cc" stop-opacity="0.85"/>
+          <stop offset="50%" stop-color="#ffcf87" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#ffcf87" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <ellipse cx="120" cy="40" rx="95" ry="40" fill="url(#topHalo)" />
+
+      <!-- Dual Sweeping Searchlights -->
+      <g class="beam-rotator">
+        <polygon points="120,24 15,160 55,175" fill="url(#searchBeam)" class="beam"/>
+        <polygon points="120,24 225,160 185,175" fill="url(#searchBeam)" class="beam beam-2"/>
+      </g>
+
+      <!-- Spire -->
+      <line x1="120" y1="6" x2="120" y2="24" stroke="#fff8d6" stroke-width="2.2" stroke-linecap="round"/>
+      <circle cx="120" cy="14" r="3" fill="#ffffff" filter="drop-shadow(0 0 6px #fff)"/>
+      <path d="M116,24 Q120,18 124,24 L126,35 L114,35 Z" fill="url(#eiffelGold)" stroke="#6b2b36" stroke-width="0.8"/>
+      <rect x="111" y="35" width="18" height="4" rx="1.5" fill="#ffe699" stroke="#6b2b36" stroke-width="0.8"/>
+      
+      <!-- Section 3 -->
+      <polygon points="113,39 127,39 133,120 107,120" fill="url(#eiffelGold)" stroke="#6b2b36" stroke-width="1"/>
+      <g stroke="#80333f" stroke-width="0.75" opacity="0.8">
+        <line x1="113" y1="48" x2="127" y2="48"/>
+        <line x1="112" y1="60" x2="128" y2="60"/>
+        <line x1="110" y1="74" x2="130" y2="74"/>
+        <line x1="109" y1="90" x2="131" y2="90"/>
+        <line x1="108" y1="106" x2="132" y2="106"/>
+        <line x1="113" y1="39" x2="127" y2="60"/>
+        <line x1="127" y1="39" x2="113" y2="60"/>
+        <line x1="112" y1="60" x2="130" y2="90"/>
+        <line x1="128" y1="60" x2="110" y2="90"/>
+        <line x1="109" y1="90" x2="133" y2="120"/>
+        <line x1="131" y1="90" x2="107" y2="120"/>
+        <line x1="120" y1="39" x2="120" y2="120" stroke="#fde398" stroke-width="0.9"/>
+      </g>
+
+      <!-- Platform 2 -->
+      <polygon points="104,124 136,124 139,130 101,130" fill="#a84351" stroke="#5c2635" stroke-width="0.9"/>
+      <rect x="99" y="120" width="42" height="5" rx="1.5" fill="#fde59b" stroke="#6b2b36" stroke-width="1"/>
+      <line x1="102" y1="122" x2="138" y2="122" stroke="#6b2b36" stroke-width="0.8" stroke-dasharray="2,2"/>
+
+      <!-- Section 2 -->
+      <polygon points="105,130 114,130 102,190 88,190" fill="url(#eiffelGold)" stroke="#6b2b36" stroke-width="1.1"/>
+      <polygon points="135,130 126,130 138,190 152,190" fill="url(#eiffelGold)" stroke="#6b2b36" stroke-width="1.1"/>
+      <g stroke="#80333f" stroke-width="0.8" opacity="0.85">
+        <line x1="103" y1="145" x2="137" y2="145"/>
+        <line x1="99" y1="162" x2="141" y2="162"/>
+        <line x1="94" y1="178" x2="146" y2="178"/>
+        <line x1="105" y1="130" x2="99" y2="162"/>
+        <line x1="114" y1="130" x2="103" y2="162"/>
+        <line x1="103" y1="162" x2="88" y2="190"/>
+        <line x1="99" y1="162" x2="102" y2="190"/>
+        <line x1="135" y1="130" x2="141" y2="162"/>
+        <line x1="126" y1="130" x2="137" y2="162"/>
+        <line x1="137" y1="162" x2="152" y2="190"/>
+        <line x1="141" y1="162" x2="138" y2="190"/>
+      </g>
+      <path d="M114,130 L126,130 L135,178 Q120,166 105,178 Z" fill="#2b2144" opacity="0.25"/>
+
+      <!-- Platform 1 -->
+      <polygon points="82,190 158,190 164,199 76,199" fill="#8c3746" stroke="#4a1f2b" stroke-width="1.2"/>
+      <rect x="73" y="188" width="94" height="6" rx="2" fill="#ffeaa5" stroke="#6b2b36" stroke-width="1.1"/>
+      <line x1="76" y1="191" x2="164" y2="191" stroke="#6b2b36" stroke-width="1" stroke-dasharray="3,2"/>
+
+      <!-- Base Legs & Center Arch -->
+      <polygon points="85,199 104,199 82,320 44,320" fill="url(#eiffelGold)" stroke="#6b2b36" stroke-width="1.3"/>
+      <polygon points="155,199 136,199 158,320 196,320" fill="url(#eiffelGold)" stroke="#6b2b36" stroke-width="1.3"/>
+      <path d="M85,320 Q120,205 155,320" fill="none" stroke="url(#steelTrim)" stroke-width="4.5" stroke-linecap="round"/>
+      <path d="M85,320 Q120,205 155,320" fill="none" stroke="#ffeaa5" stroke-width="1.5"/>
+      <path d="M92,320 Q120,230 148,320" fill="none" stroke="#6b2b36" stroke-width="2"/>
+      <path d="M92,320 Q120,230 148,320" fill="none" stroke="#fdd878" stroke-width="0.8" stroke-dasharray="3,3"/>
+
+      <!-- Base Trusses -->
+      <g stroke="#6b2b36" stroke-width="1.1" opacity="0.85">
+        <line x1="84" y1="225" x2="100" y2="225"/>
+        <line x1="80" y1="255" x2="94" y2="255"/>
+        <line x1="72" y1="288" x2="88" y2="288"/>
+        <line x1="85" y1="199" x2="94" y2="255"/>
+        <line x1="104" y1="199" x2="80" y2="255"/>
+        <line x1="80" y1="255" x2="88" y2="288"/>
+        <line x1="94" y1="255" x2="72" y2="288"/>
+        <line x1="72" y1="288" x2="82" y2="320"/>
+        <line x1="88" y1="288" x2="44" y2="320"/>
+
+        <line x1="156" y1="225" x2="140" y2="225"/>
+        <line x1="160" y1="255" x2="146" y2="255"/>
+        <line x1="168" y1="288" x2="152" y2="288"/>
+        <line x1="155" y1="199" x2="146" y2="255"/>
+        <line x1="136" y1="199" x2="160" y2="255"/>
+        <line x1="160" y1="255" x2="152" y2="288"/>
+        <line x1="146" y1="255" x2="168" y2="288"/>
+        <line x1="168" y1="288" x2="158" y2="320"/>
+        <line x1="152" y1="288" x2="196" y2="320"/>
+      </g>
+
+      <polygon points="40,320 86,320 88,328 38,328" fill="#4a242f" stroke="#2e141d" stroke-width="1.2"/>
+      <polygon points="154,320 200,320 202,328 152,328" fill="#4a242f" stroke="#2e141d" stroke-width="1.2"/>
+
+      <!-- Twinkling Lights -->
+      <g fill="#fffbe6">
+        <circle cx="120" cy="14" r="3.5" fill="#ffffff"><animate attributeName="opacity" values="0.4;1;0.4" dur="1.8s" repeatCount="indefinite"/></circle>
+        <circle cx="114" cy="37" r="2.2"><animate attributeName="opacity" values="1;0.3;1" dur="2.1s" repeatCount="indefinite"/></circle>
+        <circle cx="126" cy="37" r="2.2"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.4s" repeatCount="indefinite"/></circle>
+        <circle cx="120" cy="74" r="2"><animate attributeName="opacity" values="0.5;1;0.5" dur="1.7s" repeatCount="indefinite"/></circle>
+        <circle cx="110" cy="106" r="2"><animate attributeName="opacity" values="1;0.4;1" dur="2.5s" repeatCount="indefinite"/></circle>
+        <circle cx="130" cy="106" r="2"><animate attributeName="opacity" values="0.4;1;0.4" dur="2.2s" repeatCount="indefinite"/></circle>
+        <circle cx="102" cy="122" r="2.5"><animate attributeName="opacity" values="1;0.2;1" dur="1.9s" repeatCount="indefinite"/></circle>
+        <circle cx="138" cy="122" r="2.5"><animate attributeName="opacity" values="1;0.3;1" dur="2.7s" repeatCount="indefinite"/></circle>
+        <circle cx="78" cy="191" r="2.6"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.1s" repeatCount="indefinite"/></circle>
+        <circle cx="120" cy="191" r="3" fill="#ffffff"><animate attributeName="opacity" values="0.4;1;0.4" dur="2.8s" repeatCount="indefinite"/></circle>
+        <circle cx="162" cy="191" r="2.6"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.5s" repeatCount="indefinite"/></circle>
+        <circle cx="120" cy="245" r="2.8"><animate attributeName="opacity" values="1;0.2;1" dur="2.0s" repeatCount="indefinite"/></circle>
+        <circle cx="64" cy="318" r="2.4"><animate attributeName="opacity" values="0.2;1;0.2" dur="2.4s" repeatCount="indefinite"/></circle>
+        <circle cx="176" cy="318" r="2.4"><animate attributeName="opacity" values="1;0.3;1" dur="1.9s" repeatCount="indefinite"/></circle>
+      </g>
+    </svg>
+  </div>
+
+  <div id="pasture"></div>
+  <div id="pond" onclick="createPondRipple(event)" title="Click pond to make ripples 🦆"></div>
+  <div id="fence-layer"></div>
+
+      <!-- ==================== RUSTIC ENAMELED FIELD SIGN (WHITE & PINK "ZARA'S FARM") ==================== -->
+  <div id="farm-sign-wrap" onclick="popSignSparkles(event)" title="Welcome to Zara's Farm! 🌾" class="absolute cursor-pointer transition-transform hover:scale-105 select-none" style="left: 50%; bottom: 35%; transform: translateX(-50%); z-index: 28;">
+    <svg width="250" height="115" viewBox="0 0 250 115" xmlns="http://www.w3.org/2000/svg" class="filter drop-shadow-xl">
+      <defs>
+        <!-- Timber Post Gradient -->
+        <linearGradient id="postWood" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#422515"/>
+          <stop offset="40%" stop-color="#704427"/>
+          <stop offset="100%" stop-color="#361c0e"/>
+        </linearGradient>
+
+        <!-- White Pearl Enamel Board Gradient -->
+        <linearGradient id="whiteBoard" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#FFFFFF"/>
+          <stop offset="60%" stop-color="#FFF5F8"/>
+          <stop offset="100%" stop-color="#FFEBF2"/>
+        </linearGradient>
+
+        <!-- Rich Romantic Pink Text Gradient -->
+        <linearGradient id="pinkTextGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#be185d"/>
+          <stop offset="45%" stop-color="#e11d48"/>
+          <stop offset="100%" stop-color="#9f1239"/>
+        </linearGradient>
+
+        <radialGradient id="lanternGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fff8d6" stop-opacity="0.95"/>
+          <stop offset="40%" stop-color="#ffd56b" stop-opacity="0.65"/>
+          <stop offset="100%" stop-color="#ffd56b" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <!-- Left Timber Post (Rooted into ground) -->
+      <rect x="22" y="6" width="13" height="104" rx="2.5" fill="url(#postWood)" stroke="#2b1509" stroke-width="1.3"/>
+      <polygon points="20,6 28.5,-2 37,6" fill="#59321b" stroke="#2b1509" stroke-width="1.1"/>
+      
+      <!-- Right Timber Post (Rooted into ground) -->
+      <rect x="214" y="6" width="13" height="104" rx="2.5" fill="url(#postWood)" stroke="#2b1509" stroke-width="1.3"/>
+      <polygon points="212,6 220.5,-2 229,6" fill="#59321b" stroke="#2b1509" stroke-width="1.1"/>
+
+      <!-- Cross Timber Support Beam at top -->
+      <rect x="18" y="8" width="212" height="8.5" rx="2" fill="url(#postWood)" stroke="#2b1509" stroke-width="1.1"/>
+
+      <!-- Iron Hanging Chains -->
+      <line x1="48" y1="14" x2="48" y2="28" stroke="#1f1109" stroke-width="2.5" stroke-dasharray="3,2"/>
+      <line x1="202" y1="14" x2="202" y2="28" stroke="#1f1109" stroke-width="2.5" stroke-dasharray="3,2"/>
+      <circle cx="48" cy="14" r="3.2" fill="none" stroke="#1f1109" stroke-width="1.8"/>
+      <circle cx="202" cy="14" r="3.2" fill="none" stroke="#1f1109" stroke-width="1.8"/>
+
+      <!-- Main Sign Board (White Pearl Enamel with Gold/Pink Rim) -->
+      <!-- Soft Ambient Glow & Shadow -->
+      <rect x="31" y="26" width="188" height="50" rx="12" fill="#000000" opacity="0.32" filter="blur(3px)"/>
+      
+      <!-- White Enamel Board Plate -->
+      <rect x="30" y="24" width="190" height="48" rx="11" fill="url(#whiteBoard)" stroke="#f472b6" stroke-width="2.4"/>
+      
+      <!-- Inner Romantic Rose-Gold Inset Border -->
+      <rect x="34" y="28" width="182" height="40" rx="8" fill="none" stroke="#fda4af" stroke-width="1.2" stroke-dasharray="4,2"/>
+
+      <!-- Corner Rose Gold Rivets -->
+      <circle cx="40" cy="34" r="2.2" fill="#f43f5e" stroke="#ffe4e6" stroke-width="0.8"/>
+      <circle cx="210" cy="34" r="2.2" fill="#f43f5e" stroke="#ffe4e6" stroke-width="0.8"/>
+      <circle cx="40" cy="62" r="2.2" fill="#f43f5e" stroke="#ffe4e6" stroke-width="0.8"/>
+      <circle cx="210" cy="62" r="2.2" fill="#f43f5e" stroke="#ffe4e6" stroke-width="0.8"/>
+
+      <!-- Hanging Lantern on Left Post -->
+      <g transform="translate(10, 14)">
+        <circle cx="5" cy="16" r="16" fill="url(#lanternGlow)"/>
+        <path d="M11,0 L0,5 L0,10" fill="none" stroke="#221108" stroke-width="2"/>
+        <rect x="-1" y="8" width="12" height="14" rx="2" fill="#fff3c4" stroke="#33180a" stroke-width="1.2"/>
+        <polygon points="5,4 -3,9 13,9" fill="#221108"/>
+        <rect x="1" y="22" width="8" height="2.5" fill="#221108"/>
+        <circle cx="5" cy="15" r="2.8" fill="#f59e0b"/>
+      </g>
+
+      <!-- Trailing Ivy on Right Post -->
+      <path d="M216,104 Q221,72 218,40" fill="none" stroke="#385e32" stroke-width="1.8"/>
+      <circle cx="215" cy="88" r="3.5" fill="#4d7c45"/>
+      <circle cx="222" cy="70" r="3.5" fill="#5f9755"/>
+      <circle cx="215" cy="52" r="3" fill="#75b56a"/>
+      <circle cx="221" cy="36" r="2.5" fill="#8ed182"/>
+
+      <!-- Base Grass Tufts around Posts -->
+      <path d="M16,108 Q22,98 26,108 Q30,95 34,108" fill="none" stroke="#557c4a" stroke-width="2" stroke-linecap="round"/>
+      <path d="M208,108 Q214,98 218,108 Q224,95 230,108" fill="none" stroke="#557c4a" stroke-width="2" stroke-linecap="round"/>
+
+      <!-- Bold Pink Text: Zara's Farm -->
+      <text x="125" y="55" 
+            text-anchor="middle" 
+            font-family="'Playfair Display', 'Cormorant Garamond', serif" 
+            font-size="22" 
+            font-weight="bold" 
+            letter-spacing="0.8" 
+            fill="url(#pinkTextGrad)" 
+            filter="drop-shadow(0 1px 2px rgba(244, 63, 94, 0.35))">
+        ✧ Zara's Farm ✧
+      </text>
+    </svg>
+  </div>
+
+  <div id="animals-layer"></div>
+</div>
+
+<!-- ==================== BOTTOM FLOATING TREAT BAR ==================== -->
+<div class="fixed bottom-3 sm:bottom-5 inset-x-0 z-40 flex justify-center px-2 pointer-events-none">
+  <div class="glass rounded-full p-1 sm:p-1.5 shadow-2xl border border-white/50 flex items-center gap-1 sm:gap-2 max-w-[96vw] overflow-x-auto pointer-events-auto">
+    <button onclick="scatterSpecificFeed('all')" class="treat-btn px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full bg-white/25 hover:bg-white/40 text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm active:scale-95 transition-all shrink-0">
+      <span>🌾</span>
+      <span>Feed All</span>
+    </button>
+    <button onclick="scatterSpecificFeed('bunnies')" class="treat-btn px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-full hover:bg-white/30 text-white text-xs font-medium flex items-center gap-1 active:scale-95 transition-all shrink-0" title="Feed Bunnies">
+      <span>🥕</span>
+      <span>Bunnies</span>
+    </button>
+    <button onclick="scatterSpecificFeed('cats')" class="treat-btn px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-full hover:bg-white/30 text-white text-xs font-medium flex items-center gap-1 active:scale-95 transition-all shrink-0" title="Feed Cats">
+      <span>🐟</span>
+      <span>Cats</span>
+    </button>
+    <button onclick="scatterSpecificFeed('ducks')" class="treat-btn px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-full hover:bg-white/30 text-white text-xs font-medium flex items-center gap-1 active:scale-95 transition-all shrink-0" title="Feed Ducks">
+      <span>🍞</span>
+      <span>Ducks</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  // ==================== UNIVERSAL DIRECTIONAL HOVER GLOW ====================
+  window.addEventListener('pointermove', (e) => {
+    const interactives = document.querySelectorAll('.glass, .treat-btn, button, a');
+    for (let i = 0; i < interactives.length; i++) {
+      const rect = interactives[i].getBoundingClientRect();
+      const elemCenterX = rect.left + rect.width / 2;
+      const elemCenterY = rect.top + rect.height / 2;
+      const dx = Math.max(-14, Math.min(14, (e.clientX - elemCenterX) * 0.08));
+      const dy = Math.max(-14, Math.min(14, (e.clientY - elemCenterY) * 0.08));
+      interactives[i].style.setProperty('--glow-dx', `${dx}px`);
+      interactives[i].style.setProperty('--glow-dy', `${dy}px`);
+    }
+  }, { passive: true });
+
+  // ==================== FARM DRESSING (Trees, Hay, Grass, Flowers) ====================
+  const scene = document.getElementById('scene');
+
+  // Trees along horizon
+  const treeSpots = [
+    { left: 1, size: 42 }, { left: 6, size: 32 }, { left: 45, size: 28 },
+    { left: 60, size: 34 }, { left: 92, size: 38 }, { left: 97, size: 26 }
+  ];
+  treeSpots.forEach(t => {
+    const tree = document.createElement('div');
+    tree.className = 'tree';
+    tree.style.left = t.left + '%';
+    tree.style.bottom = '37%';
+    tree.style.width = t.size + 'px';
+    tree.style.height = (t.size * 1.3) + 'px';
+    tree.innerHTML = `
+      <svg viewBox="0 0 40 52" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="17" y="34" width="6" height="16" fill="#5c4630"/>
+        <ellipse cx="20" cy="22" rx="18" ry="20" fill="#3f5f3c"/>
+        <ellipse cx="12" cy="18" rx="11" ry="12" fill="#4c7048" opacity="0.85"/>
+        <ellipse cx="27" cy="16" rx="10" ry="11" fill="#568055" opacity="0.85"/>
+      </svg>`;
+    scene.appendChild(tree);
+  });
+
+  // Hay bales near barn
+  const haySpots = [
+    { left: 23, bottom: 38, size: 20 },
+    { left: 26, bottom: 38.5, size: 16 },
+    { left: 21, bottom: 40, size: 16 }
+  ];
+  haySpots.forEach(h => {
+    const bale = document.createElement('div');
+    bale.className = 'hay-bale';
+    bale.style.left = h.left + '%';
+    bale.style.bottom = h.bottom + '%';
+    bale.style.width = h.size + 'px';
+    bale.style.height = h.size + 'px';
+    scene.appendChild(bale);
+  });
+
+  // Grass tufts
+  for (let i = 0; i < 28; i++) {
+    const tuft = document.createElement('div');
+    tuft.className = 'grass-tuft';
+    const left = Math.random() * 98 + 1;
+    const bottom = 1 + Math.random() * 34;
+    tuft.style.left = left + '%';
+    tuft.style.bottom = bottom + '%';
+    const w = 10 + Math.random() * 8;
+    tuft.innerHTML = `<svg viewBox="0 0 20 16" width="${w}" height="${w * 0.8}" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 16 Q4 6 1 0" stroke="#3f5c34" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <path d="M10 16 Q10 4 10 -1" stroke="#4c6e3f" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <path d="M18 16 Q16 6 19 0" stroke="#3f5c34" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    </svg>`;
+    scene.appendChild(tuft);
+  }
+
+  // Wildflowers
+  const flowerColors = ['#f5e08a', '#f3a6c4', '#ffffff', '#f0c169'];
+  for (let i = 0; i < 24; i++) {
+    const f = document.createElement('div');
+    f.className = 'flower-dot';
+    f.style.left = (Math.random() * 96 + 2) + '%';
+    f.style.bottom = (1 + Math.random() * 32) + '%';
+    const size = 4 + Math.random() * 3;
+    f.style.width = size + 'px';
+    f.style.height = size + 'px';
+    f.style.background = flowerColors[Math.floor(Math.random() * flowerColors.length)];
+    f.style.boxShadow = '0 0 2px rgba(0,0,0,0.2)';
+    scene.appendChild(f);
+  }
+
+  // ==================== BARN CHIMNEY SMOKE ENGINE ====================
+  setInterval(() => {
+    const barnEl = document.getElementById('barn');
+    if (!barnEl) return;
+    const rect = barnEl.getBoundingClientRect();
+    const puff = document.createElement('div');
+    puff.className = 'smoke-puff';
+    puff.style.left = (rect.left + rect.width * 0.8) + 'px';
+    puff.style.top = (rect.top + rect.height * 0.12) + 'px';
+    document.body.appendChild(puff);
+    setTimeout(() => puff.remove(), 3500);
+  }, 1200);
+
+  // ==================== INTRO DISMISSAL ====================
+  function dismissIntro() {
+    const overlay = document.getElementById('intro-overlay');
+    overlay.style.opacity = '0';
+    setTimeout(() => overlay.remove(), 600);
+  }
+
+  // ==================== STARS ====================
+  const starsLayer = document.getElementById('stars-layer');
+  for (let i = 0; i < 50; i++) {
+    const s = document.createElement('div');
+    s.className = 'sky-star';
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 38 + '%';
+    s.style.animationDelay = (Math.random() * 3) + 's';
+    starsLayer.appendChild(s);
+  }
+
+  // ==================== SILKY-SMOOTH CANVAS SHOOTING STAR ENGINE ====================
+  const skyCanvas = document.getElementById('sky-canvas');
+  const skyCtx = skyCanvas.getContext('2d');
+
+  function resizeSkyCanvas() {
+    skyCanvas.width = window.innerWidth;
+    skyCanvas.height = window.innerHeight;
+  }
+  resizeSkyCanvas();
+  window.addEventListener('resize', resizeSkyCanvas);
+
+  class ShootingStar {
+    constructor() {
+      this.reset();
+    }
+    reset() {
+      this.x = Math.random() * (skyCanvas.width * 0.8) + skyCanvas.width * 0.1;
+      this.y = Math.random() * (skyCanvas.height * 0.35);
+      this.len = Math.random() * 90 + 70;
+      this.speed = Math.random() * 8 + 10;
+      this.angle = Math.PI / 4 + (Math.random() - 0.5) * 0.25; // elegant ~45 deg diagonal
+      this.opacity = 1;
+      this.active = false;
+    }
+    trigger() {
+      this.reset();
+      this.active = true;
+    }
+    update() {
+      if (!this.active) return;
+      this.x += Math.cos(this.angle) * this.speed;
+      this.y += Math.sin(this.angle) * this.speed;
+      this.opacity -= 0.016;
+      if (this.opacity <= 0 || this.x > skyCanvas.width + 200 || this.y > skyCanvas.height + 200) {
+        this.active = false;
+      }
+    }
+    draw() {
+      if (!this.active || this.opacity <= 0) return;
+      skyCtx.save();
+      skyCtx.globalAlpha = Math.max(0, Math.min(1, this.opacity));
+
+      const tailX = this.x - Math.cos(this.angle) * this.len;
+      const tailY = this.y - Math.sin(this.angle) * this.len;
+
+      // Radiant Golden Comet Tail
+      const grad = skyCtx.createLinearGradient(tailX, tailY, this.x, this.y);
+      grad.addColorStop(0, 'rgba(255, 255, 255, 0)');
+      grad.addColorStop(0.5, 'rgba(255, 225, 140, 0.45)');
+      grad.addColorStop(0.85, 'rgba(255, 245, 200, 0.85)');
+      grad.addColorStop(1, '#FFFFFF');
+
+      skyCtx.strokeStyle = grad;
+      skyCtx.lineWidth = 2.4;
+      skyCtx.lineCap = 'round';
+      skyCtx.shadowBlur = 8;
+      skyCtx.shadowColor = '#FFD56B';
+
+      skyCtx.beginPath();
+      skyCtx.moveTo(tailX, tailY);
+      skyCtx.lineTo(this.x, this.y);
+      skyCtx.stroke();
+
+      // Brilliant Star Head with Flare
+      skyCtx.fillStyle = '#FFFFFF';
+      skyCtx.shadowBlur = 12;
+      skyCtx.shadowColor = '#FFFFFF';
+      skyCtx.beginPath();
+      skyCtx.arc(this.x, this.y, 2.2, 0, Math.PI * 2);
+      skyCtx.fill();
+
+      skyCtx.restore();
+    }
+  }
+
+  const poolSize = 6;
+  const shootingStars = Array.from({ length: poolSize }, () => new ShootingStar());
+
+  function triggerShootingStar() {
+    const star = shootingStars.find(s => !s.active);
+    if (star) star.trigger();
+  }
+
+  // Animate Canvas Loop
+  function renderSky() {
+    skyCtx.clearRect(0, 0, skyCanvas.width, skyCanvas.height);
+    for (let i = 0; i < shootingStars.length; i++) {
+      shootingStars[i].update();
+      shootingStars[i].draw();
+    }
+    requestAnimationFrame(renderSky);
+  }
+  renderSky();
+
+  // Natural periodic shooting stars
+  setInterval(() => {
+    if (Math.random() > 0.2) triggerShootingStar();
+  }, 2600);
+
+  // Initial shooting stars
+  setTimeout(triggerShootingStar, 600);
+  setTimeout(triggerShootingStar, 2200);
+
+  // ==================== DRIFTING CLOUDS ====================
+  const cloudsLayer = document.getElementById('clouds-layer');
+  for (let i = 0; i < 3; i++) {
+    const c = document.createElement('div');
+    c.className = 'cloud-drift';
+    c.textContent = '☁️';
+    c.style.fontSize = (24 + Math.random() * 18) + 'px';
+    c.style.top = (8 + Math.random() * 12) + '%';
+    c.style.animationDuration = (50 + Math.random() * 30) + 's';
+    c.style.animationDelay = (-Math.random() * 40) + 's';
+    cloudsLayer.appendChild(c);
+  }
+
+  // ==================== STRING LIGHTS ====================
+  const lightString = document.getElementById('light-string');
+  const bulbCount = 16;
+  for (let i = 0; i < bulbCount; i++) {
+    const t = i / (bulbCount - 1);
+    const x = t * 100;
+    const sway = Math.sin(t * Math.PI) * 32;
+    const bulb = document.createElement('div');
+    bulb.className = 'bulb';
+    bulb.style.left = `calc(${x}% - 4px)`;
+    bulb.style.top = (6 + sway) + 'px';
+    bulb.style.animationDelay = (Math.random() * 2) + 's';
+    lightString.appendChild(bulb);
+  }
+
+  // ==================== FENCE ====================
+  const fenceLayer = document.getElementById('fence-layer');
+  const postCount = 18;
+  for (let i = 0; i <= postCount; i++) {
+    const post = document.createElement('div');
+    post.className = 'fence-post';
+    post.style.left = (i / postCount * 100) + '%';
+    fenceLayer.appendChild(post);
+  }
+  const rail = document.createElement('div');
+  rail.className = 'fence-rail';
+  rail.style.left = '0%';
+  rail.style.width = '100%';
+  fenceLayer.appendChild(rail);
+
+  // ==================== AMBIENT GLOWING FIREFLIES ====================
+  const firefliesLayer = document.getElementById('fireflies-layer');
+  const fireflyCount = 16;
+  const fireflies = [];
+
+  for (let i = 0; i < fireflyCount; i++) {
+    const f = document.createElement('div');
+    f.className = 'firefly';
+    const x = Math.random() * 90 + 5;
+    const y = Math.random() * 30 + 64;
+    f.style.left = x + '%';
+    f.style.top = y + '%';
+    f.style.animationDelay = (Math.random() * 3) + 's';
+    firefliesLayer.appendChild(f);
+    fireflies.push({ el: f, x, y, vx: (Math.random() - 0.5) * 0.2, vy: (Math.random() - 0.5) * 0.15 });
+  }
+
+  setInterval(() => {
+    fireflies.forEach(f => {
+      f.x += f.vx;
+      f.y += f.vy;
+      if (f.x < 4 || f.x > 96) f.vx *= -1;
+      if (f.y < 64 || f.y > 96) f.vy *= -1;
+      f.el.style.left = f.x + '%';
+      f.el.style.top = f.y + '%';
+    });
+  }, 100);
+
+  // ==================== THEME TOGGLE (GOLDEN DUSK <-> STARRY MIDNIGHT) ====================
+  let isMidnight = false;
+  function toggleSkyTheme() {
+    isMidnight = !isMidnight;
+    document.body.classList.toggle('midnight-theme', isMidnight);
+    
+    const label = document.getElementById('theme-label');
+    const icon = document.getElementById('theme-icon');
+    const labelM = document.getElementById('theme-label-m');
+    const iconM = document.getElementById('theme-icon-m');
+
+    if (isMidnight) {
+      if (icon) icon.innerText = '🌅';
+      if (label) label.innerText = 'Golden Dusk';
+      if (iconM) iconM.innerText = '🌅';
+      if (labelM) labelM.innerText = 'Dusk';
+      // Extra shooting star on midnight transition!
+      setTimeout(triggerShootingStar, 300);
+    } else {
+      if (icon) icon.innerText = '🌙';
+      if (label) label.innerText = 'Starry Midnight';
+      if (iconM) iconM.innerText = '🌙';
+      if (labelM) labelM.innerText = 'Midnight';
+    }
+  }
+
+  // ==================== EIFFEL TOWER SPARKLE SHOW ====================
+  function triggerEiffelSparkles() {
+    const eiffel = document.getElementById('eiffel-wrap');
+    if (!eiffel) return;
+    const rect = eiffel.getBoundingClientRect();
+
+    for (let i = 0; i < 28; i++) {
+      setTimeout(() => {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'eiffel-sparkle';
+        sparkle.innerText = ['✨', '⭐', '💫', '✦'][Math.floor(Math.random() * 4)];
+        sparkle.style.left = (rect.left + rect.width * (0.15 + Math.random() * 0.7)) + 'px';
+        sparkle.style.top = (rect.top + rect.height * (0.05 + Math.random() * 0.8)) + 'px';
+        const tx = (Math.random() - 0.5) * 120 + 'px';
+        const ty = (Math.random() - 0.5) * 120 + 'px';
+        sparkle.style.setProperty('--tx', tx);
+        sparkle.style.setProperty('--ty', ty);
+        document.body.appendChild(sparkle);
+        setTimeout(() => sparkle.remove(), 1200);
+      }, i * 35);
+    }
+    // Also trigger a shooting star across the sky!
+    triggerShootingStar();
+  }
+
+  // ==================== SIGN SPARKLE BURST ====================
+  function popSignSparkles(e) {
+    const sign = document.getElementById('farm-sign-wrap');
+    if (!sign) return;
+    const rect = sign.getBoundingClientRect();
+
+    for (let i = 0; i < 16; i++) {
+      setTimeout(() => {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'eiffel-sparkle';
+        sparkle.innerText = ['✨', '🌾', '💛', '🌸'][Math.floor(Math.random() * 4)];
+        sparkle.style.left = (rect.left + rect.width * (0.2 + Math.random() * 0.6)) + 'px';
+        sparkle.style.top = (rect.top + rect.height * (0.1 + Math.random() * 0.6)) + 'px';
+        const tx = (Math.random() - 0.5) * 80 + 'px';
+        const ty = (Math.random() - 0.5) * 60 + 'px';
+        sparkle.style.setProperty('--tx', tx);
+        sparkle.style.setProperty('--ty', ty);
+        document.body.appendChild(sparkle);
+        setTimeout(() => sparkle.remove(), 1200);
+      }, i * 40);
+    }
+  }
+
+  // ==================== WINDMILL INTERACTION ====================
+  function spinWindmillFast() {
+    const blades = document.getElementById('windmill-blades');
+    const windmill = document.getElementById('windmill');
+    if (!blades) return;
+    blades.classList.add('fast-spin');
+
+    const rect = windmill.getBoundingClientRect();
+    const puff = document.createElement('div');
+    puff.className = 'heart-pop';
+    puff.innerText = '🍃💨';
+    puff.style.left = (rect.left + 20) + 'px';
+    puff.style.top = (rect.top - 10) + 'px';
+    document.body.appendChild(puff);
+    setTimeout(() => puff.remove(), 1100);
+
+    setTimeout(() => {
+      blades.classList.remove('fast-spin');
+    }, 3800);
+  }
+
+  // ==================== POND RIPPLES ====================
+  function createPondRipple(e) {
+    const pond = document.getElementById('pond');
+    const rect = pond.getBoundingClientRect();
+    const ripple = document.createElement('div');
+    ripple.className = 'pond-ripple';
+    ripple.style.left = (e.clientX - rect.left) + 'px';
+    ripple.style.top = (e.clientY - rect.top) + 'px';
+    pond.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 1400);
+
+    animalEls.filter(a => a.isDuck).forEach(duck => {
+      popHeart(duck, '💦');
+      duck.classList.remove('happy');
+      void duck.offsetWidth;
+      duck.classList.add('happy');
+    });
+  }
+
+  // ==================== ANIMAL SPEECH & PERSONALITIES ====================
+  const ANIMAL_DIALOGUES = {
+    '🐱': ["purrr...", "*stretches lazily* 🐾", "meow~", "*nuzzles hand*", "*sleepy blink*"],
+    '🐐': ["bleeeaaat! 🌿", "*playful headbutt*", "munching flowers~", "baaa! ✨"],
+    '🦆': ["quack quack! 🪽", "*splishes & splashes*", "waddle waddle~", "honk! 💦"],
+    '🦝': ["*plots a tiny heist* 🦝", "shiny! ✨", "*washes hands*", "snack acquired!"],
+    '🐴': ["*gentle neigh* ✨", "*soft huff*", "clop clop 🌾", "*nuzzles gently*"],
+    '🐕': ["*tail wags excitedly* 🐾", "woof! happy to see you!", "*happy panting* 🐶", "*rolls over*"],
+    '🐰': ["*nose twitch* 🥕", "*little hop*", "munch munch~", "*floppy ears wiggle*"]
+  };
+
+  function popSpeechBubble(el, emoji) {
+    const lines = ANIMAL_DIALOGUES[emoji] || ["*happy animal sounds* ✨"];
+    const text = lines[Math.floor(Math.random() * lines.length)];
+    
+    const bubble = document.createElement('div');
+    bubble.className = 'speech-bubble';
+    bubble.innerText = text;
+    const rect = el.getBoundingClientRect();
+    bubble.style.left = (rect.left + rect.width / 2) + 'px';
+    bubble.style.top = (rect.top - 8) + 'px';
+    document.body.appendChild(bubble);
+    setTimeout(() => bubble.remove(), 2200);
+  }
+
+  // ==================== ANIMALS ====================
+  // 5 cats, 3 baby goats, 5 ducks, 1 raccoon, 1 horse, 3 golden retrievers, 10 bunnies
+  const animalTypes = [
+    ...Array(5).fill('🐱'),
+    ...Array(3).fill('🐐'),
+    ...Array(5).fill('🦆'),
+    '🦝',
+    '🐴',
+    ...Array(3).fill('🐕'),
+    ...Array(10).fill('🐰'),
+  ];
+
+  const animalsLayer = document.getElementById('animals-layer');
+  const animalEls = [];
+
+  function getBounds(isDuck) {
+    const isMobile = window.innerWidth < 640;
+    if (isDuck) {
+      return isMobile 
+        ? { xMin: 5, xMax: 44, yMin: 76, yMax: 90 }
+        : { xMin: 9, xMax: 38, yMin: 78, yMax: 92 };
+    } else {
+      return isMobile
+        ? { xMin: 4, xMax: 92, yMin: 64, yMax: 92 }
+        : { xMin: 22, xMax: 94, yMin: 64, yMax: 94 };
+    }
+  }
+
+  function randomIn(bounds) {
+    return {
+      x: bounds.xMin + Math.random() * (bounds.xMax - bounds.xMin),
+      y: bounds.yMin + Math.random() * (bounds.yMax - bounds.yMin)
+    };
+  }
+
+  function layoutAnimals() {
+    animalsLayer.innerHTML = '';
+    animalEls.length = 0;
+
+    animalTypes.forEach((emoji) => {
+      const isDuck = emoji === '🦆';
+      const bounds = getBounds(isDuck);
+      const start = randomIn(bounds);
+
+      const el = document.createElement('div');
+      el.className = 'animal bobbing';
+      el.textContent = emoji;
+      el.style.left = start.x + '%';
+      el.style.top = start.y + '%';
+      el.style.fontSize = (window.innerWidth < 640 ? (20 + Math.random() * 10) : (24 + Math.random() * 12)) + 'px';
+      el.style.transition = 'left 3s ease-in-out, top 3s ease-in-out, transform 0.2s ease';
+      el.dataset.facing = '1';
+      el.emoji = emoji;
+      el.isDuck = isDuck;
+      el.bounds = bounds;
+      el.fleeing = false;
+
+      el.addEventListener('click', () => interactAnimal(el));
+      animalsLayer.appendChild(el);
+      animalEls.push(el);
+
+      scheduleWander(el);
+    });
+  }
+
+  function moveTo(el, x, y, duration) {
+    const curLeft = parseFloat(el.style.left);
+    if (x < curLeft) {
+      el.style.transform = `scaleX(-1)`;
+      el.dataset.facing = '-1';
+    } else {
+      el.style.transform = `scaleX(1)`;
+      el.dataset.facing = '1';
+    }
+    el.style.transition = `left ${duration}s ease-in-out, top ${duration}s ease-in-out, transform 0.2s ease`;
+    el.style.left = x + '%';
+    el.style.top = y + '%';
+  }
+
+  function scheduleWander(el) {
+    const delay = 2500 + Math.random() * 4000;
+    el.wanderTimer = setTimeout(() => {
+      if (!el.fleeing) {
+        const bounds = getBounds(el.isDuck);
+        const target = randomIn(bounds);
+        const duration = 2.5 + Math.random() * 2;
+        moveTo(el, target.x, target.y, duration);
+      }
+      scheduleWander(el);
+    }, delay);
+  }
+
+  let fedTotal = 0;
+  function updateHud() {
+    document.getElementById('fed-count').innerText = fedTotal;
+  }
+
+  function popHeart(el, symbol) {
+    const heart = document.createElement('div');
+    heart.className = 'heart-pop';
+    heart.textContent = symbol || ['💕', '✨', '💛'][Math.floor(Math.random() * 3)];
+    const rect = el.getBoundingClientRect();
+    heart.style.left = (rect.left + rect.width / 2 - 8) + 'px';
+    heart.style.top = (rect.top - 6) + 'px';
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 1100);
+  }
+
+  function interactAnimal(el) {
+    popSpeechBubble(el, el.emoji);
+    popHeart(el, '💕');
+    el.classList.remove('happy');
+    void el.offsetWidth;
+    el.classList.add('happy');
+
+    el.fleeing = true;
+    clearTimeout(el.wanderTimer);
+
+    const bounds = getBounds(el.isDuck);
+    const target = randomIn(bounds);
+    moveTo(el, target.x, target.y, 0.45);
+
+    fedTotal++;
+    updateHud();
+
+    setTimeout(() => {
+      el.fleeing = false;
+      scheduleWander(el);
+    }, 900);
+  }
+
+  // ==================== SPECIFIC TREAT DISPENSER ====================
+  function scatterSpecificFeed(type) {
+    let targets = animalEls;
+    let treatIcon = '🌾';
+
+    if (type === 'bunnies') {
+      targets = animalEls.filter(a => a.emoji === '🐰');
+      treatIcon = '🥕';
+    } else if (type === 'cats') {
+      targets = animalEls.filter(a => a.emoji === '🐱');
+      treatIcon = '🐟';
+    } else if (type === 'ducks') {
+      targets = animalEls.filter(a => a.emoji === '🦆');
+      treatIcon = '🍞';
+    }
+
+    targets.forEach((el, i) => {
+      setTimeout(() => {
+        const seed = document.createElement('div');
+        seed.className = 'seed';
+        seed.textContent = treatIcon;
+        const rect = el.getBoundingClientRect();
+        seed.style.left = (rect.left + Math.random() * 10 - 5) + 'px';
+        seed.style.top = (rect.top - 14) + 'px';
+        document.body.appendChild(seed);
+        setTimeout(() => seed.remove(), 650);
+
+        popHeart(el, '💛');
+        if (i % 2 === 0) popSpeechBubble(el, el.emoji);
+
+        el.classList.remove('happy');
+        void el.offsetWidth;
+        el.classList.add('happy');
+        fedTotal++;
+        updateHud();
+      }, i * 45);
+    });
+  }
+
+  layoutAnimals();
+  window.addEventListener('resize', () => {
+    clearTimeout(window._resizeTimer);
+    window._resizeTimer = setTimeout(layoutAnimals, 200);
+  });
+</script>
+</body>
+</html>
