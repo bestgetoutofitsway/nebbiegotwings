@@ -923,9 +923,253 @@
     transform: translateY(1px) scale(0.98) !important;
   }
 
+  /* ==================== VELVET WINE DARK THEME WITH RADIANT PINK NEON GLOW ==================== */
+  body {
+    transition: background 0.7s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s ease;
+  }
+  body.velvet-dark {
+    background: radial-gradient(ellipse at 50% 25%, #420417 0%, #570720 38%, #6a0b29 70%, #380213 100%) !important;
+    background-attachment: fixed !important;
+    color: #ffd6e0 !important;
+  }
+
+  /* Radiant Pink Neon Glow on ALL Action Buttons */
+  body.velvet-dark button.bg-gradient-to-r,
+  body.velvet-dark .bg-gradient-to-r,
+  body.velvet-dark #breathe-btn,
+  body.velvet-dark #passcode-form button,
+  body.velvet-dark #send-light-btn,
+  body.velvet-dark #scrapbook-next-btn,
+  body.velvet-dark #play-pause-btn {
+    background: linear-gradient(135deg, #f43f5e 0%, #e11d48 40%, #be123c 100%) !important;
+    border: 1.5px solid rgba(255, 200, 220, 0.8) !important;
+    box-shadow: 
+      0 0 25px rgba(255, 45, 135, 0.85),
+      0 0 50px rgba(244, 114, 182, 0.55),
+      0 0 10px rgba(255, 105, 180, 0.95),
+      inset 0 1px 2px rgba(255, 255, 255, 0.5) !important;
+    color: #ffffff !important;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  body.velvet-dark button.bg-gradient-to-r:hover,
+  body.velvet-dark .bg-gradient-to-r:hover,
+  body.velvet-dark #breathe-btn:hover,
+  body.velvet-dark #passcode-form button:hover,
+  body.velvet-dark #send-light-btn:hover,
+  body.velvet-dark #scrapbook-next-btn:hover,
+  body.velvet-dark #play-pause-btn:hover {
+    box-shadow: 
+      0 0 35px rgba(255, 45, 135, 1),
+      0 0 70px rgba(244, 114, 182, 0.75),
+      0 0 16px rgba(255, 105, 180, 1),
+      inset 0 1px 3px rgba(255, 255, 255, 0.7) !important;
+    transform: translateY(-1px) scale(1.02) !important;
+  }
+
+  /* Floating Theme Toggle Button with Radiant Aura */
+  body.velvet-dark #theme-toggle-btn {
+    background: rgba(55, 6, 26, 0.92) !important;
+    border: 1.5px solid rgba(255, 105, 180, 0.75) !important;
+    box-shadow: 
+      0 0 25px rgba(255, 45, 135, 0.75),
+      0 0 45px rgba(244, 114, 182, 0.45),
+      0 4px 16px rgba(0, 0, 0, 0.6) !important;
+    color: #ffe4e9 !important;
+  }
+  body.velvet-dark #theme-toggle-btn:hover {
+    box-shadow: 
+      0 0 35px rgba(255, 45, 135, 0.95),
+      0 0 65px rgba(244, 114, 182, 0.65) !important;
+  }
+
+  /* Glass Cards with Pink Neon Perimeter Aura */
+  body.velvet-dark .macos-glass {
+    background: rgba(36, 4, 16, 0.85) !important;
+    border: 1.5px solid rgba(255, 105, 180, 0.4) !important;
+    box-shadow: 
+      0 0 28px rgba(255, 45, 135, 0.28),
+      0 0 60px rgba(244, 114, 182, 0.15),
+      0 20px 40px -10px rgba(0, 0, 0, 0.75),
+      inset 0 0 25px rgba(255, 105, 180, 0.1) !important;
+    color: #fce7f3 !important;
+  }
+
+  @media (max-width: 640px) {
+    body.velvet-dark .macos-glass {
+      background: rgba(30, 3, 13, 0.92) !important;
+      border: 1px solid rgba(255, 105, 180, 0.35) !important;
+      box-shadow: 0 0 20px rgba(255, 45, 135, 0.25), 0 10px 25px rgba(0, 0, 0, 0.7) !important;
+    }
+  }
+
+  /* Polaroid Cards with Vibrant Pink Aura */
+  body.velvet-dark .polaroid-card {
+    background: #1e030e !important;
+    border: 1.5px solid rgba(255, 105, 180, 0.4) !important;
+    box-shadow: 
+      0 0 26px rgba(255, 45, 135, 0.35),
+      0 0 50px rgba(244, 114, 182, 0.18),
+      0 14px 32px -6px rgba(0, 0, 0, 0.75) !important;
+  }
+  body.velvet-dark .polaroid-card:hover {
+    border-color: rgba(255, 105, 180, 0.9) !important;
+    box-shadow: 
+      0 0 38px rgba(255, 45, 135, 0.85),
+      0 0 75px rgba(244, 114, 182, 0.45),
+      0 18px 36px rgba(0, 0, 0, 0.85) !important;
+    transform: translateY(-2px) scale(1.02) !important;
+  }
+  body.velvet-dark .polaroid-card p {
+    color: #ffe4e9 !important;
+  }
+
+  /* App Icons with Glowing Pink Aura */
+  body.velvet-dark .macos-app-icon {
+    background: linear-gradient(145deg, #420519, #24020d) !important;
+    border: 1.5px solid rgba(255, 105, 180, 0.5) !important;
+    box-shadow: 
+      0 0 20px rgba(255, 45, 135, 0.45),
+      0 0 40px rgba(244, 114, 182, 0.25),
+      0 8px 18px -4px rgba(0, 0, 0, 0.6) !important;
+    color: #ffd6e0 !important;
+  }
+  body.velvet-dark .macos-app-icon:hover {
+    border-color: rgba(255, 105, 180, 1) !important;
+    box-shadow: 
+      0 0 30px rgba(255, 45, 135, 0.9),
+      0 0 55px rgba(244, 114, 182, 0.5) !important;
+  }
+
+  /* Secondary Glass Action Buttons (Prev, Affirmation button, etc.) */
+  body.velvet-dark #scrapbook-prev-btn,
+  body.velvet-dark #scrapbook-page-indicator,
+  body.velvet-dark #affirmations-section button {
+    background: rgba(45, 6, 22, 0.88) !important;
+    border: 1.5px solid rgba(255, 105, 180, 0.45) !important;
+    box-shadow: 0 0 18px rgba(255, 45, 135, 0.4), 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+    color: #ffd6e0 !important;
+  }
+  body.velvet-dark #scrapbook-prev-btn:hover,
+  body.velvet-dark #affirmations-section button:hover {
+    border-color: rgba(255, 105, 180, 0.95) !important;
+    box-shadow: 0 0 30px rgba(255, 45, 135, 0.85), 0 0 50px rgba(244, 114, 182, 0.45) !important;
+  }
+
+  /* Breathing Circle Glowing Aura */
+  body.velvet-dark #breathe-circle {
+    box-shadow: 
+      0 0 65px rgba(255, 45, 135, 0.85),
+      0 0 130px rgba(244, 114, 182, 0.5),
+      inset 0 0 35px rgba(255, 105, 180, 0.4) !important;
+    border: 2px solid rgba(255, 200, 220, 0.9) !important;
+  }
+
+  /* Lace Frame & Botanical Rail Glowing Auras */
+  body.velvet-dark .lace-scallop-top,
+  body.velvet-dark .lace-scallop-bottom,
+  body.velvet-dark .lace-scallop-left,
+  body.velvet-dark .lace-scallop-right {
+    filter: drop-shadow(0 0 10px rgba(255, 45, 135, 0.75)) drop-shadow(0 0 25px rgba(244, 114, 182, 0.4)) !important;
+  }
+  body.velvet-dark .lace-mesh-inset {
+    border-color: rgba(255, 182, 193, 0.65) !important;
+    box-shadow: 
+      inset 0 0 28px rgba(255, 45, 135, 0.45),
+      0 0 24px rgba(255, 105, 180, 0.6) !important;
+  }
+
+  body.velvet-dark h1,
+  body.velvet-dark h2,
+  body.velvet-dark h3,
+  body.velvet-dark h4,
+  body.velvet-dark .text-angel-deep {
+    color: #ffd1dc !important;
+    text-shadow: 0 0 20px rgba(255, 105, 180, 0.35);
+  }
+
+  body.velvet-dark .text-gray-500,
+  body.velvet-dark .text-gray-600 {
+    color: #f9a8d4 !important;
+  }
+
+  body.velvet-dark .text-slate-800 {
+    color: #ffe4e9 !important;
+  }
+
+  body.velvet-dark #letter-section p,
+  body.velvet-dark #letter-section .text-gray-700 {
+    color: #ffe4e9 !important;
+  }
+
+  body.velvet-dark #affirmation-text {
+    color: #ffe4e9 !important;
+    text-shadow: 0 0 15px rgba(255, 105, 180, 0.3);
+  }
+
+    /* Ensure Scrapbook Journal Pages maintain dark, crisp, authentic ink readability in Dark Mode */
+  body.velvet-dark #scrapbook-wrapper .font-handwriting,
+  body.velvet-dark #scrapbook-wrapper .text-slate-800,
+  body.velvet-dark #scrapbook-wrapper p.font-handwriting {
+    color: #1e293b !important;
+    text-shadow: none !important;
+  }
+
+  body.velvet-dark #scrapbook-wrapper h4,
+  body.velvet-dark #scrapbook-wrapper .text-angel-deep {
+    color: #4a1226 !important;
+    text-shadow: none !important;
+  }
+
+  body.velvet-dark #scrapbook-wrapper .text-gray-400,
+  body.velvet-dark #scrapbook-wrapper .font-mono:not(#scrapbook-page-indicator) {
+    color: #64748b !important;
+    text-shadow: none !important;
+  }
+
+  body.velvet-dark #scrapbook-wrapper .text-angel-accent {
+    color: #e11d48 !important;
+    text-shadow: none !important;
+  }
+
+  body.velvet-dark #playlist-drawer {
+    background: rgba(26, 3, 11, 0.94) !important;
+    border-color: rgba(255, 105, 180, 0.4) !important;
+    box-shadow: 0 0 20px rgba(255, 45, 135, 0.3) !important;
+  }
+
+  body.velvet-dark input[type="range"] {
+    background: #4a081a !important;
+  }
+
+  body.velvet-dark #lock-screen {
+    background: radial-gradient(ellipse at 50% 25%, rgba(66, 4, 23, 0.95) 0%, rgba(87, 7, 32, 0.95) 45%, rgba(56, 2, 19, 0.95) 100%) !important;
+  }
+
+  body.velvet-dark #passcode-input {
+    background: rgba(30, 3, 13, 0.85) !important;
+    border: 1.5px solid rgba(255, 105, 180, 0.45) !important;
+    box-shadow: 0 0 20px rgba(255, 45, 135, 0.35), inset 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+    color: #ffe4e9 !important;
+  }
+
+  body.velvet-dark #rail-track-top,
+  body.velvet-dark #rail-track-bottom,
+  body.velvet-dark #rail-track-left,
+  body.velvet-dark #rail-track-right {
+    border-color: rgba(244, 114, 182, 0.6) !important;
+    filter: drop-shadow(0 0 12px rgba(255, 45, 135, 0.75)) drop-shadow(0 0 25px rgba(244, 114, 182, 0.4)) !important;
+  }
+
 </style>
 </head>
 <body class="font-sans antialiased selection:bg-pink-200 selection:text-pink-900 relative">
+
+<!-- Floating Theme Mode Switcher (Rosé Light ☀️ / Velvet Wine 🌙) - Positioned Under the Border -->
+<button id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Theme" class="fixed top-9 left-5 sm:top-14 sm:left-12 md:top-16 md:left-14 z-[100] px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full macos-glass flex items-center gap-2 text-xs font-mono font-semibold transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg border border-white/80 cursor-pointer select-none">
+  <span id="theme-icon" class="text-sm sm:text-base">🌙</span>
+  <span id="theme-text" class="text-angel-deep">Velvet Wine</span>
+</button>
 
 <!-- Ethereal Multi-Layer Canvas (Static Pink Stars, Glowing Shooting Stars, Petals & Angel Wings) -->
 <canvas id="ethereal-canvas"></canvas>
@@ -1981,7 +2225,7 @@
       </svg>
     </div>
     <h1 class="font-serif text-3xl font-normal text-angel-deep mb-1">Welcome</h1>
-    <p class="text-xs text-gray-500 mb-6 font-light">Enter the phrase to open the clouds</p>
+    <p class="text-xs text-gray-500 mb-6 font-light">Sunshine, Lolipops and.....</p>
     <form id="passcode-form" onsubmit="handleUnlock(event)">
       <input type="text" id="passcode-input" placeholder="Secret phrase..." autocomplete="off"
         class="w-full px-5 py-3.5 rounded-2xl text-center text-sm border border-pink-200/80 bg-white/75 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-angel-accent/70 transition-all mb-4 placeholder:text-pink-300 shadow-inner" />
@@ -2325,6 +2569,43 @@
     </div>
   </section>
 
+  <!-- ==================== THE LETTER ==================== -->
+  <section id="letter-section" class="max-w-xl mx-auto my-20 sm:my-28 fade-up">
+    <div class="macos-glass rounded-[36px] p-8 sm:p-12 shadow-xl border border-white/80 relative text-left">
+      
+      <!-- Decorative Opening Quote Mark -->
+      <div class="text-center font-serif text-5xl sm:text-6xl text-angel-accent opacity-50 select-none leading-none mb-6">
+        “
+      </div>
+
+      <!-- Letter Body Paragraphs -->
+      <div class="font-serif italic text-gray-700 leading-relaxed text-base sm:text-lg space-y-6">
+        <p>
+          We both know that what happened wasn't fair to you. You didn't choose this, and yet the people who were supposed to protect you made you doubt your own memory of what happened. That's a really cruel thing to do to someone, but none of it changes what's true  you didn't want this. Nobody in your position would be okay, and you don't have to perform being okay for anyone, least of all for me.
+        </p>
+
+        <p>
+          This barely-two-page website isn't gonna fix anything, i know. i built it anyway  figured even if there was a small chance it made you happy, it'd be worth it.
+        </p>
+
+        <p>
+          The girl who used to dream of being a writer, going to Europe, having a farm, being free , she's still in there somewhere. i believe that. i know it's hard to feel it right now, but take a leap of faith on this one.
+        </p>
+      </div>
+
+      <!-- Final Distinct Right-Aligned Emotional Landing Line -->
+      <div class="pt-6 mt-6 border-t border-pink-100/60 text-right not-italic font-semibold text-sm sm:text-base text-angel-deep tracking-wide">
+        You've survived 8 months. that wasn't luck, that was you.
+      </div>
+
+      <!-- Decorative Closing Quote Mark (Rotated 180 Degrees) -->
+      <div class="text-center font-serif text-5xl sm:text-6xl text-angel-accent opacity-50 select-none leading-none mt-6 rotate-180">
+        “
+      </div>
+
+    </div>
+  </section>
+
   <!-- CLOSING NOTE -->
   <section id="note-section" class="max-w-2xl mx-auto my-20 fade-up">
     <div class="macos-glass p-8 sm:p-10 rounded-[36px] text-center relative shadow-lg">
@@ -2375,7 +2656,37 @@
 </div>
 
 <script>
-  const SECRET_KEY = "angel";
+  const VALID_KEYS = ["rainbows", "rainbow"];
+
+  // ==================== VELVET WINE THEME CONTROLLER ====================
+  let currentTheme = localStorage.getItem('nebbie_theme_mode') || 'light';
+
+  function applyTheme(theme) {
+    currentTheme = theme;
+    const body = document.body;
+    const icon = document.getElementById('theme-icon');
+    const textEl = document.getElementById('theme-text');
+
+    if (theme === 'dark') {
+      body.classList.add('velvet-dark');
+      if (icon) icon.innerText = '☀️';
+      if (textEl) textEl.innerText = 'Rosé Light';
+    } else {
+      body.classList.remove('velvet-dark');
+      if (icon) icon.innerText = '🌙';
+      if (textEl) textEl.innerText = 'Velvet Wine';
+    }
+    localStorage.setItem('nebbie_theme_mode', theme);
+  }
+
+  function toggleTheme() {
+    const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    applyTheme(nextTheme);
+  }
+
+  // Restore saved theme on page load
+  applyTheme(currentTheme);
+
 
   // ==================== ETHEREAL BACKGROUND CANVAS ENGINE ====================
   const canvas = document.getElementById('ethereal-canvas');
@@ -3512,7 +3823,7 @@
     const input = document.getElementById('passcode-input').value.trim().toLowerCase();
     const errorMsg = document.getElementById('error-msg');
 
-    if (input === SECRET_KEY) {
+    if (VALID_KEYS.includes(input)) {
       unlockSanctuary();
     } else {
       if (errorMsg) errorMsg.classList.remove('hidden');
