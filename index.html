@@ -3736,10 +3736,40 @@
       }, { passive: true });
     }
   }
+  function checkSavedUnlockState() {
+    try {
+      if (localStorage.getItem('nebbie_sanctuary_unlocked') === 'true') {
+        isSanctuaryUnlocked = true;
+        const introScreen = document.getElementById('intro-screen');
+        const lockScreen = document.getElementById('lock-screen');
+        const mainContent = document.getElementById('main-content');
+        const scrollFrame = document.getElementById('scroll-frame');
+
+        if (introScreen) introScreen.remove();
+        if (lockScreen) lockScreen.remove();
+        if (mainContent) {
+          mainContent.classList.remove('hidden', 'opacity-0');
+        }
+        if (scrollFrame) {
+          scrollFrame.classList.remove('opacity-0');
+        }
+        setTimeout(() => {
+          updateBotanicalProgress();
+          initScrollReveal();
+          init3DScrapbook();
+        }, 60);
+      }
+    } catch(e) {}
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', bindIntroDismiss);
+    document.addEventListener('DOMContentLoaded', () => {
+      bindIntroDismiss();
+      checkSavedUnlockState();
+    });
   } else {
     bindIntroDismiss();
+    checkSavedUnlockState();
   }
 
     // ==================== LOCAL AUDIO PLAYLIST ====================
@@ -4090,7 +4120,11 @@
       init3DScrapbook();
     }, 50);
 
-    // Trigger Instant Survey 3 seconds after unlock
+    try {
+      localStorage.setItem('nebbie_sanctuary_unlocked', 'true');
+    } catch(e) {}
+
+    // Trigger Instant Survey 3 seconds after unlock (if not completed before)
     setTimeout(() => {
       showInstantSurvey();
     }, 3000);
@@ -5122,12 +5156,21 @@
     } catch (e) {}
   }
 
+  let surveyPausedAudio = false;
+
   function showInstantSurvey() {
     if (surveyShown) return;
     surveyShown = true;
     const modal = document.getElementById('instant-survey-modal');
     const card = document.getElementById('survey-card');
     if (!modal || !card) return;
+
+    // Automatically pause music when survey pops up
+    if (audio && !audio.paused) {
+      surveyPausedAudio = true;
+      audio.pause();
+      syncVinylState(false);
+    }
 
     modal.classList.remove('opacity-0', 'pointer-events-none');
     modal.classList.add('opacity-100', 'pointer-events-auto');
@@ -5145,6 +5188,14 @@
     card.classList.add('scale-90');
     modal.classList.remove('opacity-100', 'pointer-events-auto');
     modal.classList.add('opacity-0', 'pointer-events-none');
+
+    // Automatically resume music when survey is completed or closed
+    if (surveyPausedAudio && audio && audio.paused) {
+      surveyPausedAudio = false;
+      audio.play().then(() => {
+        syncVinylState(true);
+      }).catch(() => {});
+    }
   }
 
   function setSurveyStep(step) {
