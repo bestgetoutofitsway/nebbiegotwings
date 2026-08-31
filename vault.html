@@ -1295,9 +1295,24 @@
         </div>
 
         <!-- RIGHT: PHYSICAL RECORD CRATE WITH SLIDING VINYLS -->
-        <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: space-between;">
-          <div class="flex items-center justify-between mb-3 px-1">
-            <span class="text-sm font-serif font-bold text-pink-200">The Vinyl Vault</span>
+        <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 12px;">
+          <div class="flex items-center justify-between px-1">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-serif font-bold text-pink-200 tracking-wide">The Vinyl Vault</span>
+              <span class="text-[11px] font-mono text-pink-300/60 tracking-wider">· 6 Pressings</span>
+            </div>
+            
+            <!-- Shuffle / Pick Random Record Button -->
+            <button id="shuffle-crate-btn" onclick="shufflePickRecord()" class="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium text-pink-200 hover:text-white bg-pink-500/10 hover:bg-pink-500/25 border border-pink-400/30 hover:border-pink-400/60 shadow-[0_0_12px_rgba(236,72,153,0.15)] hover:shadow-[0_0_18px_rgba(236,72,153,0.35)] transition-all duration-300 group cursor-pointer active:scale-95" title="Pick Random Record">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="text-pink-300 group-hover:rotate-180 transition-transform duration-500">
+                <polyline points="16 3 21 3 21 8"></polyline>
+                <line x1="4" y1="20" x2="21" y2="3"></line>
+                <polyline points="21 16 21 21 16 21"></polyline>
+                <line x1="15" y1="15" x2="21" y2="21"></line>
+                <line x1="4" y1="4" x2="9" y2="9"></line>
+              </svg>
+              <span>Pick Random Record</span>
+            </button>
           </div>
 
           <!-- The Physical Shelf Box -->
@@ -1980,6 +1995,22 @@
 
     function prevTrack() { loadTrack(currentIdx - 1, isPlaying); }
     function nextTrack() { loadTrack(currentIdx + 1, isPlaying); }
+
+    function shufflePickRecord() {
+      if (!playlist || playlist.length <= 1) return;
+      let nextIdx;
+      do {
+        nextIdx = Math.floor(Math.random() * playlist.length);
+      } while (nextIdx === currentIdx && playlist.length > 1);
+
+      loadTrack(nextIdx, true);
+
+      // Smoothly scroll selected crate sleeve into view
+      const crateEl = document.getElementById('crate-container');
+      if (crateEl && crateEl.children && crateEl.children[nextIdx]) {
+        crateEl.children[nextIdx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
 
     function seekTrack(val) {
       if (player.duration) {
