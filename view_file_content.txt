@@ -1,0 +1,165 @@
+Created At: 2026-08-31T05:43:12+05:00
+Completed At: 2026-08-31T05:43:12+05:00
+File Path: `file:///c:/Nebbiegotwings/vault.html`
+Total Lines: 2221
+Total Bytes: 95697
+Showing lines 1738 to 1883
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+1738:           });
+1739:         }
+1740:       }
+1741: 
+1742:       let constellations = [];
+1743: 
+1744:       // Generate random celestial constellations from bright stars
+1745:       function createConstellations() {
+1746:         const brightStars = stars.filter(s => s.radius >= 0.95);
+1747:         if (brightStars.length < 10) return;
+1748: 
+1749:         const count = Math.min(6, Math.max(3, Math.floor(width / 320)));
+1750:         const usedStars = new Set();
+1751: 
+1752:         for (let c = 0; c < count; c++) {
+1753:           const unusedStars = brightStars.filter(s => !usedStars.has(s));
+1754:           if (unusedStars.length < 4) break;
+1755: 
+1756:           const anchor = unusedStars[Math.floor(Math.random() * unusedStars.length)];
+1757:           usedStars.add(anchor);
+1758: 
+1759:           // Find 3-5 nearest bright stars to form a constellation cluster
+1760:           const cluster = [anchor];
+1761:           const maxDist = Math.min(width, height) * 0.32;
+1762: 
+1763:           const nearby = unusedStars
+1764:             .filter(s => s !== anchor && Math.hypot(s.x - anchor.x, s.y - anchor.y) < maxDist)
+1765:             .sort((a, b) => Math.hypot(a.x - anchor.x, a.y - anchor.y) - Math.hypot(b.x - anchor.x, b.y - anchor.y));
+1766: 
+1767:           const numNodes = Math.min(nearby.length, Math.floor(Math.random() * 3 + 3));
+1768:           for (let n = 0; n < numNodes; n++) {
+1769:             cluster.push(nearby[n]);
+1770:             usedStars.add(nearby[n]);
+1771:           }
+1772: 
+1773:           if (cluster.length >= 3) {
+1774:             // Build connected edges (minimum spanning tree / organic star links)
+1775:             const edges = [];
+1776:             for (let i = 1; i < cluster.length; i++) {
+1777:               let closest = cluster[0];
+1778:               let minDist = Infinity;
+1779:               for (let j = 0; j < i; j++) {
+1780:                 const d = Math.hypot(cluster[i].x - cluster[j].x, cluster[i].y - cluster[j].y);
+1781:                 if (d < minDist) {
+1782:                   minDist = d;
+1783:                   closest = cluster[j];
+1784:                 }
+1785:               }
+1786:               edges.push([closest, cluster[i]]);
+1787:             }
+1788: 
+1789:             const colorSchemes = [
+1790:               { r: 192, g: 132, b: 252 }, // Soft Neon Violet
+1791:               { r: 244, g: 114, b: 182 }, // Rose Pink Starlight
+1792:               { r: 254, g: 240, b: 138 }, // Celestial Gold
+1793:               { r: 186, g: 230, b: 253 }, // Icy Diamond Blue
+1794:               { r: 255, g: 255, b: 255 }  // Pure Celestial White
+1795:             ];
+1796: 
+1797:             const color = colorSchemes[Math.floor(Math.random() * colorSchemes.length)];
+1798: 
+1799:             const constellation = {
+1800:               stars: cluster,
+1801:               edges: edges,
+1802:               color: color,
+1803:               alpha: 0,
+1804:               maxAlpha: Math.random() * 0.3 + 0.35,
+1805:               fadeSpeed: Math.random() * 0.003 + 0.002,
+1806:               state: 'in', // 'in', 'hold', 'out'
+1807:               holdTime: Math.random() * 6000 + 5000,
+1808:               holdStart: 0
+1809:             };
+1810: 
+1811:             constellations.push(constellation);
+1812:           }
+1813:         }
+1814:       }
+1815: 
+1816:       function updateConstellations() {
+1817:         const now = Date.now();
+1818:         for (let i = constellations.length - 1; i >= 0; i--) {
+1819:           const c = constellations[i];
+1820:           if (c.state === 'in') {
+1821:             c.alpha += c.fadeSpeed;
+1822:             if (c.alpha >= c.maxAlpha) {
+1823:               c.alpha = c.maxAlpha;
+1824:               c.state = 'hold';
+1825:               c.holdStart = now;
+1826:             }
+1827:           } else if (c.state === 'hold') {
+1828:             if (now - c.holdStart > c.holdTime) {
+1829:               c.state = 'out';
+1830:             }
+1831:           } else if (c.state === 'out') {
+1832:             c.alpha -= c.fadeSpeed;
+1833:             if (c.alpha <= 0) {
+1834:               constellations.splice(i, 1);
+1835:             }
+1836:           }
+1837:         }
+1838: 
+1839:         // Maintain 3-6 active constellations in rotation
+1840:         const desiredCount = Math.min(6, Math.max(3, Math.floor(width / 320)));
+1841:         if (constellations.length < desiredCount) {
+1842:           createConstellations();
+1843:         }
+1844:       }
+1845: 
+1846:       // Spawns vibrant shooting stars with diverse celestial colors & trail dynamics
+1847:       function spawnShootingStar() {
+1848:         const startX = Math.random() * width * 0.9 + width * 0.05;
+1849:         const startY = Math.random() * height * 0.45;
+1850:         const angle = (Math.random() * 26 + 22) * (Math.PI / 180); // 22-48 degree diagonal streak
+1851:         const speed = Math.random() * 9 + 11;
+1852:         const length = Math.random() * 100 + 85;
+1853: 
+1854:         const meteorPalettes = [
+1855:           { head: 'rgba(255, 255, 255,', mid: 'rgba(216, 180, 254,', tail: 'rgba(168, 85, 247, 0)' }, // Lilac Neon
+1856:           { head: 'rgba(255, 250, 235,', mid: 'rgba(254, 215, 170,', tail: 'rgba(251, 146, 60, 0)' },  // Warm Star-Gold
+1857:           { head: 'rgba(255, 255, 255,', mid: 'rgba(244, 114, 182,', tail: 'rgba(236, 72, 153, 0)' },  // Cosmic Rose Pink
+1858:           { head: 'rgba(240, 253, 250,', mid: 'rgba(147, 197, 253,', tail: 'rgba(59, 130, 246, 0)' }   // Cyan Sapphire
+1859:         ];
+1860: 
+1861:         const palette = meteorPalettes[Math.floor(Math.random() * meteorPalettes.length)];
+1862: 
+1863:         shootingStars.push({
+1864:           x: startX,
+1865:           y: startY,
+1866:           vx: Math.cos(angle) * speed,
+1867:           vy: Math.sin(angle) * speed,
+1868:           length: length,
+1869:           life: 1.0,
+1870:           decay: Math.random() * 0.016 + 0.012,
+1871:           palette: palette,
+1872:           width: Math.random() * 1.2 + 1.6
+1873:         });
+1874:       }
+1875: 
+1876:       // High-frequency shooting star timer (every 1.0 - 2.4 seconds)
+1877:       let nextShootingStarTime = Date.now() + 800;
+1878: 
+1879:       function render(time) {
+1880:         ctx.clearRect(0, 0, width, height);
+1881: 
+1882:         // 0. Subtle Cursor Nebula Aura (atmospheric ambient glow following cursor)
+1883:         if (mouseX > -999) {
+The above content does NOT show the entire file contents. If you need to view any lines of the file which were not shown to complete your task, call this tool again to view those lines.
+Created At: 2026-08-31T06:04:57+05:00
+Completed At: 2026-08-31T06:05:00+05:00
+
+The command exited with code 1.
+Output:
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import json; [print(json.loads(line)['content']) for line in open('C:/Users/DELL/.gemini/antigravity/brain/829a1db2-99ba-4438-90a8-788976097258/.system_generated/logs/transcript_full.jsonl', encoding='utf-8') if 'view_file' in line.lower() and 'Showing lines 1738 to 1883' in line]
+                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^
+KeyError: 'content'
+

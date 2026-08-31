@@ -801,6 +801,7 @@
   .gold-foil-title {
     background: linear-gradient(135deg, #fff7d6 0%, #ffd700 25%, #d4af37 55%, #fff2a3 80%, #aa7c11 100%);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6)) drop-shadow(0 0 6px rgba(255, 215, 0, 0.45));
   }
@@ -923,7 +924,7 @@
     transform: translateY(1px) scale(0.98) !important;
   }
 
-  /* ==================== VELVET WINE DARK THEME WITH RADIANT PINK NEON GLOW ==================== */
+  /* ==================== VELVET WINE DARK THEME (FULL DIRECTIONAL CURSOR GLARE) ==================== */
   body {
     transition: background 0.7s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s ease;
   }
@@ -933,7 +934,7 @@
     color: #ffd6e0 !important;
   }
 
-  /* Radiant Pink Neon Glow on ALL Action Buttons */
+  /* Primary Action Buttons (Play/Pause, Start Breathing, Send Light, Next, etc.) */
   body.velvet-dark button.bg-gradient-to-r,
   body.velvet-dark .bg-gradient-to-r,
   body.velvet-dark #breathe-btn,
@@ -941,17 +942,15 @@
   body.velvet-dark #send-light-btn,
   body.velvet-dark #scrapbook-next-btn,
   body.velvet-dark #play-pause-btn {
-    background: linear-gradient(135deg, #f43f5e 0%, #e11d48 40%, #be123c 100%) !important;
-    border: 1.5px solid rgba(255, 200, 220, 0.8) !important;
-    box-shadow: 
-      0 0 25px rgba(255, 45, 135, 0.85),
-      0 0 50px rgba(244, 114, 182, 0.55),
-      0 0 10px rgba(255, 105, 180, 0.95),
-      inset 0 1px 2px rgba(255, 255, 255, 0.5) !important;
+    background: linear-gradient(135deg, #e11d48 0%, #be123c 50%, #9f1239 100%) !important;
+    border: 1px solid rgba(255, 180, 205, 0.4) !important;
+    box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
     color: #ffffff !important;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.12s ease, border-color 0.25s ease, background 0.25s ease !important;
   }
 
+  /* CURSOR-REACTIVE DIRECTIONAL HOVER GLOW ON ACTION BUTTONS */
   body.velvet-dark button.bg-gradient-to-r:hover,
   body.velvet-dark .bg-gradient-to-r:hover,
   body.velvet-dark #breathe-btn:hover,
@@ -959,104 +958,133 @@
   body.velvet-dark #send-light-btn:hover,
   body.velvet-dark #scrapbook-next-btn:hover,
   body.velvet-dark #play-pause-btn:hover {
+    background: linear-gradient(135deg, #f43f5e 0%, #e11d48 45%, #be123c 100%) !important;
+    border-color: rgba(255, 220, 235, 0.95) !important;
     box-shadow: 
-      0 0 35px rgba(255, 45, 135, 1),
-      0 0 70px rgba(244, 114, 182, 0.75),
-      0 0 16px rgba(255, 105, 180, 1),
-      inset 0 1px 3px rgba(255, 255, 255, 0.7) !important;
-    transform: translateY(-1px) scale(1.02) !important;
+      var(--glow-dx, 0px) var(--glow-dy, 0px) 26px rgba(255, 45, 135, 0.95),
+      calc(var(--glow-dx, 0px) * 1.5) calc(var(--glow-dy, 0px) * 1.5) 48px rgba(244, 114, 182, 0.55),
+      0 4px 16px rgba(0, 0, 0, 0.4),
+      inset var(--glow-dx, 0px) var(--glow-dy, 0px) 14px rgba(255, 255, 255, 0.45) !important;
+    transform: translateY(-2px) scale(1.04) !important;
+    filter: brightness(1.12);
+  }
+  body.velvet-dark button.bg-gradient-to-r:active,
+  body.velvet-dark .bg-gradient-to-r:active,
+  body.velvet-dark #breathe-btn:active,
+  body.velvet-dark #passcode-form button:active,
+  body.velvet-dark #send-light-btn:active,
+  body.velvet-dark #scrapbook-next-btn:active,
+  body.velvet-dark #play-pause-btn:active {
+    transform: translateY(0px) scale(0.96) !important;
+    box-shadow: 0 0 16px rgba(244, 63, 94, 0.7), inset 0 2px 4px rgba(0, 0, 0, 0.4) !important;
   }
 
-  /* Floating Theme Toggle Button with Radiant Aura */
+  /* Floating Theme Toggle Button with Directional Cursor Tracking */
   body.velvet-dark #theme-toggle-btn {
-    background: rgba(55, 6, 26, 0.92) !important;
-    border: 1.5px solid rgba(255, 105, 180, 0.75) !important;
-    box-shadow: 
-      0 0 25px rgba(255, 45, 135, 0.75),
-      0 0 45px rgba(244, 114, 182, 0.45),
-      0 4px 16px rgba(0, 0, 0, 0.6) !important;
+    background: rgba(55, 6, 26, 0.85) !important;
+    border: 1px solid rgba(255, 105, 180, 0.35) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
     color: #ffe4e9 !important;
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.12s ease, border-color 0.25s ease !important;
   }
   body.velvet-dark #theme-toggle-btn:hover {
+    border-color: rgba(255, 150, 195, 0.85) !important;
     box-shadow: 
-      0 0 35px rgba(255, 45, 135, 0.95),
-      0 0 65px rgba(244, 114, 182, 0.65) !important;
+      var(--glow-dx, 0px) var(--glow-dy, 0px) 24px rgba(255, 45, 135, 0.9),
+      calc(var(--glow-dx, 0px) * 1.5) calc(var(--glow-dy, 0px) * 1.5) 45px rgba(244, 114, 182, 0.5),
+      0 4px 16px rgba(0, 0, 0, 0.4) !important;
+    transform: translateY(-2px) scale(1.05) !important;
   }
 
-  /* Glass Cards with Pink Neon Perimeter Aura */
+  /* Glass Cards (Breathing Card, Music Player Card) with Radiant Pink Perimeter Glare */
   body.velvet-dark .macos-glass {
     background: rgba(36, 4, 16, 0.85) !important;
     border: 1.5px solid rgba(255, 105, 180, 0.4) !important;
     box-shadow: 
-      0 0 28px rgba(255, 45, 135, 0.28),
-      0 0 60px rgba(244, 114, 182, 0.15),
-      0 20px 40px -10px rgba(0, 0, 0, 0.75),
-      inset 0 0 25px rgba(255, 105, 180, 0.1) !important;
+      0 0 25px rgba(255, 45, 135, 0.3),
+      0 0 50px rgba(244, 114, 182, 0.15),
+      0 20px 40px -10px rgba(0, 0, 0, 0.8),
+      inset 0 0 20px rgba(255, 105, 180, 0.08) !important;
     color: #fce7f3 !important;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.25s ease, box-shadow 0.12s ease !important;
+  }
+  body.velvet-dark .macos-glass:hover,
+  body.velvet-dark details:hover,
+  body.velvet-dark #vinyl-card:hover {
+    border-color: #ff2d87 !important;
+    box-shadow: 
+      var(--glow-dx, 0px) var(--glow-dy, 0px) 32px rgba(255, 45, 135, 0.95), 
+      calc(var(--glow-dx, 0px) * 1.6) calc(var(--glow-dy, 0px) * 1.6) 65px rgba(255, 105, 180, 0.6), 
+      0 0 22px rgba(255, 45, 135, 0.5),
+      0 20px 40px -10px rgba(0, 0, 0, 0.75),
+      inset var(--glow-dx, 0px) var(--glow-dy, 0px) 20px rgba(255, 45, 135, 0.35),
+      inset 0 0 20px rgba(255, 105, 180, 0.2) !important;
   }
 
   @media (max-width: 640px) {
     body.velvet-dark .macos-glass {
       background: rgba(30, 3, 13, 0.92) !important;
       border: 1px solid rgba(255, 105, 180, 0.35) !important;
-      box-shadow: 0 0 20px rgba(255, 45, 135, 0.25), 0 10px 25px rgba(0, 0, 0, 0.7) !important;
+      box-shadow: 0 0 18px rgba(255, 45, 135, 0.25), 0 10px 25px rgba(0, 0, 0, 0.7) !important;
     }
   }
 
-  /* Polaroid Cards with Vibrant Pink Aura */
+  /* Polaroid Cards with Directional Glare & Parallax Lift */
   body.velvet-dark .polaroid-card {
     background: #1e030e !important;
-    border: 1.5px solid rgba(255, 105, 180, 0.4) !important;
-    box-shadow: 
-      0 0 26px rgba(255, 45, 135, 0.35),
-      0 0 50px rgba(244, 114, 182, 0.18),
-      0 14px 32px -6px rgba(0, 0, 0, 0.75) !important;
+    border: 1.5px solid rgba(255, 105, 180, 0.35) !important;
+    box-shadow: 0 14px 32px -6px rgba(0, 0, 0, 0.75) !important;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.12s ease, border-color 0.3s ease !important;
   }
   body.velvet-dark .polaroid-card:hover {
-    border-color: rgba(255, 105, 180, 0.9) !important;
+    border-color: #ff2d87 !important;
     box-shadow: 
-      0 0 38px rgba(255, 45, 135, 0.85),
-      0 0 75px rgba(244, 114, 182, 0.45),
+      var(--glow-dx, 0px) var(--glow-dy, 0px) 32px rgba(255, 45, 135, 0.9),
+      calc(var(--glow-dx, 0px) * 1.6) calc(var(--glow-dy, 0px) * 1.6) 60px rgba(244, 114, 182, 0.45),
       0 18px 36px rgba(0, 0, 0, 0.85) !important;
-    transform: translateY(-2px) scale(1.02) !important;
+    transform: translateY(-4px) scale(1.03) !important;
   }
   body.velvet-dark .polaroid-card p {
     color: #ffe4e9 !important;
   }
 
-  /* App Icons with Glowing Pink Aura */
+  /* App Icons with Directional Cursor Glare */
   body.velvet-dark .macos-app-icon {
-    background: linear-gradient(145deg, #420519, #24020d) !important;
-    border: 1.5px solid rgba(255, 105, 180, 0.5) !important;
-    box-shadow: 
-      0 0 20px rgba(255, 45, 135, 0.45),
-      0 0 40px rgba(244, 114, 182, 0.25),
-      0 8px 18px -4px rgba(0, 0, 0, 0.6) !important;
+    background: linear-gradient(145deg, #3d0517, #22020c) !important;
+    border: 1px solid rgba(255, 105, 180, 0.35) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
     color: #ffd6e0 !important;
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.12s ease, border-color 0.25s ease !important;
   }
   body.velvet-dark .macos-app-icon:hover {
-    border-color: rgba(255, 105, 180, 1) !important;
+    border-color: #ff2d87 !important;
     box-shadow: 
-      0 0 30px rgba(255, 45, 135, 0.9),
-      0 0 55px rgba(244, 114, 182, 0.5) !important;
+      var(--glow-dx, 0px) var(--glow-dy, 0px) 22px rgba(255, 45, 135, 0.9),
+      calc(var(--glow-dx, 0px) * 1.4) calc(var(--glow-dy, 0px) * 1.4) 38px rgba(244, 114, 182, 0.5),
+      0 6px 16px rgba(0, 0, 0, 0.6) !important;
+    transform: translateY(-2px) scale(1.06) !important;
   }
 
-  /* Secondary Glass Action Buttons (Prev, Affirmation button, etc.) */
+  /* Secondary Glass Action Buttons (Prev, Affirmations, etc.) */
   body.velvet-dark #scrapbook-prev-btn,
   body.velvet-dark #scrapbook-page-indicator,
   body.velvet-dark #affirmations-section button {
-    background: rgba(45, 6, 22, 0.88) !important;
-    border: 1.5px solid rgba(255, 105, 180, 0.45) !important;
-    box-shadow: 0 0 18px rgba(255, 45, 135, 0.4), 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+    background: rgba(45, 6, 22, 0.80) !important;
+    border: 1px solid rgba(255, 105, 180, 0.35) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
     color: #ffd6e0 !important;
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.12s ease, border-color 0.25s ease !important;
   }
   body.velvet-dark #scrapbook-prev-btn:hover,
   body.velvet-dark #affirmations-section button:hover {
-    border-color: rgba(255, 105, 180, 0.95) !important;
-    box-shadow: 0 0 30px rgba(255, 45, 135, 0.85), 0 0 50px rgba(244, 114, 182, 0.45) !important;
+    border-color: #ff2d87 !important;
+    box-shadow: 
+      var(--glow-dx, 0px) var(--glow-dy, 0px) 24px rgba(255, 45, 135, 0.9), 
+      calc(var(--glow-dx, 0px) * 1.5) calc(var(--glow-dy, 0px) * 1.5) 44px rgba(244, 114, 182, 0.5) !important;
+    transform: translateY(-2px) scale(1.03) !important;
   }
 
-  /* Breathing Circle Glowing Aura */
+  /* Breathing Circle Radiant Aura */
   body.velvet-dark #breathe-circle {
     box-shadow: 
       0 0 65px rgba(255, 45, 135, 0.85),
@@ -1067,15 +1095,11 @@
 
   /* Lace Frame & Botanical Rail Glowing Auras */
   body.velvet-dark .lace-scallop-top,
-  body.velvet-dark .lace-scallop-bottom,
   body.velvet-dark .lace-scallop-left,
   body.velvet-dark .lace-scallop-right {
     filter: drop-shadow(0 0 10px rgba(255, 45, 135, 0.75)) drop-shadow(0 0 25px rgba(244, 114, 182, 0.4)) !important;
   }
   body.velvet-dark .lace-mesh-inset {
-    border-color: rgba(255, 182, 193, 0.65) !important;
-    box-shadow: 
-      inset 0 0 28px rgba(255, 45, 135, 0.45),
       0 0 24px rgba(255, 105, 180, 0.6) !important;
   }
 
@@ -1161,6 +1185,165 @@
     filter: drop-shadow(0 0 12px rgba(255, 45, 135, 0.75)) drop-shadow(0 0 25px rgba(244, 114, 182, 0.4)) !important;
   }
 
+  /* Polaroid Expand Modal in Dark Mode (High Contrast & Clear Readability) */
+  body.velvet-dark #polaroid-modal {
+    background: rgba(18, 1, 8, 0.8) !important;
+  }
+  body.velvet-dark #modal-card {
+    background: rgba(36, 4, 16, 0.96) !important;
+    border: 1.5px solid rgba(255, 105, 180, 0.5) !important;
+    box-shadow: 
+      0 0 35px rgba(255, 45, 135, 0.65), 
+      0 0 70px rgba(244, 114, 182, 0.25), 
+      0 25px 60px -10px rgba(0, 0, 0, 0.9) !important;
+  }
+  body.velvet-dark #modal-title {
+    color: #ffffff !important;
+    text-shadow: 0 0 12px rgba(255, 105, 180, 0.4) !important;
+  }
+  body.velvet-dark #modal-text-container {
+    background: rgba(18, 2, 8, 0.92) !important;
+    border: 1px solid rgba(255, 105, 180, 0.35) !important;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.8) !important;
+  }
+  body.velvet-dark #modal-text {
+    color: #ffe4e9 !important;
+    font-weight: 300 !important;
+    line-height: 1.75 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+  }
+      /* ==================== APPLE GLASS PASTEL INSTANT SURVEY (HIGH CONTRAST) ==================== */
+  .survey-apple-glass {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", system-ui, sans-serif !important;
+    background: #ffffff !important;
+    backdrop-filter: blur(28px) saturate(190%) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+    border: 2px solid #fb7185 !important;
+    box-shadow: 
+      0 25px 60px -10px rgba(225, 29, 72, 0.25),
+      0 0 35px rgba(244, 114, 182, 0.35) !important;
+    color: #1f2937 !important;
+  }
+  .survey-title {
+    color: #4c0519 !important;
+    font-size: 1.5rem !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.025em !important;
+  }
+  .survey-subtitle {
+    color: #881337 !important;
+    font-size: 0.82rem !important;
+    font-weight: 600 !important;
+  }
+  .survey-question-label {
+    color: #4c0519 !important;
+    font-size: 0.92rem !important;
+    font-weight: 700 !important;
+  }
+  .survey-sublabel {
+    color: #9f1239 !important;
+    font-weight: 500 !important;
+  }
+  .survey-step-badge {
+    background: #ffe4e6 !important;
+    border: 1.5px solid #f43f5e !important;
+    color: #881337 !important;
+    font-weight: 700 !important;
+  }
+  .survey-step-card {
+    background: #fff1f2 !important;
+    border: 1.5px solid #fecdd3 !important;
+  }
+  .survey-pill-btn {
+    background: #ffffff !important;
+    border: 1.5px solid #fb7185 !important;
+    color: #4c0519 !important;
+    font-weight: 600 !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06) !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+  .survey-pill-btn:hover {
+    background: #ffe4e6 !important;
+    border-color: #e11d48 !important;
+    color: #9f1239 !important;
+    transform: translateY(-1px) !important;
+  }
+  .survey-pill-btn.active {
+    background: linear-gradient(135deg, #e11d48 0%, #be123c 100%) !important;
+    color: #ffffff !important;
+    border-color: #be123c !important;
+    box-shadow: 0 4px 14px rgba(225, 29, 72, 0.4) !important;
+  }
+  .survey-input-field {
+    background: #ffffff !important;
+    border: 2px solid #fb7185 !important;
+    color: #111827 !important;
+    font-weight: 600 !important;
+  }
+  .survey-input-field:focus {
+    border-color: #e11d48 !important;
+    box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.2) !important;
+  }
+
+  /* DARK MODE EXPLICIT OVERRIDES */
+  body.velvet-dark .survey-apple-glass {
+    background: rgba(28, 3, 13, 0.98) !important;
+    border: 2px solid rgba(255, 105, 180, 0.6) !important;
+    box-shadow: 
+      0 25px 60px -10px rgba(0, 0, 0, 0.95),
+      0 0 40px rgba(255, 45, 135, 0.5) !important;
+    color: #ffd6e0 !important;
+  }
+  body.velvet-dark .survey-title {
+    color: #ffffff !important;
+    text-shadow: 0 0 14px rgba(255, 105, 180, 0.5) !important;
+  }
+  body.velvet-dark .survey-subtitle {
+    color: #fbcfe8 !important;
+  }
+  body.velvet-dark .survey-question-label {
+    color: #ffe4e9 !important;
+  }
+  body.velvet-dark .survey-sublabel {
+    color: #f472b6 !important;
+  }
+  body.velvet-dark .survey-step-badge {
+    background: rgba(80, 7, 36, 0.9) !important;
+    border-color: rgba(255, 105, 180, 0.6) !important;
+    color: #ffd6e0 !important;
+  }
+  body.velvet-dark .survey-step-card {
+    background: rgba(18, 2, 8, 0.9) !important;
+    border-color: rgba(255, 105, 180, 0.35) !important;
+  }
+  body.velvet-dark .survey-pill-btn {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1.5px solid rgba(255, 105, 180, 0.35) !important;
+    color: #fce7f3 !important;
+  }
+  body.velvet-dark .survey-pill-btn:hover {
+    background: rgba(255, 105, 180, 0.2) !important;
+    border-color: rgba(255, 105, 180, 0.7) !important;
+    color: #ffffff !important;
+  }
+  body.velvet-dark .survey-pill-btn.active {
+    background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%) !important;
+    color: #ffffff !important;
+    border-color: #f43f5e !important;
+  }
+  body.velvet-dark .survey-input-field {
+    background: rgba(14, 1, 6, 0.96) !important;
+    border: 2px solid rgba(255, 105, 180, 0.45) !important;
+    color: #ffe4e9 !important;
+  }
+  @keyframes surveyShake {
+    0%, 100% { transform: translateX(0); }
+    15%, 45%, 75% { transform: translateX(-7px); }
+    30%, 60%, 90% { transform: translateX(7px); }
+  }
+  .survey-shake {
+    animation: surveyShake 0.42s cubic-bezier(0.36, 0.07, 0.19, 0.97) both !important;
+  }
 </style>
 </head>
 <body class="font-sans antialiased selection:bg-pink-200 selection:text-pink-900 relative">
@@ -2323,6 +2506,17 @@
         </div>
       </div>
 
+      <!-- Music Lounge Navigation Button -->
+      <div class="mt-3 pt-2.5 border-t border-pink-100/60">
+        <a href="vault.html" class="w-full flex items-center justify-between px-3.5 py-2 rounded-2xl macos-app-icon text-[11px] font-mono text-angel-deep hover:text-pink-600 transition-all shadow-sm group" title="Visit The Music Lounge">
+          <span class="flex items-center gap-2">
+            <span class="text-xs group-hover:rotate-12 transition-transform">🌌</span>
+            <span class="font-semibold tracking-wide">MUSIC LOUGNGE?</span>
+          </span>
+          <span class="text-xs text-pink-400 group-hover:translate-x-0.5 transition-transform">&rarr;</span>
+        </a>
+      </div>
+
     </div>
   </div>
 
@@ -2631,6 +2825,131 @@
 
 </main>
 
+<!-- ==================== STEP-BY-STEP INSTANT SURVEY MODAL ==================== -->
+<div id="instant-survey-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/45 dark:bg-black/75 backdrop-blur-md p-4 opacity-0 pointer-events-none transition-all duration-300">
+  <div id="survey-card" class="survey-apple-glass max-w-lg w-full p-6 sm:p-7 rounded-[32px] relative transform scale-90 transition-transform duration-300 max-h-[92vh] overflow-y-auto custom-scrollbar shadow-2xl">
+    
+    <!-- Close Button -->
+    <button type="button" onclick="closeInstantSurvey()" class="absolute top-4 right-4 w-8 h-8 rounded-full macos-app-icon flex items-center justify-center text-gray-600 hover:text-red-500 transition-all text-xs font-bold cursor-pointer" aria-label="Close Survey">
+      ✕
+    </button>
+
+    <!-- Header & Step Indicator -->
+    <div class="text-center mb-5">
+      <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full survey-step-badge text-[11px] font-mono uppercase tracking-wider mb-2">
+        <span id="survey-step-badge">Question 1 of 4</span>
+      </div>
+      <h3 class="survey-title">
+        Instant Survey
+      </h3>
+      <p class="survey-subtitle mt-1">
+        Answer honestly. Complete each question to proceed.
+      </p>
+
+      <!-- 4 Progress Step Bars -->
+      <div class="flex items-center justify-center gap-2 mt-3">
+        <div id="progress-dot-1" class="w-8 h-1.5 rounded-full bg-rose-600 transition-all duration-300"></div>
+        <div id="progress-dot-2" class="w-8 h-1.5 rounded-full bg-pink-200 dark:bg-white/20 transition-all duration-300"></div>
+        <div id="progress-dot-3" class="w-8 h-1.5 rounded-full bg-pink-200 dark:bg-white/20 transition-all duration-300"></div>
+        <div id="progress-dot-4" class="w-8 h-1.5 rounded-full bg-pink-200 dark:bg-white/20 transition-all duration-300"></div>
+      </div>
+    </div>
+
+    <!-- Step 1: Question A -->
+    <div id="survey-step-1" class="space-y-4">
+      <div class="survey-step-card p-4 rounded-2xl">
+        <label class="survey-question-label block mb-3">
+          A. How was your day?
+        </label>
+        <div class="space-y-2" id="survey-day-options">
+          <button type="button" onclick="selectSurveyDay('Amazing (HELLL YEAHHHHH)', this)" class="survey-pill-btn w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center justify-between cursor-pointer">
+            <span>Amazing (HELLL YEAHHHHH)</span>
+          </button>
+          <button type="button" onclick="selectSurveyDay('Amazing (sarcastically)', this)" class="survey-pill-btn w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center justify-between cursor-pointer">
+            <span>Amazing (sarcastically)</span>
+          </button>
+          <button type="button" onclick="selectSurveyDay('good (fuck yeahh)', this)" class="survey-pill-btn w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center justify-between cursor-pointer">
+            <span>good (fuck yeahh)</span>
+          </button>
+          <button type="button" onclick="selectSurveyDay('shitty (shit what happened)', this)" class="survey-pill-btn w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center justify-between cursor-pointer">
+            <span>shitty (shit what happened)</span>
+          </button>
+          <button type="button" onclick="selectSurveyDay('really fucking bad (text me!!!)', this)" class="survey-pill-btn w-full text-left px-4 py-2.5 rounded-xl text-xs flex items-center justify-between cursor-pointer">
+            <span>really fucking bad (text me!!!)</span>
+          </button>
+        </div>
+      </div>
+      <p id="err-step-1" class="text-xs text-red-600 font-bold hidden text-center">Please select an option to continue.</p>
+    </div>
+
+    <!-- Step 2: Question B -->
+    <div id="survey-step-2" class="hidden space-y-4">
+      <div class="survey-step-card p-4 rounded-2xl text-center">
+        <label class="survey-question-label block mb-4">
+          B. Did you drink coffee today (lma0)
+        </label>
+        <div class="grid grid-cols-2 gap-3" id="survey-coffee-options">
+          <button type="button" onclick="selectSurveyCoffee('Yes', this)" class="survey-pill-btn text-center px-4 py-3 rounded-xl text-xs font-bold flex items-center justify-center cursor-pointer">
+            <span>Yes</span>
+          </button>
+          <button type="button" onclick="selectSurveyCoffee('No', this)" class="survey-pill-btn text-center px-4 py-3 rounded-xl text-xs font-bold flex items-center justify-center cursor-pointer">
+            <span>No</span>
+          </button>
+        </div>
+      </div>
+      <p id="err-step-2" class="text-xs text-red-600 font-bold hidden text-center">Please select an option to continue.</p>
+    </div>
+
+    <!-- Step 3: Question C -->
+    <div id="survey-step-3" class="hidden space-y-4">
+      <div class="survey-step-card p-4 rounded-2xl">
+        <label for="survey-coolest-input" class="survey-question-label block mb-2">
+          C. Who's the coolest person ever??? <span class="survey-sublabel text-xs font-normal">(write her legal name)</span>
+        </label>
+        <input 
+          type="text" 
+          id="survey-coolest-input" 
+          placeholder="Enter her legal name..." 
+          autocomplete="off"
+          class="survey-input-field w-full px-4 py-2.5 rounded-xl text-xs focus:outline-none transition-all"
+        />
+        <p id="err-step-3" class="text-xs text-red-600 font-bold mt-2 hidden">Incorrect answer. There is only one true legal answer!</p>
+      </div>
+      <button type="button" onclick="validateStep3()" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700 text-white text-xs font-bold uppercase tracking-wider transition-all shadow-md active:scale-98 cursor-pointer">
+        Next Question
+      </button>
+    </div>
+
+    <!-- Step 4: Question D -->
+    <div id="survey-step-4" class="hidden space-y-4">
+      <div class="survey-step-card p-4 rounded-2xl">
+        <label for="survey-fave-input" class="survey-question-label block mb-2">
+          D. Who's your favourite person <span class="survey-sublabel text-xs font-normal">(nicknames can be accepted)</span>
+        </label>
+        <input 
+          type="text" 
+          id="survey-fave-input" 
+          placeholder="Enter your favourite person..." 
+          autocomplete="off"
+          class="survey-input-field w-full px-4 py-2.5 rounded-xl text-xs focus:outline-none transition-all"
+        />
+        <p id="err-step-4" class="text-xs text-red-600 font-bold mt-2 hidden">Incorrect. Think carefully and try again!</p>
+      </div>
+      <button type="button" id="survey-final-submit-btn" onclick="validateStep4AndSubmit()" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700 text-white text-xs font-bold uppercase tracking-wider transition-all shadow-md active:scale-98 cursor-pointer">
+        Submit Survey
+      </button>
+    </div>
+
+    <!-- Success Screen -->
+    <div id="survey-success-screen" class="hidden text-center py-6 space-y-3">
+      <h4 class="survey-title">Survey Complete!</h4>
+      <button type="button" onclick="closeInstantSurvey()" class="mt-4 px-6 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 text-white text-xs font-bold uppercase tracking-wider hover:brightness-105 transition-all shadow cursor-pointer">
+        Continue to Sanctuary
+      </button>
+    </div>
+
+  </div>
+</div>
 <!-- ==================== POLAROID EXPAND MODAL ==================== -->
 <div id="polaroid-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-[#5c3b48]/35 backdrop-blur-md p-5 opacity-0 pointer-events-none transition-opacity duration-300" onclick="closePolaroid(event)">
   <div id="modal-card" class="macos-glass max-w-md w-full p-6 sm:p-8 rounded-[36px] text-center relative transform scale-90 transition-transform duration-300" onclick="event.stopPropagation()">
@@ -2645,8 +2964,8 @@
 
     <h3 id="modal-title" class="font-serif text-2xl text-angel-deep mb-4">Your Creative Spark</h3>
 
-    <div class="p-5 rounded-2xl bg-white/70 border border-pink-100 mb-6 text-left shadow-inner">
-      <p id="modal-text" class="text-xs sm:text-sm text-gray-600 leading-relaxed font-light"></p>
+    <div id="modal-text-container" class="p-5 rounded-2xl bg-white/70 border border-pink-100 mb-6 text-left shadow-inner">
+      <p id="modal-text" class="text-xs sm:text-sm text-gray-700 leading-relaxed font-light"></p>
     </div>
 
     <button onclick="closePolaroid(null)" class="px-6 py-2.5 rounded-2xl bg-gradient-to-r from-angel-accent to-angel-deep text-white text-xs font-medium tracking-wide uppercase transition-all shadow-md hover:brightness-105 active:scale-95">
@@ -2657,6 +2976,15 @@
 
 <script>
   const VALID_KEYS = ["rainbows", "rainbow"];
+
+    // ==================== VERCEL ANALYTICS SILENT TELEMETRY HELPER ====================
+  function trackEvent(name, data) {
+    try {
+      if (typeof window.va === 'function') {
+        window.va('event', data ? { name, data } : { name });
+      }
+    } catch (e) {}
+  }
 
   // ==================== VELVET WINE THEME CONTROLLER ====================
   let currentTheme = localStorage.getItem('nebbie_theme_mode') || 'light';
@@ -2677,6 +3005,7 @@
       if (textEl) textEl.innerText = 'Velvet Wine';
     }
     localStorage.setItem('nebbie_theme_mode', theme);
+    trackEvent('theme_switched', { theme: theme });
   }
 
   function toggleTheme() {
@@ -3541,40 +3870,60 @@
     renderPlaylist();
   }
 
-  function selectTrack(idx) {
-    loadTrack(idx);
-    audio.play().then(() => {
-      syncVinylState(true);
-    }).catch(() => {});
-  }
-
   function syncVinylState(isPlaying) {
     const disc = document.getElementById('vinyl-disc');
     const tonearm = document.getElementById('tonearm');
     const playBtn = document.getElementById('play-pause-btn');
 
     if (isPlaying) {
-      disc.classList.remove('paused-vinyl');
-      tonearm.classList.remove('tonearm-idle');
-      tonearm.classList.add('tonearm-playing');
-      playBtn.innerText = "⏸";
+      if (disc) disc.classList.remove('paused-vinyl');
+      if (tonearm) {
+        tonearm.classList.remove('tonearm-idle');
+        tonearm.classList.add('tonearm-playing');
+      }
+      if (playBtn) playBtn.innerText = "⏸";
     } else {
-      disc.classList.add('paused-vinyl');
-      tonearm.classList.remove('tonearm-playing');
-      tonearm.classList.add('tonearm-idle');
-      playBtn.innerText = "▶";
+      if (disc) disc.classList.add('paused-vinyl');
+      if (tonearm) {
+        tonearm.classList.remove('tonearm-playing');
+        tonearm.classList.add('tonearm-idle');
+      }
+      if (playBtn) playBtn.innerText = "▶";
     }
   }
 
   function toggleAudio() {
     if (audio.paused) {
+      if (audio.volume <= 0.05) {
+        audio.volume = 0.85;
+        const volSlider = document.getElementById('volume-slider');
+        if (volSlider) volSlider.value = 0.85;
+      }
+      if (!audio.src || audio.src === '' || audio.src === window.location.href) {
+        loadTrack(currentTrackIdx);
+      }
       audio.play().then(() => {
         syncVinylState(true);
-      }).catch(() => {});
+      }).catch((e) => {
+        console.log('Play triggered:', e);
+      });
     } else {
       audio.pause();
       syncVinylState(false);
     }
+  }
+
+  function selectTrack(idx) {
+    loadTrack(idx);
+    if (audio.volume <= 0.05) {
+      audio.volume = 0.85;
+      const volSlider = document.getElementById('volume-slider');
+      if (volSlider) volSlider.value = 0.85;
+    }
+    trackEvent('song_played', { song: playlist[idx].title, artist: playlist[idx].artist });
+    audio.play().then(() => {
+      syncVinylState(true);
+    }).catch(() => {});
   }
 
   function nextTrack() {
@@ -3602,7 +3951,7 @@
       const elapsed = performance.now() - startTime;
       const progress = Math.min(elapsed / durationMs, 1.0);
       
-      // Smooth smoothstep / ease-in-out curve
+      // Smooth cubic ease-in-out curve
       const easeProgress = progress * progress * (3 - 2 * progress);
       const currentVol = targetVolume * easeProgress;
       audio.volume = Math.min(Math.max(currentVol, 0.0), 1.0);
@@ -3614,12 +3963,12 @@
         audio.volume = targetVolume;
         if (volumeSlider) volumeSlider.value = targetVolume;
       }
-    }, 40);
+    }, 30);
   }
 
   function changeVolume(val) {
     clearInterval(audioFadeTimer);
-    audio.volume = val;
+    audio.volume = parseFloat(val);
   }
 
   function seekAudio(percent) {
@@ -3642,9 +3991,9 @@
 
     if (audio.duration) {
       const progress = (audio.currentTime / audio.duration) * 100;
-      seekSlider.value = progress;
-      currentTimeEl.innerText = formatTime(audio.currentTime);
-      totalDurationEl.innerText = formatTime(audio.duration);
+      if (seekSlider) seekSlider.value = progress;
+      if (currentTimeEl) currentTimeEl.innerText = formatTime(audio.currentTime);
+      if (totalDurationEl) totalDurationEl.innerText = formatTime(audio.duration);
     }
   });
 
@@ -3652,79 +4001,9 @@
     nextTrack();
   });
 
-  // ==================== CROSS-PAGE SEAMLESS MUSIC STATE ====================
-  function saveMusicState() {
-    try {
-      const state = {
-        trackIdx: currentTrackIdx,
-        currentTime: audio.currentTime || 0,
-        isPlaying: !audio.paused,
-        volume: audio.volume !== undefined ? audio.volume : 0.85,
-        savedAt: Date.now()
-      };
-      localStorage.setItem('nebbie_music_state', JSON.stringify(state));
-    } catch(e) {}
-  }
-
-  function restoreMusicState() {
-    try {
-      const saved = localStorage.getItem('nebbie_music_state');
-      if (saved) {
-        const state = JSON.parse(saved);
-        if (typeof state.trackIdx === 'number' && state.trackIdx >= 0 && state.trackIdx < playlist.length) {
-          currentTrackIdx = state.trackIdx;
-        }
-        loadTrack(currentTrackIdx);
-
-        if (typeof state.volume === 'number') {
-          audio.volume = state.volume;
-          const volSlider = document.getElementById('volume-slider');
-          if (volSlider) volSlider.value = state.volume;
-        }
-
-        if (state.isPlaying) {
-          const elapsedSec = (Date.now() - (state.savedAt || Date.now())) / 1000;
-          const resumeTime = (state.currentTime || 0) + (elapsedSec < 30 ? elapsedSec : 0);
-          
-          audio.addEventListener('loadedmetadata', function onLoaded() {
-            audio.removeEventListener('loadedmetadata', onLoaded);
-            if (audio.duration && resumeTime < audio.duration) {
-              audio.currentTime = resumeTime;
-            }
-            audio.play().then(() => syncVinylState(true)).catch(() => {});
-          });
-
-          audio.play().then(() => {
-            if (resumeTime) audio.currentTime = resumeTime;
-            syncVinylState(true);
-          }).catch(() => {});
-        }
-        return true;
-      }
-    } catch(e) {}
-    return false;
-  }
-
-  // Throttled music state saving (prevents synchronous disk writes from blocking 60fps frame rate)
-  let saveStateTimer = null;
-  function throttledSaveMusicState() {
-    if (!saveStateTimer) {
-      saveStateTimer = setTimeout(() => {
-        saveMusicState();
-        saveStateTimer = null;
-      }, 2500);
-    }
-  }
-
-  audio.addEventListener('timeupdate', throttledSaveMusicState);
-  audio.addEventListener('play', saveMusicState);
-  audio.addEventListener('pause', saveMusicState);
-  window.addEventListener('beforeunload', saveMusicState);
-  window.addEventListener('pagehide', saveMusicState);
-
-  if (!restoreMusicState()) {
-    loadTrack(0);
-  }
+  // Default audio volume
+  audio.volume = 0.85;
+  loadTrack(0);
 
   parseAllSongMetadata();
 
@@ -3753,6 +4032,7 @@
   };
 
   function openPolaroid(id) {
+    trackEvent('polaroid_opened', { id: id });
     const data = polaroidData[id];
     if (!data) return;
 
@@ -3781,6 +4061,7 @@
   function unlockSanctuary() {
     if (isSanctuaryUnlocked) return;
     isSanctuaryUnlocked = true;
+    trackEvent('sanctuary_unlocked');
 
     const errorMsg = document.getElementById('error-msg');
     const lockScreen = document.getElementById('lock-screen');
@@ -3809,13 +4090,21 @@
       init3DScrapbook();
     }, 50);
 
+    // Trigger Instant Survey 3 seconds after unlock
+    setTimeout(() => {
+      showInstantSurvey();
+    }, 3000);
+
     // Start PPP from 1:00 (60 seconds) with smooth 3.5s cinematic volume fade-in
+    loadTrack(0);
     audio.currentTime = 60;
     audio.volume = 0.0;
     audio.play().then(() => {
       syncVinylState(true);
       fadeInAudio(0.85, 3500);
-    }).catch(() => {});
+    }).catch((e) => {
+      console.log('Autoplay deferred:', e);
+    });
   }
 
   function handleUnlock(e) {
@@ -4585,6 +4874,7 @@
   }
 
     function popFarmGreenSparkles(e) {
+    trackEvent('farm_portal_clicked');
     const rect = e.currentTarget.getBoundingClientRect();
     const originX = rect.left + rect.width / 2;
     const originY = rect.top + rect.height / 2;
@@ -4613,6 +4903,7 @@
   }
 
   function fireSparkles() {
+    trackEvent('send_light_clicked');
     confetti({
       particleCount: 80,
       spread: 65,
@@ -4624,6 +4915,7 @@
   // Breathing Exercise
   let breathing = false;
   function startBreathing() {
+    trackEvent('breathing_exercise_started');
     if (breathing) return;
     breathing = true;
     const circle = document.getElementById('breathe-circle');
@@ -4720,6 +5012,7 @@
   initAffirmationDeck();
 
   function nextAffirmation() {
+    trackEvent('affirmation_drawn');
     const idx = getNextAffirmationIndex();
     lastAffirmationIdx = idx;
     const el = document.getElementById('affirmation-text');
@@ -4792,9 +5085,270 @@
   }
 
   function nextCharacter() {
+    trackEvent('character_viewed');
     currentCharacterIdx = (currentCharacterIdx + 1) % characterData.length;
     updateCharacterCard();
   }
+
+  
+  // =========================================================================
+  // STEP-BY-STEP INSTANT SURVEY ENGINE WITH CUSTOM SOUND EFFECTS
+  // =========================================================================
+  const SURVEY_DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1543783868103004201/IlcIU9dPF5VrNdpVBCyKmCHDcH8301pl-iG9Haf6nGhTvdsmEQjY0pvf7BUmd2CfzyEN';
+
+  let surveyState = {
+    day: '',
+    coffee: '',
+    coolest: '',
+    fave: ''
+  };
+
+  let surveyCurrentStep = 1;
+  let surveyShown = false;
+
+  function playSurveySFX(filename, maxDurationSec = 0) {
+    try {
+      const audioObj = new Audio('assets/' + filename);
+      audioObj.volume = 0.88;
+      audioObj.play().catch(() => {});
+      if (maxDurationSec > 0) {
+        setTimeout(() => {
+          try {
+            audioObj.pause();
+            audioObj.currentTime = 0;
+          } catch(e) {}
+        }, maxDurationSec * 1000);
+      }
+    } catch (e) {}
+  }
+
+  function showInstantSurvey() {
+    if (surveyShown) return;
+    surveyShown = true;
+    const modal = document.getElementById('instant-survey-modal');
+    const card = document.getElementById('survey-card');
+    if (!modal || !card) return;
+
+    modal.classList.remove('opacity-0', 'pointer-events-none');
+    modal.classList.add('opacity-100', 'pointer-events-auto');
+    card.classList.remove('scale-90');
+    card.classList.add('scale-100');
+    setSurveyStep(1);
+  }
+
+  function closeInstantSurvey() {
+    const modal = document.getElementById('instant-survey-modal');
+    const card = document.getElementById('survey-card');
+    if (!modal || !card) return;
+
+    card.classList.remove('scale-100');
+    card.classList.add('scale-90');
+    modal.classList.remove('opacity-100', 'pointer-events-auto');
+    modal.classList.add('opacity-0', 'pointer-events-none');
+  }
+
+  function setSurveyStep(step) {
+    surveyCurrentStep = step;
+    const badge = document.getElementById('survey-step-badge');
+    if (badge) badge.innerText = 'Question ' + step + ' of 4';
+
+    for (let i = 1; i <= 4; i++) {
+      const pane = document.getElementById('survey-step-' + i);
+      const dot = document.getElementById('progress-dot-' + i);
+      if (pane) {
+        if (i === step) {
+          pane.classList.remove('hidden');
+        } else {
+          pane.classList.add('hidden');
+        }
+      }
+      if (dot) {
+        if (i <= step) {
+          dot.className = 'w-8 h-1.5 rounded-full bg-pink-500 transition-all duration-300';
+        } else {
+          dot.className = 'w-8 h-1.5 rounded-full bg-pink-200 dark:bg-white/20 transition-all duration-300';
+        }
+      }
+    }
+
+    if (step === 3) {
+      setTimeout(() => {
+        const inp = document.getElementById('survey-coolest-input');
+        if (inp) inp.focus();
+      }, 150);
+    } else if (step === 4) {
+      setTimeout(() => {
+        const inp = document.getElementById('survey-fave-input');
+        if (inp) inp.focus();
+      }, 150);
+    }
+  }
+
+  function selectSurveyDay(val, btn) {
+    surveyState.day = val;
+    const parent = document.getElementById('survey-day-options');
+    parent.querySelectorAll('.survey-pill-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const err = document.getElementById('err-step-1');
+    if (err) err.classList.add('hidden');
+
+    setTimeout(() => {
+      setSurveyStep(2);
+    }, 280);
+  }
+
+  function selectSurveyCoffee(val, btn) {
+    surveyState.coffee = val;
+    const parent = document.getElementById('survey-coffee-options');
+    parent.querySelectorAll('.survey-pill-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const err = document.getElementById('err-step-2');
+    if (err) err.classList.add('hidden');
+
+    if (val === 'Yes') {
+      playSurveySFX('Kids Cheering - Sound Effect (HD).mp3');
+    } else {
+      playSurveySFX('disappointed.mp3');
+    }
+
+    setTimeout(() => {
+      setSurveyStep(3);
+    }, 650);
+  }
+
+  function normalizeSurveyInput(str) {
+    return (str || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  }
+
+  function triggerElementShake(el) {
+    if (!el) return;
+    el.classList.remove('survey-shake');
+    void el.offsetWidth;
+    el.classList.add('survey-shake');
+  }
+
+  function validateStep3() {
+    const inputC = document.getElementById('survey-coolest-input');
+    const errC = document.getElementById('err-step-3');
+    const cleanC = normalizeSurveyInput(inputC.value);
+    const validC = ['zarairfan', 'zara', 'neb', 'nebbie'];
+
+    if (!validC.includes(cleanC)) {
+      playSurveySFX('Oh My God Bruh, Oh Hell Nah Sound Effect.mp3');
+      inputC.classList.add('border-red-500', 'bg-red-50/70', 'text-red-700');
+      if (errC) errC.classList.remove('hidden');
+      triggerElementShake(document.getElementById('survey-step-3'));
+      return false;
+    }
+
+    // Correct Answer (3-second duration cap on Yippee)
+    playSurveySFX('YIPPEE YIPPEE HEHE WOAH.mp3', 3);
+    inputC.classList.remove('border-red-500', 'bg-red-50/70', 'text-red-700');
+    inputC.classList.add('border-emerald-500');
+    if (errC) errC.classList.add('hidden');
+    surveyState.coolest = inputC.value.trim();
+
+    setTimeout(() => {
+      setSurveyStep(4);
+    }, 700);
+    return true;
+  }
+
+  function validateStep4AndSubmit() {
+    const inputD = document.getElementById('survey-fave-input');
+    const errD = document.getElementById('err-step-4');
+    const cleanD = normalizeSurveyInput(inputD.value);
+    const validD = ['you', 'jawad', 'jawadibrahim', 'jawaf', 'jawafibrahim', 'twinkie', 'twinkiepie'];
+
+    if (!validD.includes(cleanD)) {
+      playSurveySFX('Get out sound effect!!.mp3');
+      inputD.classList.add('border-red-500', 'bg-red-50/70', 'text-red-700');
+      if (errD) errD.classList.remove('hidden');
+      triggerElementShake(document.getElementById('survey-step-4'));
+      return;
+    }
+
+    // Correct Answer
+    playSurveySFX('HAPPY HAPPY HAPPY Meme Sound Effect.mp3');
+    inputD.classList.remove('border-red-500', 'bg-red-50/70', 'text-red-700');
+    inputD.classList.add('border-emerald-500');
+    if (errD) errD.classList.add('hidden');
+    surveyState.fave = inputD.value.trim();
+
+    const submitBtn = document.getElementById('survey-final-submit-btn');
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'DISPATCHING RESPONSES...';
+    }
+
+    // Send Payload to Discord Webhook
+    const payload = {
+      content: '**New Instant Survey Submission Received!**',
+      embeds: [
+        {
+          title: 'Instant Survey Responses',
+          color: 0xff2d87,
+          fields: [
+            {
+              name: 'A. How was your day?',
+              value: surveyState.day || 'Not specified',
+              inline: false
+            },
+            {
+              name: 'B. Did you drink coffee today?',
+              value: surveyState.coffee === 'Yes' ? 'Yes (Kids Cheering)' : 'No (Disappointed)',
+              inline: true
+            },
+            {
+              name: 'C. Coolest Person Ever',
+              value: surveyState.coolest,
+              inline: true
+            },
+            {
+              name: 'D. Favourite Person',
+              value: surveyState.fave,
+              inline: false
+            }
+          ],
+          footer: {
+            text: 'NebbieGotWings Sanctuary Survey • ' + new Date().toLocaleString()
+          }
+        }
+      ]
+    };
+
+    try {
+      fetch(SURVEY_DISCORD_WEBHOOK, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).catch(() => {});
+    } catch(e) {}
+
+    // Show Success Screen
+    for (let i = 1; i <= 4; i++) {
+      const pane = document.getElementById('survey-step-' + i);
+      if (pane) pane.classList.add('hidden');
+    }
+    const badge = document.getElementById('survey-step-badge');
+    if (badge) badge.innerText = 'Completed';
+    const successEl = document.getElementById('survey-success-screen');
+    if (successEl) successEl.classList.remove('hidden');
+  }
+
+  // Allow pressing Enter on Question C and D
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      if (surveyCurrentStep === 3) {
+        validateStep3();
+      } else if (surveyCurrentStep === 4) {
+        validateStep4AndSubmit();
+      }
+    }
+  });
+
 </script>
 </body>
 </html>

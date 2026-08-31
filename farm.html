@@ -1172,7 +1172,17 @@
   }, 1200);
 
   // ==================== INTRO DISMISSAL ====================
+    // ==================== VERCEL ANALYTICS SILENT TELEMETRY HELPER ====================
+  function trackEvent(name, data) {
+    try {
+      if (typeof window.va === 'function') {
+        window.va('event', data ? { name, data } : { name });
+      }
+    } catch (e) {}
+  }
+
   function dismissIntro() {
+    trackEvent('farm_arrived');
     const overlay = document.getElementById('intro-overlay');
     if (overlay) {
       overlay.style.opacity = '0';
@@ -1385,6 +1395,7 @@
   // ==================== THEME TOGGLE (GOLDEN DUSK <-> STARRY MIDNIGHT) ====================
   let isMidnight = false;
   function toggleSkyTheme() {
+    trackEvent('farm_sky_theme_toggled', { mode: !isMidnight ? 'midnight' : 'dusk' });
     isMidnight = !isMidnight;
     document.body.classList.toggle('midnight-theme', isMidnight);
     
@@ -1531,7 +1542,6 @@
     });
   }
 
-  // ==================== ANIMAL SPEECH & PERSONALITIES ====================
   const ANIMAL_DIALOGUES = {
     '🐱': ["purrr...", "*stretches lazily* 🐾", "meow~", "*nuzzles hand*", "*sleepy blink*"],
     '🐐': ["bleeeaaat! 🌿", "*playful headbutt*", "munching flowers~", "baaa! ✨"],
@@ -1804,9 +1814,35 @@
   }
 
   function loadFarmTrack(idx) {
+    trackEvent('farm_song_played', { song: playlist[idx].title, artist: playlist[idx].artist });
     currentTrackIdx = idx;
     farmAudio.src = playlist[currentTrackIdx].src;
     updateFarmMusicUI(!farmAudio.paused);
+  }
+
+  
+  // --- CROSS-TAB LIVE AUDIO SYNCHRONIZATION ---
+  if ('BroadcastChannel' in window) {
+    window.nebbieFarmMusicChannel = new BroadcastChannel('nebbie_music_channel');
+    window.nebbieFarmMusicChannel.onmessage = (e) => {
+      const data = e.data;
+      if (!data) return;
+      if (data.type === 'PLAY' && !farmAudio.paused) {
+        // already playing
+      } else if (data.type === 'PLAY' && farmAudio.paused) {
+        toggleFarmAudio();
+      } else if (data.type === 'PAUSE' && !farmAudio.paused) {
+        toggleFarmAudio();
+      }
+    };
+  }
+
+  function broadcastFarmAudio(type, payload = {}) {
+    if (window.nebbieFarmMusicChannel) {
+      try {
+        window.nebbieFarmMusicChannel.postMessage({ type, trackIdx: currentTrackIdx, currentTime: farmAudio ? farmAudio.currentTime : 0, ...payload });
+      } catch (err) {}
+    }
   }
 
   function toggleFarmAudio() {
@@ -1817,6 +1853,7 @@
       }).catch(() => {});
     } else {
       farmAudio.pause();
+        broadcastFarmAudio("PAUSE");
       updateFarmMusicUI(false);
       saveFarmMusicState();
     }
