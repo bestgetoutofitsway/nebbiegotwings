@@ -3738,7 +3738,15 @@
   }
   function checkSavedUnlockState() {
     try {
-      if (localStorage.getItem('nebbie_sanctuary_unlocked') === 'true') {
+      // Clear any legacy persistent storage unlock flags
+      localStorage.removeItem('nebbie_sanctuary_unlocked');
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const isReturning = urlParams.get('return') === 'true';
+      const hasSessionUnlock = sessionStorage.getItem('nebbie_sanctuary_unlocked') === 'true';
+
+      // Only bypass intro/lock if explicitly returning from farm or vault AND unlocked in current session
+      if (isReturning && hasSessionUnlock) {
         isSanctuaryUnlocked = true;
         const introScreen = document.getElementById('intro-screen');
         const lockScreen = document.getElementById('lock-screen');
@@ -4121,7 +4129,8 @@
     }, 50);
 
     try {
-      localStorage.setItem('nebbie_sanctuary_unlocked', 'true');
+      sessionStorage.setItem('nebbie_sanctuary_unlocked', 'true');
+      localStorage.removeItem('nebbie_sanctuary_unlocked');
     } catch(e) {}
 
     // Trigger Instant Survey 3 seconds after unlock (if not completed before)
