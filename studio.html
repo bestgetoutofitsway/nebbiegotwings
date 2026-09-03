@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Vinyl Vault · Record Pressing Studio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=JetBrains+Mono:wght@400;600&family=Playfair+Display:ital,wght@0,600;1,400&family=Caveat:wght@600&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      background-color: #0d020a;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(219, 39, 119, 0.18), transparent 45%),
+        radial-gradient(circle at 10% 80%, rgba(126, 34, 206, 0.15), transparent 40%),
+        radial-gradient(circle at 90% 60%, rgba(244, 114, 182, 0.10), transparent 35%);
+      color: #ffd6e0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+    }
+    .font-serif { font-family: 'Playfair Display', Georgia, serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .font-handwriting { font-family: 'Caveat', cursive; }
+    .font-display { font-family: 'Cinzel', serif; }
+
+    .glass-card {
+      background: rgba(22, 5, 18, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(244, 114, 182, 0.25);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.75), 0 0 25px rgba(236, 72, 153, 0.15);
+      border-radius: 20px;
+    }
+
+    .dropzone {
+      border: 2px dashed rgba(244, 114, 182, 0.4);
+      background: rgba(13, 2, 10, 0.5);
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+    .dropzone:hover, .dropzone.drag-over {
+      border-color: #ec4899;
+      background: rgba(236, 72, 153, 0.12);
+      box-shadow: 0 0 20px rgba(236, 72, 153, 0.25);
+      transform: scale(1.01);
+    }
+
+    /* Spinning vinyl preview */
+    .vinyl-preview-disc {
+      animation: spinPlatter 4s linear infinite;
+      animation-play-state: running;
+    }
+    @keyframes spinPlatter {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Tab Buttons */
+    .studio-tab-btn.active-tab {
+      background: rgba(236, 72, 153, 0.25);
+      border-color: rgba(244, 114, 182, 0.6);
+      color: #ffffff;
+      box-shadow: 0 0 15px rgba(236, 72, 153, 0.35);
+    }
+  </style>
+</head>
+<body class="p-4 sm:p-8 flex flex-col items-center">
+
+  <!-- Header -->
+  <header class="w-full max-w-5xl flex items-center justify-between pb-5 mb-6 border-b border-pink-500/20">
+    <div class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-pink-900 via-purple-950 to-zinc-950 border border-pink-500/40 flex items-center justify-center shadow-[0_0_20px_rgba(236,72,153,0.35)]">
+        <span class="text-2xl">💿</span>
+      </div>
+      <div>
+        <h1 class="text-xl sm:text-2xl font-display font-bold text-pink-100 tracking-wider">THE VINYL PRESSING STUDIO</h1>
+        <p class="text-xs font-mono text-pink-300/80">Direct Hard Drive Automation & 1000×1000 Artwork Cropper</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <span id="backend-status" class="px-2.5 py-1 rounded-full text-[10px] font-mono bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 flex items-center gap-1.5 shadow">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+        <span>Python Engine Connected</span>
+      </span>
+      <a href="vault.html" class="px-4 py-1.5 rounded-full text-xs font-mono bg-pink-500/10 hover:bg-pink-500/25 border border-pink-400/40 text-pink-200 hover:text-white transition-all">
+        ← Return to Vault
+      </a>
+    </div>
+  </header>
+
+  <!-- Navigation Mode Tabs -->
+  <div class="w-full max-w-5xl flex items-center gap-3 mb-6">
+    <button type="button" id="tab-btn-visual" onclick="switchTab('visual')" class="studio-tab-btn active-tab px-5 py-2 rounded-xl border border-white/10 text-xs font-mono font-bold tracking-wider uppercase transition-all flex items-center gap-2 cursor-pointer">
+      <span>✨</span>
+      <span>1. Visual Record Ingestion</span>
+    </button>
+    <button type="button" id="tab-btn-paster" onclick="switchTab('paster')" class="studio-tab-btn px-5 py-2 rounded-xl border border-white/10 text-xs font-mono font-bold tracking-wider uppercase text-pink-300/80 hover:text-white transition-all flex items-center gap-2 cursor-pointer">
+      <span>📋</span>
+      <span>2. Paste Track Code & Auto-Apply</span>
+    </button>
+  </div>
+
+  <!-- Dimension Notice Banner -->
+  <div class="w-full max-w-5xl mb-6 p-3.5 rounded-2xl bg-gradient-to-r from-pink-950/70 via-purple-950/50 to-pink-950/70 border border-pink-500/35 flex items-center justify-between flex-wrap gap-2 shadow-lg">
+    <div class="flex items-center gap-2.5">
+      <span class="text-base">✨</span>
+      <span class="text-xs font-mono font-semibold text-pink-100">
+        Perfect Vinyl Dimension: <span class="text-pink-300 font-bold bg-pink-900/50 px-2 py-0.5 rounded-md border border-pink-500/30">1000 × 1000 px</span> (1:1 Square Ratio)
+      </span>
+    </div>
+    <span class="text-[11px] font-mono text-pink-300/80 italic">Images are automatically scaled & cropped to 1000x1000 without distortion!</span>
+  </div>
+
+  <!-- TAB 1: VISUAL INGESTION STUDIO -->
+  <div id="tab-content-visual" class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- Left Column: Drag & Drop Dropzones & Inputs (7 cols) -->
+    <section class="lg:col-span-7 space-y-5">
+      
+      <!-- 1. Audio Dropzone -->
+      <div class="glass-card p-5">
+        <label class="block text-xs font-mono font-bold text-pink-300 uppercase mb-2">1. Drag & Drop Audio File (.mp3, .wav, .m4a)</label>
+        <div id="audio-dropzone" class="dropzone rounded-2xl p-6 text-center" onclick="document.getElementById('audio-file-input').click()">
+          <input type="file" id="audio-file-input" accept="audio/*" class="hidden" onchange="handleAudioSelect(this.files[0])" />
+          <div class="text-3xl mb-2">🎵</div>
+          <p id="audio-drop-text" class="text-sm font-serif font-bold text-white">Click or Drop Audio File Here</p>
+          <p class="text-[11px] font-mono text-pink-300/60 mt-1">Extracts ID3 tags, title, artist, and embedded cover</p>
+        </div>
+      </div>
+
+      <!-- 2. Track Metadata Editor -->
+      <div class="glass-card p-5 space-y-3">
+        <h2 class="text-xs font-mono font-bold text-pink-300 uppercase mb-1">2. Track Metadata</h2>
+        
+        <div>
+          <label class="block text-[11px] font-mono text-pink-200/80 mb-1">Song Title</label>
+          <input type="text" id="track-title-input" placeholder="e.g. Prom Song (Gone Wrong)" oninput="updateLivePreview()" class="w-full px-3 py-2 rounded-xl bg-black/50 border border-pink-500/30 text-sm text-white focus:outline-none focus:border-pink-400 font-serif" />
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-mono text-pink-200/80 mb-1">Artist Name</label>
+          <input type="text" id="track-artist-input" placeholder="e.g. Lana Del Rey" oninput="updateLivePreview()" class="w-full px-3 py-2 rounded-xl bg-black/50 border border-pink-500/30 text-sm text-white focus:outline-none focus:border-pink-400 font-sans" />
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-mono text-pink-200/80 mb-1">Personal Memory Note (Optional handwritten caption)</label>
+          <input type="text" id="track-note-input" placeholder="e.g. exciteddd" oninput="updateLivePreview()" class="w-full px-3 py-2 rounded-xl bg-black/50 border border-pink-500/30 text-sm text-pink-200 focus:outline-none focus:border-pink-400 font-handwriting" />
+        </div>
+
+        <!-- 3. Cover Artwork Options & Cropper -->
+        <div class="pt-3 border-t border-pink-500/15">
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block text-[11px] font-mono text-pink-200/80 font-bold uppercase">Album Artwork</label>
+            <span id="dimension-badge" class="text-[10px] font-mono text-pink-300 bg-pink-900/40 px-2 py-0.5 rounded-full border border-pink-500/30">Target: 1000×1000 px</span>
+          </div>
+
+          <div class="flex items-center gap-2 mb-2 flex-wrap">
+            <button type="button" onclick="searchAppleArtwork()" class="px-3 py-1.5 rounded-xl bg-pink-600 hover:bg-pink-500 text-white text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow">
+              <span>🔍</span>
+              <span>Auto-Find 1000x1000 Apple CDN Cover</span>
+            </button>
+            
+            <label class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-pink-500/30 text-pink-200 text-xs font-mono cursor-pointer transition-all flex items-center gap-1.5">
+              <span>📁 Upload Custom Image</span>
+              <input type="file" id="custom-cover-input" accept="image/*" class="hidden" onchange="handleCustomCover(this.files[0])" />
+            </label>
+
+            <button type="button" id="open-cropper-btn" onclick="openCropperWithCurrent()" class="hidden px-3 py-1.5 rounded-xl bg-purple-900/50 hover:bg-purple-800 border border-purple-400/40 text-purple-200 text-xs font-mono font-bold transition-all items-center gap-1.5">
+              <span>✂️ Crop to 1000x1000</span>
+            </button>
+          </div>
+
+          <input type="text" id="track-cover-input" placeholder="Cover Image URL or assets/cover.jpg..." oninput="updateLivePreview()" class="w-full px-3 py-1.5 rounded-xl bg-black/50 border border-pink-500/30 text-xs text-pink-100 font-mono" />
+          <p id="artwork-status-text" class="text-[10px] font-mono text-pink-400 mt-1"></p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Right Column: Live 3D Vinyl Sleeve & Audio Preview (5 cols) -->
+    <section class="lg:col-span-5 space-y-5">
+      
+      <!-- Live Physical Sleeve Preview Card -->
+      <div class="glass-card p-5 text-center">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-[10px] font-mono uppercase text-pink-300 font-bold">Live Vinyl Crate Sleeve Preview</span>
+          <span class="text-[9px] font-mono text-pink-400/80">1:1 Aspect Ratio</span>
+        </div>
+        
+        <div class="relative mx-auto w-52 h-52 sm:w-60 sm:h-60 rounded-2xl p-4 flex flex-col justify-end overflow-hidden shadow-2xl border border-white/20 bg-cover bg-center" id="preview-sleeve-bg" style="background-color: #2e1065;">
+          
+          <!-- Vinyl Record Peeking Out -->
+          <div class="vinyl-preview-disc absolute -top-10 -right-10 w-48 h-48 rounded-full border border-zinc-700/60 shadow-2xl flex items-center justify-center bg-zinc-950">
+            <div id="preview-disc-label" class="w-18 h-18 rounded-full bg-cover bg-center border border-white/30 shadow-inner" style="width: 72px; height: 72px; background-color: #ec4899;"></div>
+          </div>
+
+          <!-- Glossy Wrap Glare Overlay -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none"></div>
+
+          <!-- Track Badge & Info -->
+          <div class="relative z-10 text-left">
+            <span class="text-[9px] font-mono text-pink-300 font-bold tracking-wider uppercase">NEW MASTER PRESSING</span>
+            <p id="preview-title" class="text-sm font-serif font-bold text-white truncate drop-shadow">No Track Loaded</p>
+            <p id="preview-artist" class="text-[11px] text-pink-200/80 truncate">Drop an audio file to begin</p>
+            <p id="preview-note" class="text-[11px] font-handwriting text-pink-300 truncate mt-0.5"></p>
+          </div>
+        </div>
+
+        <!-- Audio Player Tester -->
+        <div class="mt-4 pt-4 border-t border-pink-500/15">
+          <audio id="preview-audio" controls class="w-full h-8 opacity-80"></audio>
+        </div>
+      </div>
+
+      <!-- Action: Code Generator & Press -->
+      <div class="glass-card p-5 space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-mono font-bold text-pink-300 uppercase">3. Track Code Generator</h3>
+          <button type="button" onclick="copyGeneratedCode()" class="text-[11px] font-mono font-bold bg-pink-600 hover:bg-pink-500 text-white px-3 py-1 rounded-lg border border-pink-400/50 cursor-pointer transition-all flex items-center gap-1 shadow">
+            <span>📋</span>
+            <span>Copy Code</span>
+          </button>
+        </div>
+        
+        <p class="text-[11px] text-pink-200/70">Your track code is generated automatically below. You can copy-paste it into <code class="text-pink-300 font-mono">press_record.py</code> (Tab 2) or paste it in chat!</p>
+        
+        <textarea id="generated-code-box" readonly class="w-full h-36 px-3 py-2.5 rounded-xl bg-black/75 border border-pink-500/30 text-[10.5px] font-mono text-pink-100 focus:outline-none select-all" placeholder="Track code will appear here..."></textarea>
+
+        <button type="button" id="press-action-btn" onclick="copyGeneratedCode()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-pink-500 via-rose-600 to-pink-600 hover:from-pink-600 hover:to-rose-700 text-white text-xs font-mono font-bold uppercase tracking-wider transition-all shadow-[0_0_25px_rgba(236,72,153,0.35)] active:scale-98 cursor-pointer flex items-center justify-center gap-2">
+          <span>📋</span>
+          <span>Copy Track Code to Clipboard</span>
+        </button>
+
+        <p id="press-status-msg" class="text-xs font-mono text-center text-pink-300 font-bold min-h-[16px]"></p>
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- TAB 2: PASTE TRACK CODE & AUTO-APPLY -->
+  <div id="tab-content-paster" class="w-full max-w-5xl hidden space-y-6">
+    <div class="glass-card p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-pink-500/20 pb-3">
+        <div>
+          <h2 class="text-base font-serif font-bold text-white flex items-center gap-2">
+            <span>📋</span>
+            <span>Paste Track Code & Auto-Apply</span>
+          </h2>
+          <p class="text-xs font-mono text-pink-300/70">Paste any generated track code object below and click Apply — the Python backend will parse it and insert it into both files!</p>
+        </div>
+        <span class="text-xs font-mono text-pink-400 bg-pink-900/40 px-3 py-1 rounded-full border border-pink-500/30">1-Click Auto Insertion</span>
+      </div>
+
+      <textarea id="pasted-code-input" rows="8" class="w-full p-4 rounded-xl bg-black/60 border border-pink-500/30 text-xs font-mono text-pink-100 placeholder-pink-300/30 focus:outline-none focus:border-pink-400 font-mono" placeholder="Paste your track object code here... (e.g. { id: 7, title: 'Prom Song (Gone Wrong)', artist: 'Lana Del Rey', ... })"></textarea>
+
+      <div class="flex items-center justify-between">
+        <button type="button" onclick="applyPastedCode()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-pink-500 via-rose-600 to-pink-600 hover:from-pink-600 hover:to-rose-700 text-white text-xs font-mono font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(236,72,153,0.35)] active:scale-98 cursor-pointer flex items-center gap-2">
+          <span>⚡</span>
+          <span>Auto-Apply Pasted Code to Vault & Index</span>
+        </button>
+        <span id="paster-status-msg" class="text-xs font-mono text-pink-300 font-bold"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 1:1 SQUARE IMAGE CROPPER MODAL ==================== -->
+  <div id="cropper-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
+    <div class="glass-card max-w-xl w-full p-6 space-y-4">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-pink-500/20">
+        <div>
+          <h3 class="text-base font-serif font-bold text-white flex items-center gap-2">
+            <span>✂️ Crop Album Artwork</span>
+            <span class="text-xs font-mono text-pink-400 bg-pink-900/50 px-2 py-0.5 rounded border border-pink-500/30">1000 × 1000 px</span>
+          </h3>
+          <p class="text-[11px] font-mono text-pink-300/70">Drag and zoom to position your image perfectly into the 1:1 vinyl square</p>
+        </div>
+        <button type="button" onclick="closeCropperModal()" class="text-pink-300 hover:text-white font-mono text-sm">✕</button>
+      </div>
+
+      <!-- Cropper Viewport Container -->
+      <div class="relative w-full h-80 bg-black/60 rounded-xl overflow-hidden flex items-center justify-center border border-pink-500/30">
+        <img id="cropper-image" src="" class="max-h-full max-w-full" />
+      </div>
+
+      <!-- Controls & Guides -->
+      <div class="flex items-center justify-between text-xs font-mono text-pink-200/80 flex-wrap gap-2">
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="if(cropper) cropper.rotate(-90)" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white">↺ Rotate</button>
+          <button type="button" onclick="if(cropper) cropper.zoom(0.1)" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white">🔍 Zoom In</button>
+          <button type="button" onclick="if(cropper) cropper.zoom(-0.1)" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white">🔍 Zoom Out</button>
+          <button type="button" onclick="if(cropper) cropper.reset()" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white">Reset</button>
+        </div>
+        <span class="text-[10px] text-pink-400 font-mono">Aspect Ratio: Fixed 1:1</span>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center justify-end gap-3 pt-3 border-t border-pink-500/20">
+        <button type="button" onclick="closeCropperModal()" class="px-4 py-2 rounded-xl text-xs font-mono text-pink-300 hover:text-white bg-transparent border border-pink-500/30 hover:border-pink-400">Cancel</button>
+        <button type="button" onclick="applyCrop()" class="px-5 py-2 rounded-xl text-xs font-mono font-bold text-white bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 shadow-md">✓ Crop & Apply (1000x1000)</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    let currentAudioFile = null;
+    let currentAudioBase64 = null;
+    let currentCoverUrl = '';
+    let cropper = null;
+    let rawUploadedImageSrc = '';
+
+    // Switch Tabs
+    function switchTab(tabId) {
+      if (tabId === 'visual') {
+        document.getElementById('tab-content-visual').classList.remove('hidden');
+        document.getElementById('tab-content-paster').classList.add('hidden');
+        document.getElementById('tab-btn-visual').classList.add('active-tab');
+        document.getElementById('tab-btn-paster').classList.remove('active-tab');
+      } else {
+        document.getElementById('tab-content-visual').classList.add('hidden');
+        document.getElementById('tab-content-paster').classList.remove('hidden');
+        document.getElementById('tab-btn-paster').classList.add('active-tab');
+        document.getElementById('tab-btn-visual').classList.remove('active-tab');
+      }
+    }
+
+    // Setup Drag & Drop Handlers
+    const dropzone = document.getElementById('audio-dropzone');
+    ['dragenter', 'dragover'].forEach(name => {
+      dropzone.addEventListener(name, (e) => { e.preventDefault(); dropzone.classList.add('drag-over'); });
+    });
+    ['dragleave', 'drop'].forEach(name => {
+      dropzone.addEventListener(name, (e) => { e.preventDefault(); dropzone.classList.remove('drag-over'); });
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+      const files = e.dataTransfer.files;
+      if (files && files.length > 0) {
+        handleAudioSelect(files[0]);
+      }
+    });
+
+    function handleAudioSelect(file) {
+      if (!file) return;
+      currentAudioFile = file;
+
+      document.getElementById('audio-drop-text').innerText = file.name;
+      const audioEl = document.getElementById('preview-audio');
+      audioEl.src = URL.createObjectURL(file);
+
+      // Read audio file as base64 for Python backend
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        currentAudioBase64 = e.target.result;
+      };
+      reader.readAsDataURL(file);
+
+      let rawName = file.name.replace(/\.[^/.]+$/, "");
+      rawName = rawName.replace(/^\d+\s*[-_.]\s*/, "");
+      let title = rawName;
+      let artist = "Unknown Artist";
+
+      if (rawName.includes(" - ")) {
+        const parts = rawName.split(" - ");
+        artist = parts[0].trim();
+        title = parts[1].trim();
+      }
+
+      document.getElementById('track-title-input').value = title;
+      document.getElementById('track-artist-input').value = artist;
+
+      if (window.jsmediatags) {
+        window.jsmediatags.read(file, {
+          onSuccess: function(tag) {
+            const tags = tag.tags;
+            if (tags.title) document.getElementById('track-title-input').value = tags.title;
+            if (tags.artist) document.getElementById('track-artist-input').value = tags.artist;
+
+            if (tags.picture) {
+              const base64String = tags.picture.data.map(c => String.fromCharCode(c)).join('');
+              const base64 = "data:" + tags.picture.format + ";base64," + btoa(base64String);
+              rawUploadedImageSrc = base64;
+              checkAndPromptCropping(base64);
+            } else {
+              searchAppleArtwork();
+            }
+            updateLivePreview();
+          },
+          onError: function() {
+            searchAppleArtwork();
+            updateLivePreview();
+          }
+        });
+      } else {
+        searchAppleArtwork();
+        updateLivePreview();
+      }
+    }
+
+    function handleCustomCover(file) {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        rawUploadedImageSrc = e.target.result;
+        checkAndPromptCropping(rawUploadedImageSrc);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function checkAndPromptCropping(imageSrc) {
+      const img = new Image();
+      img.onload = function() {
+        const w = img.naturalWidth;
+        const h = img.naturalHeight;
+        const isSquare = Math.abs(w - h) < 4;
+        
+        document.getElementById('dimension-badge').innerText = `Uploaded: ${w} × ${h} px`;
+        document.getElementById('open-cropper-btn').classList.remove('hidden');
+        document.getElementById('open-cropper-btn').classList.add('flex');
+
+        if (!isSquare || w !== 1000 || h !== 1000) {
+          openCropperModal(imageSrc);
+        } else {
+          currentCoverUrl = imageSrc;
+          document.getElementById('track-cover-input').value = currentCoverUrl;
+          document.getElementById('artwork-status-text').innerText = `✓ Perfect 1000x1000 artwork loaded!`;
+          updateLivePreview();
+        }
+      };
+      img.src = imageSrc;
+    }
+
+    function openCropperWithCurrent() {
+      if (rawUploadedImageSrc || currentCoverUrl) {
+        openCropperModal(rawUploadedImageSrc || currentCoverUrl);
+      }
+    }
+
+    function openCropperModal(imageSrc) {
+      const modal = document.getElementById('cropper-modal');
+      const cropperImg = document.getElementById('cropper-image');
+      modal.classList.remove('hidden');
+      cropperImg.src = imageSrc;
+
+      if (cropper) {
+        cropper.destroy();
+      }
+
+      cropper = new Cropper(cropperImg, {
+        aspectRatio: 1,
+        viewMode: 1,
+        dragMode: 'move',
+        autoCropArea: 1.0,
+        restore: false,
+        guides: true,
+        center: true,
+        highlight: false,
+        cropBoxMovable: true,
+        cropBoxResizable: true,
+        toggleDragModeOnDblclick: false
+      });
+    }
+
+    function closeCropperModal() {
+      const modal = document.getElementById('cropper-modal');
+      modal.classList.add('hidden');
+      if (cropper) {
+        cropper.destroy();
+        cropper = null;
+      }
+    }
+
+    function applyCrop() {
+      if (!cropper) return;
+      const canvas = cropper.getCroppedCanvas({
+        width: 1000,
+        height: 1000,
+        imageSmoothingEnabled: true,
+        imageSmoothingQuality: 'high'
+      });
+
+      const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+      currentCoverUrl = croppedDataUrl;
+      document.getElementById('track-cover-input').value = currentCoverUrl;
+      document.getElementById('dimension-badge').innerText = `Cropped: 1000 × 1000 px ✓`;
+      document.getElementById('artwork-status-text').innerText = `✓ Successfully cropped to 1000x1000 (1:1 square)!`;
+
+      closeCropperModal();
+      updateLivePreview();
+    }
+
+    async function searchAppleArtwork() {
+      const title = document.getElementById('track-title-input').value.trim();
+      const artist = document.getElementById('track-artist-input').value.trim();
+      if (!title) return;
+
+      const statusEl = document.getElementById('artwork-status-text');
+      statusEl.innerText = "Searching Apple Music for 1000x1000 artwork...";
+
+      try {
+        const query = encodeURIComponent(`${title} ${artist}`);
+        const res = await fetch(`https://itunes.apple.com/search?term=${query}&entity=song&limit=3`);
+        const data = await res.json();
+        if (data.results && data.results.length > 0) {
+          const item = data.results[0];
+          const highRes = item.artworkUrl100.replace('100x100bb', '1000x1000bb');
+          currentCoverUrl = highRes;
+          rawUploadedImageSrc = highRes;
+          document.getElementById('track-cover-input').value = highRes;
+          document.getElementById('dimension-badge').innerText = `Apple Official: 1000 × 1000 px ✓`;
+          document.getElementById('open-cropper-btn').classList.remove('hidden');
+          document.getElementById('open-cropper-btn').classList.add('flex');
+          statusEl.innerText = `✓ Found Official 1000x1000 Artwork for "${item.collectionName || item.trackName}"!`;
+          updateLivePreview();
+        } else {
+          statusEl.innerText = "ℹ No online cover found (using ambient gradient)";
+        }
+      } catch (e) {
+        statusEl.innerText = "ℹ Artwork search completed.";
+      }
+    }
+
+    function generateTrackCode() {
+      const title = document.getElementById('track-title-input').value.trim() || 'Track Title';
+      const artist = document.getElementById('track-artist-input').value.trim() || 'Artist Name';
+      const note = document.getElementById('track-note-input').value.trim();
+      const cover = document.getElementById('track-cover-input').value.trim() || currentCoverUrl || 'assets/cover.jpg';
+
+      const code = `// --- VAULT.HTML TRACK ENTRY ---
+{ 
+  id: 9, 
+  title: ${JSON.stringify(title)}, 
+  artist: ${JSON.stringify(artist)}, 
+  src: 'assets/song9.mp3', 
+  note: ${JSON.stringify(note)}, 
+  badge: 'Track 09', 
+  cover: '${cover}',
+  fallbackCover: 'linear-gradient(135deg, #4a044e, #1e1b4b)',
+  palette: {
+    nebula1: 'rgba(219, 39, 119, 0.18)', nebula2: 'rgba(126, 34, 206, 0.14)',
+    starAccent: { r: 244, g: 114, b: 182 }, glow: 'rgba(236, 72, 153, 0.45)',
+    stageShadow: 'rgba(236, 72, 153, 0.45)'
+  }
+}`;
+      const box = document.getElementById('generated-code-box');
+      if (box) box.value = code;
+      return code;
+    }
+
+    function copyGeneratedCode() {
+      const code = generateTrackCode();
+      const msg = document.getElementById('press-status-msg');
+      navigator.clipboard.writeText(code).then(() => {
+        if (msg) msg.innerText = "✨ Track code copied to clipboard! Ready to paste into press_record.py!";
+        setTimeout(() => { if (msg) msg.innerText = ""; }, 3000);
+      }).catch(() => {
+        const box = document.getElementById('generated-code-box');
+        if (box) box.select();
+        if (msg) msg.innerText = "Code selected! Press Ctrl+C to copy.";
+      });
+    }
+
+    function updateLivePreview() {
+      const title = document.getElementById('track-title-input').value || 'Untitled Track';
+      const artist = document.getElementById('track-artist-input').value || 'Artist';
+      const note = document.getElementById('track-note-input').value || '';
+      const cover = document.getElementById('track-cover-input').value.trim() || currentCoverUrl;
+
+      document.getElementById('preview-title').innerText = title;
+      document.getElementById('preview-artist').innerText = artist;
+      document.getElementById('preview-note').innerText = note ? `(${note})` : '';
+
+      const sleeveEl = document.getElementById('preview-sleeve-bg');
+      const discEl = document.getElementById('preview-disc-label');
+
+      if (cover) {
+        sleeveEl.style.backgroundImage = `url('${cover}')`;
+        discEl.style.backgroundImage = `url('${cover}')`;
+      } else {
+        sleeveEl.style.backgroundImage = 'none';
+        discEl.style.backgroundImage = 'none';
+      }
+
+      generateTrackCode();
+    }
+
+    // 1-CLICK DIRECT PRESS TO HARD DRIVE VIA PYTHON BACKEND
+    async function pressRecordDirectly() {
+      const title = document.getElementById('track-title-input').value.trim();
+      const artist = document.getElementById('track-artist-input').value.trim();
+      const note = document.getElementById('track-note-input').value.trim();
+      const cover = document.getElementById('track-cover-input').value.trim() || currentCoverUrl;
+
+      if (!title || !artist) {
+        alert("Please specify a Song Title and Artist Name.");
+        return;
+      }
+
+      const btn = document.getElementById('press-action-btn');
+      const msg = document.getElementById('press-status-msg');
+      btn.disabled = true;
+      btn.innerHTML = '<span>⏳ Saving to Hard Drive & Updating Vault...</span>';
+      msg.innerText = '';
+
+      try {
+        const response = await fetch('/api/press', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: title,
+            artist: artist,
+            note: note,
+            cover: cover,
+            audioBase64: currentAudioBase64
+          })
+        });
+
+        const res = await response.json();
+        if (res.success) {
+          msg.innerHTML = `✨ Successfully Pressed ${res.track.badge}: "${res.track.title}" into the Vault!`;
+          btn.innerHTML = '<span>✓ Record Pressed Successfully!</span>';
+          btn.classList.replace('from-pink-500', 'from-emerald-600');
+          btn.classList.replace('to-pink-600', 'to-teal-700');
+          setTimeout(() => {
+            btn.disabled = false;
+            btn.innerHTML = '<span>💿</span><span>Press Another Record</span>';
+            btn.classList.replace('from-emerald-600', 'from-pink-500');
+            btn.classList.replace('to-teal-700', 'to-pink-600');
+          }, 3500);
+        } else {
+          msg.innerText = 'Error: ' + res.error;
+          btn.disabled = false;
+          btn.innerHTML = '<span>💿 Press Record into the Vault</span>';
+        }
+      } catch (e) {
+        msg.innerText = 'Connected via browser fallback. Code generated below!';
+        btn.disabled = false;
+        btn.innerHTML = '<span>💿 Press Record into the Vault</span>';
+      }
+    }
+
+    // AUTO-APPLY PASTED CODE
+    async function applyPastedCode() {
+      const code = document.getElementById('pasted-code-input').value.trim();
+      if (!code) {
+        alert("Please paste your track code object first.");
+        return;
+      }
+
+      const status = document.getElementById('paster-status-msg');
+      status.innerText = "Applying pasted code to vault.html & index.html...";
+
+      try {
+        const response = await fetch('/api/apply-code', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: code })
+        });
+
+        const res = await response.json();
+        if (res.success) {
+          status.innerText = `✓ Successfully Applied ${res.track.badge}: "${res.track.title}" into Vault & Index!`;
+          document.getElementById('pasted-code-input').value = '';
+        } else {
+          status.innerText = 'Error: ' + res.error;
+        }
+      } catch (e) {
+        status.innerText = 'Error connecting to Python backend.';
+      }
+    }
+  </script>
+</body>
+</html>

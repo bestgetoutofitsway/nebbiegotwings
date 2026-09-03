@@ -144,9 +144,9 @@
 
   button:hover {
     box-shadow: 
-      var(--glow-dx, 0px) var(--glow-dy, 0px) 22px #ff2d87, 
-      calc(var(--glow-dx, 0px) * 1.5) calc(var(--glow-dy, 0px) * 1.5) 40px rgba(255, 45, 135, 0.7) !important;
-    filter: brightness(1.12);
+      var(--glow-dx, 0px) var(--glow-dy, 0px) 10px rgba(255, 45, 135, 0.4), 
+      calc(var(--glow-dx, 0px) * 1.2) calc(var(--glow-dy, 0px) * 1.2) 18px rgba(255, 105, 180, 0.25) !important;
+    filter: brightness(1.04);
   }
 
   .macos-app-icon:hover {
@@ -1218,10 +1218,10 @@
     background: #ffffff !important;
     backdrop-filter: blur(28px) saturate(190%) !important;
     -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
-    border: 2px solid #fb7185 !important;
+    border: 1.5px solid #fb7185 !important;
     box-shadow: 
-      0 25px 60px -10px rgba(225, 29, 72, 0.25),
-      0 0 35px rgba(244, 114, 182, 0.35) !important;
+      0 20px 50px -10px rgba(0, 0, 0, 0.15),
+      0 0 20px rgba(244, 114, 182, 0.2) !important;
     color: #1f2937 !important;
   }
   .survey-title {
@@ -1266,6 +1266,8 @@
     background: #ffe4e6 !important;
     border-color: #e11d48 !important;
     color: #9f1239 !important;
+    box-shadow: 0 2px 6px rgba(225, 29, 72, 0.15) !important;
+    filter: none !important;
     transform: translateY(-1px) !important;
   }
   .survey-pill-btn.active {
@@ -1288,10 +1290,10 @@
   /* DARK MODE EXPLICIT OVERRIDES */
   body.velvet-dark .survey-apple-glass {
     background: rgba(28, 3, 13, 0.98) !important;
-    border: 2px solid rgba(255, 105, 180, 0.6) !important;
+    border: 1.5px solid rgba(255, 105, 180, 0.5) !important;
     box-shadow: 
-      0 25px 60px -10px rgba(0, 0, 0, 0.95),
-      0 0 40px rgba(255, 45, 135, 0.5) !important;
+      0 20px 50px -10px rgba(0, 0, 0, 0.9),
+      0 0 25px rgba(255, 45, 135, 0.25) !important;
     color: #ffd6e0 !important;
   }
   body.velvet-dark .survey-title {
@@ -1322,9 +1324,11 @@
     color: #fce7f3 !important;
   }
   body.velvet-dark .survey-pill-btn:hover {
-    background: rgba(255, 105, 180, 0.2) !important;
-    border-color: rgba(255, 105, 180, 0.7) !important;
+    background: rgba(255, 105, 180, 0.15) !important;
+    border-color: rgba(255, 105, 180, 0.5) !important;
     color: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), 0 0 10px rgba(255, 45, 135, 0.2) !important;
+    filter: none !important;
   }
   body.velvet-dark .survey-pill-btn.active {
     background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%) !important;
@@ -3786,37 +3790,61 @@
       title: "PPP",
       artist: "Beach House",
       src: "assets/song2.mp3",
-      cover: ""
+      cover: "assets/cover1.jpg"
     },
     {
       title: "Affection",
       artist: "BETWEEN FRIENDS",
       src: "assets/song4.mp3",
-      cover: ""
+      cover: "assets/cover2.jpg"
     },
     {
       title: "Lemon Glow",
       artist: "Beach House",
       src: "assets/song6.mp3",
-      cover: ""
+      cover: "assets/cover3.jpg"
     },
     {
       title: "About You",
       artist: "The 1975",
       src: "assets/song3.mp3",
-      cover: ""
+      cover: "assets/cover4.jpg"
     },
     {
       title: "Die For You",
       artist: "The Weeknd",
       src: "assets/song1.mp3",
-      cover: ""
+      cover: "assets/cover5.jpg"
     },
     {
       title: "Stargirl Interlude",
       artist: "The Weeknd ft. Lana Del Rey",
       src: "assets/song5.mp3",
-      cover: ""
+      cover: "assets/cover5.jpg"
+    },
+    {
+      title: "Gila",
+      artist: "Beach House",
+      src: "assets/song7.mp3",
+      cover: "assets/cover7.jpg"
+    },
+    {
+      title: "Prom Song (Gone Wrong)",
+      artist: "Lana Del Rey",
+      src: "assets/song8.mp3",
+      cover: "assets/cover8.jpg"
+    },
+    {
+      title: "Meet Me In The Pale Moonlight",
+      artist: "Lana Del Rey",
+      src: "assets/song9.mp3",
+      cover: "assets/cover9.jpg"
+    },
+    {
+      title: "Runaway Runaway",
+      artist: "Mars Argo",
+      src: "assets/song10.mp3",
+      cover: "assets/cover10.jpg"
     }
   ];
 

@@ -564,30 +564,18 @@
       left: 103px;
       width: 114px;
       height: 114px;
-      border-radius: 150px;
+      border-radius: 50%;
       background: #db2777;
-      box-shadow: 0 0 8px rgba(219, 39, 119, 0.6);
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.7), inset 0 0 0 1.5px rgba(255, 255, 255, 0.25);
       pointer-events: none;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.15);
     }
-    #label:after {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      width: 94px;
-      height: 47px;
-      background: #db2777;
-      border-radius: 94px 94px 0 0;
-      content: '';
-    }
-    #label:before {
-      position: absolute;
-      top: 5px;
-      left: 5px;
-      width: 104px;
-      height: 104px;
-      background: #fbcfe8;
-      border-radius: 100px;
-      content: '';
+    #label:after, #label:before {
+      display: none !important;
+      content: none !important;
     }
 
     #axis-shadow { position: absolute; top: 82px; left: 338px; width: 7px; height: 12px; background: #000; opacity: 0.5; border-radius: 0 0 7px 7px; content: ''; z-index: 6; }
@@ -617,19 +605,68 @@
       width: 100%;
       height: 100%;
       pointer-events: none;
+      cursor: grab;
       transform-origin: 622px 52px;
-      transition: transform 0.9s cubic-bezier(0.25, 1, 0.5, 1);
+      transition: transform 0.85s cubic-bezier(0.25, 1, 0.5, 1);
       filter: drop-shadow(4px 10px 6px rgba(0, 0, 0, 0.55));
       will-change: transform;
       z-index: 8;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    #tonearm-moving-assembly.is-dragging-arm {
+      transition: none !important;
+      cursor: grabbing !important;
     }
     #tonearm-moving-assembly.tonearm-playing { transform: rotate(24deg); }
     #tonearm-moving-assembly.tonearm-idle { transform: rotate(0deg); }
 
-    #arm { position: absolute; top: 120px; left: 485px; width: 175px; height: 9px; background: #464646; border-bottom: 3px solid #1a1a1a; border-radius: 45px; transform: rotateZ(-55deg); z-index: 4; }
-    #head { position: absolute; top: 180px; left: 512px; width: 24px; height: 34px; background: #1a1a1a; border-radius: 6px 12px 0 0; transform: rotateZ(10deg) skewX(-25deg); z-index: 8; }
+    #arm { 
+      position: absolute; 
+      top: 120px; 
+      left: 485px; 
+      width: 175px; 
+      height: 9px; 
+      background: #464646; 
+      border-bottom: 3px solid #1a1a1a; 
+      border-radius: 45px; 
+      transform: rotateZ(-55deg); 
+      z-index: 4; 
+      pointer-events: auto;
+      transition: background 0.2s ease;
+    }
+    #tonearm-moving-assembly:hover #arm {
+      background: #5a5a5a;
+    }
+    #head { 
+      position: absolute; 
+      top: 180px; 
+      left: 512px; 
+      width: 24px; 
+      height: 34px; 
+      background: #1a1a1a; 
+      border-radius: 6px 12px 0 0; 
+      transform: rotateZ(10deg) skewX(-25deg); 
+      z-index: 8; 
+      pointer-events: auto;
+    }
     #head:before { position: absolute; top: -2px; left: -2px; width: 23px; height: 34px; background: #464646; border-radius: 6px 12px 0 0; content: ''; }
-    #head:after { position: absolute; top: 15px; left: 10px; width: 16px; height: 6px; background: #f43f5e; border-radius: 1px 2px 2px 1px; box-shadow: 1.5px 1px #1a1a1a, 0 0 8px rgba(244, 63, 94, 0.8); content: ''; transform: rotate(10deg); }
+    #head:after { 
+      position: absolute; 
+      top: 15px; 
+      left: 10px; 
+      width: 16px; 
+      height: 6px; 
+      background: #f43f5e; 
+      border-radius: 1px 2px 2px 1px; 
+      box-shadow: 1.5px 1px #1a1a1a, 0 0 8px rgba(244, 63, 94, 0.8); 
+      content: ''; 
+      transform: rotate(10deg); 
+      transition: box-shadow 0.2s ease;
+    }
+    #tonearm-moving-assembly:hover #head:after {
+      box-shadow: 1.5px 1px #1a1a1a, 0 0 16px rgba(244, 63, 94, 1), 0 0 24px rgba(251, 113, 133, 0.8);
+    }
 
     /* Grain */
     #grain1 { position: absolute; top: 12px; left: 8px; width: 62px; height: 18px; border: 1px solid #3c1e52; border-radius: 0 0 25px 25px; border-top: none; }
@@ -1077,7 +1114,113 @@
       100% { transform: scale(1); opacity: 1; }
     }
 
-  </style>
+  
+  /* ==================== MACOS PLAYLIST & QUEUE MANAGER WINDOW ==================== */
+  #macos-playlist-window {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.96) translateZ(0);
+    will-change: transform, opacity;
+    width: 480px;
+    max-width: 92vw;
+    background: rgba(18, 4, 16, 0.95);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border: 1.5px solid rgba(244, 114, 182, 0.35);
+    box-shadow: 0 25px 60px -10px rgba(0,0,0,0.92), 0 0 30px rgba(236, 72, 153, 0.25);
+    border-radius: 22px;
+    z-index: 50;
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+  }
+  #macos-playlist-window.open-window {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1) translateZ(0);
+  }
+
+  /* Custom Translucent Rose Pink Scrollbars */
+  #window-track-list::-webkit-scrollbar,
+  #macos-playlist-window::-webkit-scrollbar,
+  #playlist-tab-bar::-webkit-scrollbar,
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 5px !important;
+    height: 5px !important;
+  }
+  #window-track-list::-webkit-scrollbar-track,
+  #macos-playlist-window::-webkit-scrollbar-track,
+  #playlist-tab-bar::-webkit-scrollbar-track,
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent !important;
+  }
+  #window-track-list::-webkit-scrollbar-thumb,
+  #macos-playlist-window::-webkit-scrollbar-thumb,
+  #playlist-tab-bar::-webkit-scrollbar-thumb,
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(244, 114, 182, 0.35) !important;
+    border-radius: 9999px !important;
+  }
+  #window-track-list::-webkit-scrollbar-thumb:hover,
+  #macos-playlist-window::-webkit-scrollbar-thumb:hover,
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(236, 72, 153, 0.8) !important;
+  }
+  #window-track-list,
+  #macos-playlist-window,
+  #playlist-tab-bar {
+    scrollbar-width: thin !important;
+    scrollbar-color: rgba(244, 114, 182, 0.35) transparent !important;
+  }
+
+  .playlist-tab-pill {
+    padding: 4px 11px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    color: #fbcfe8;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 105, 180, 0.25);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    white-space: nowrap;
+    shrink: 0;
+  }
+  .playlist-tab-pill:hover {
+    background: rgba(255, 105, 180, 0.15);
+    border-color: rgba(255, 105, 180, 0.5);
+    color: #ffffff;
+  }
+  .playlist-tab-pill.active-tab {
+    background: linear-gradient(135deg, #ec4899, #be123c) !important;
+    border-color: #f43f5e !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 10px rgba(236, 72, 153, 0.4) !important;
+  }
+
+  .reorder-btn {
+    width: 20px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    color: #f472b6;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 105, 180, 0.2);
+    font-size: 9px;
+    transition: all 0.15s ease;
+    cursor: pointer;
+  }
+  .reorder-btn:hover {
+    background: rgba(236, 72, 153, 0.3);
+    color: #ffffff;
+    border-color: #f43f5e;
+  }
+
+</style>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body class="relative flex flex-col justify-between min-h-[175vh] selection:bg-pink-500 selection:text-white pb-32 scroll-smooth">
@@ -1202,7 +1345,7 @@
         <div id="weight"></div>
         <div id="axle"></div>
 
-        <div id="tonearm-moving-assembly" class="tonearm-idle">
+        <div id="tonearm-moving-assembly" class="tonearm-idle" role="button" tabindex="0" title="Click or Drag Tonearm to Drop Needle & Play" aria-label="Drop needle to play or lift tonearm to pause">
           <div id="arm"></div>
           <div id="head"></div>
         </div>
@@ -1253,8 +1396,15 @@
               </div>
             </div>
 
-            <h2 id="track-title" class="font-serif text-2xl font-bold text-pink-100 truncate mt-1">PPP</h2>
-            <p id="track-artist" class="font-sans text-xs text-pink-300/80 font-medium">Beach House</p>
+            <div class="flex items-center gap-3 mt-1.5">
+              <div id="track-cover-thumb" class="w-12 h-12 rounded-xl shrink-0 border border-white/20 shadow-md bg-cover bg-center overflow-hidden relative" style="background-image: url('assets/cover1.jpg');">
+                <div class="absolute inset-0 bg-gradient-to-tr from-black/20 to-white/10 pointer-events-none"></div>
+              </div>
+              <div class="min-w-0 flex-1">
+                <h2 id="track-title" class="font-serif text-xl font-bold text-pink-100 truncate">PPP</h2>
+                <p id="track-artist" class="font-sans text-xs text-pink-300/80 font-medium truncate">Beach House</p>
+              </div>
+            </div>
             
             <p id="track-note" class="font-handwriting text-lg text-amber-200/90 leading-snug mt-3 italic min-h-[28px]">
               &nbsp;
@@ -1299,7 +1449,7 @@
           <div class="flex items-center justify-between px-1">
             <div class="flex items-center gap-2">
               <span class="text-sm font-serif font-bold text-pink-200 tracking-wide">The Vinyl Vault</span>
-              <span class="text-[11px] font-mono text-pink-300/60 tracking-wider">· 6 Pressings</span>
+              <span class="text-[11px] font-mono text-pink-300/60 tracking-wider">· 10 Pressings</span>
             </div>
             
             <!-- Shuffle / Pick Random Record Button -->
@@ -1357,10 +1507,49 @@
       </div>
     </button>
 
+    <!-- App 2: The Vault Playlist Manager -->
+    <button id="dock-playlist-btn" onclick="toggleMacosPlaylistWindow()" class="dock-app-btn group relative flex flex-col items-center justify-center p-1 rounded-xl outline-none cursor-pointer" title="Vault Playlist Manager" aria-label="Open Vault Playlist">
+      <div class="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-pink-900/70 via-purple-950/90 to-zinc-950 border border-pink-500/30 flex items-center justify-center shadow-lg group-hover:border-pink-400/60 group-hover:shadow-[0_0_22px_rgba(236,72,153,0.45)] transition-all">
+        <!-- Playlist Menu Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="text-pink-300 group-hover:text-pink-100 transition-colors">
+          <line x1="8" y1="6" x2="21" y2="6"></line>
+          <line x1="8" y1="12" x2="21" y2="12"></line>
+          <line x1="8" y1="18" x2="21" y2="18"></line>
+          <line x1="3" y1="6" x2="3.01" y2="6"></line>
+          <line x1="3" y1="12" x2="3.01" y2="12"></line>
+          <line x1="3" y1="18" x2="3.01" y2="18"></line>
+        </svg>
+      </div>
+      <!-- macOS Active Running App Light -->
+      <div id="dock-playlist-dot" class="w-1.5 h-1.5 rounded-full bg-transparent mt-1 transition-all duration-300"></div>
+      <!-- Tooltip -->
+      <div class="absolute -top-9 px-2.5 py-1 rounded-lg bg-zinc-950/95 border border-white/10 text-[11px] font-mono text-pink-200 shadow-2xl opacity-0 pointer-events-none group-hover:opacity-100 -translate-y-1 group-hover:translate-y-0 transition-all duration-200 whitespace-nowrap">
+        Playlist Manager
+      </div>
+    </button>
+
     <!-- Dock Divider -->
     <div class="w-[1px] h-8 bg-white/10 mx-0.5"></div>
 
-    <!-- App 2: Say smth back (Send Signal) -->
+    <!-- App 3: Song Wishlist / Request a Record -->
+    <button id="dock-request-song-btn" onclick="openSongRequestModal()" class="dock-app-btn group relative flex flex-col items-center justify-center p-1 rounded-xl outline-none cursor-pointer" title="Request a Song / Add to Wishlist" aria-label="Request a Record for the Vault">
+      <div class="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-rose-900/70 via-pink-950/90 to-zinc-950 border border-pink-500/30 flex items-center justify-center shadow-lg group-hover:border-pink-400/60 group-hover:shadow-[0_0_22px_rgba(244,63,94,0.45)] transition-all">
+        <!-- Music Note + Sparkle Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="text-rose-300 group-hover:text-white transition-transform group-hover:scale-110">
+          <path d="M9 18V5l12-2v13"></path>
+          <circle cx="6" cy="18" r="3"></circle>
+          <circle cx="18" cy="16" r="3"></circle>
+        </svg>
+      </div>
+      <!-- macOS Active Running App Light -->
+      <div id="dock-request-dot" class="w-1.5 h-1.5 rounded-full bg-transparent mt-1 transition-all duration-300"></div>
+      <!-- Tooltip -->
+      <div class="absolute -top-9 px-2.5 py-1 rounded-lg bg-zinc-950/95 border border-white/10 text-[11px] font-mono text-pink-200 shadow-2xl opacity-0 pointer-events-none group-hover:opacity-100 -translate-y-1 group-hover:translate-y-0 transition-all duration-200 whitespace-nowrap">
+        Request a Song
+      </div>
+    </button>
+
+    <!-- App 4: Say smth back (Send Signal) -->
     <button id="dock-signal-btn" onclick="openSignalModal()" class="dock-app-btn group relative flex flex-col items-center justify-center p-1 rounded-xl outline-none" title="Say smth back" aria-label="Send a Signal Back">
       <div class="relative w-12 h-12 rounded-2xl bg-zinc-900/80 border border-white/10 flex items-center justify-center shadow-lg group-hover:border-white/30 group-hover:shadow-[0_0_18px_rgba(255,255,255,0.25)] transition-all">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-300 group-hover:text-white group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform">
@@ -1432,7 +1621,8 @@
       { 
         id: 1, title: 'PPP', artist: 'Beach House', src: 'assets/song2.mp3', 
         note: '', badge: 'Track 01', 
-        cover: 'linear-gradient(135deg, #4a044e, #1e1b4b)',
+        cover: 'assets/cover1.jpg',
+        fallbackCover: 'linear-gradient(135deg, #4a044e, #1e1b4b)',
         palette: {
           nebula1: 'rgba(147, 51, 234, 0.16)', nebula2: 'rgba(219, 39, 119, 0.12)',
           starAccent: { r: 244, g: 114, b: 182 }, glow: 'rgba(236, 72, 153, 0.35)',
@@ -1442,7 +1632,8 @@
       { 
         id: 2, title: 'Affection', artist: 'BETWEEN FRIENDS', src: 'assets/song4.mp3', 
         note: '', badge: 'Track 02', 
-        cover: 'linear-gradient(135deg, #18181b, #312e81)',
+        cover: 'assets/cover2.jpg',
+        fallbackCover: 'linear-gradient(135deg, #18181b, #312e81)',
         palette: {
           nebula1: 'rgba(49, 46, 129, 0.18)', nebula2: 'rgba(99, 102, 241, 0.12)',
           starAccent: { r: 165, g: 180, b: 252 }, glow: 'rgba(99, 102, 241, 0.3)',
@@ -1452,7 +1643,8 @@
       { 
         id: 3, title: 'Lemon Glow', artist: 'Beach House', src: 'assets/song6.mp3', 
         note: '(your favourite)', badge: 'Track 03', 
-        cover: 'linear-gradient(135deg, #831843, #3b0764)',
+        cover: 'assets/cover3.jpg',
+        fallbackCover: 'linear-gradient(135deg, #831843, #3b0764)',
         palette: {
           nebula1: 'rgba(202, 138, 4, 0.15)', nebula2: 'rgba(131, 24, 67, 0.16)',
           starAccent: { r: 254, g: 240, b: 138 }, glow: 'rgba(234, 179, 8, 0.35)',
@@ -1462,7 +1654,8 @@
       { 
         id: 4, title: 'About You', artist: 'The 1975', src: 'assets/song3.mp3', 
         note: '', badge: 'Track 04', 
-        cover: 'linear-gradient(135deg, #1e293b, #0f172a)',
+        cover: 'assets/cover4.jpg',
+        fallbackCover: 'linear-gradient(135deg, #1e293b, #0f172a)',
         palette: {
           nebula1: 'rgba(51, 65, 85, 0.16)', nebula2: 'rgba(148, 163, 184, 0.12)',
           starAccent: { r: 203, g: 213, b: 225 }, glow: 'rgba(148, 163, 184, 0.25)',
@@ -1472,7 +1665,8 @@
       { 
         id: 5, title: 'Die For You', artist: 'The Weeknd', src: 'assets/song1.mp3', 
         note: '', badge: 'Track 05', 
-        cover: 'linear-gradient(135deg, #881337, #2e1065)',
+        cover: 'assets/cover5.jpg',
+        fallbackCover: 'linear-gradient(135deg, #881337, #2e1065)',
         palette: {
           nebula1: 'rgba(225, 29, 72, 0.18)', nebula2: 'rgba(88, 28, 135, 0.14)',
           starAccent: { r: 251, g: 113, b: 133 }, glow: 'rgba(225, 29, 72, 0.35)',
@@ -1482,11 +1676,56 @@
       { 
         id: 6, title: 'Stargirl Interlude', artist: 'The Weeknd ft. Lana Del Rey', src: 'assets/song5.mp3', 
         note: 'I just wanna see you shine.', badge: 'Track 06', 
-        cover: 'linear-gradient(135deg, #581c87, #022c22)',
+        cover: 'assets/cover5.jpg',
+        fallbackCover: 'linear-gradient(135deg, #581c87, #022c22)',
         palette: {
           nebula1: 'rgba(147, 51, 234, 0.15)', nebula2: 'rgba(13, 148, 136, 0.14)',
           starAccent: { r: 167, g: 243, b: 208 }, glow: 'rgba(45, 212, 191, 0.35)',
           stageShadow: 'rgba(45, 212, 191, 0.35)'
+        }
+      },
+      { 
+        id: 7, title: "Gila", artist: "Beach House", src: 'assets/song7.mp3', 
+        note: "Dreamy, testing a feature btw", badge: 'Track 07', 
+        cover: 'assets/cover7.jpg',
+        fallbackCover: 'linear-gradient(135deg, #1e1b4b, #3b0764)',
+        palette: {
+          nebula1: 'rgba(76, 29, 149, 0.18)', nebula2: 'rgba(219, 39, 119, 0.15)',
+          starAccent: { r: 192, g: 132, b: 252 }, glow: 'rgba(168, 85, 247, 0.45)',
+          stageShadow: 'rgba(168, 85, 247, 0.45)'
+        }
+      },
+      { 
+        id: 8, title: "Prom Song (Gone Wrong)", artist: "Lana Del Rey", src: 'assets/song8.mp3', 
+        note: "excitedddd", badge: 'Track 08', 
+        cover: 'assets/cover8.jpg',
+        fallbackCover: 'linear-gradient(135deg, #1e1b4b, #3b0764)',
+        palette: {
+          nebula1: 'rgba(76, 29, 149, 0.18)', nebula2: 'rgba(219, 39, 119, 0.15)',
+          starAccent: { r: 192, g: 132, b: 252 }, glow: 'rgba(168, 85, 247, 0.45)',
+          stageShadow: 'rgba(168, 85, 247, 0.45)'
+        }
+      },
+      { 
+        id: 9, title: "Meet Me In The Pale Moonlight", artist: "Lana Del Rey", src: 'assets/song9.mp3', 
+        note: "hoping they are all the right version and btw the cover image is soo you", badge: 'Track 09', 
+        cover: 'assets/cover9.jpg',
+        fallbackCover: 'linear-gradient(135deg, #1e1b4b, #3b0764)',
+        palette: {
+          nebula1: 'rgba(76, 29, 149, 0.18)', nebula2: 'rgba(219, 39, 119, 0.15)',
+          starAccent: { r: 192, g: 132, b: 252 }, glow: 'rgba(168, 85, 247, 0.45)',
+          stageShadow: 'rgba(168, 85, 247, 0.45)'
+        }
+      },
+      { 
+        id: 10, title: "Runaway Runaway", artist: "Mars Argo", src: 'assets/song10.mp3', 
+        note: "bangerrrr", badge: 'Track 10', 
+        cover: 'assets/cover10.jpg',
+        fallbackCover: 'linear-gradient(135deg, #1e1b4b, #3b0764)',
+        palette: {
+          nebula1: 'rgba(76, 29, 149, 0.18)', nebula2: 'rgba(219, 39, 119, 0.15)',
+          starAccent: { r: 192, g: 132, b: 252 }, glow: 'rgba(168, 85, 247, 0.45)',
+          stageShadow: 'rgba(168, 85, 247, 0.45)'
         }
       }
     ];
@@ -1772,9 +2011,9 @@
     let wasPlayingBeforeScratch = false;
     let lastMouseAngle = 0;
     let currentPlatterAngle = 0;
-    let dragDistance = 0;
+    let totalScratchDistance = 0;
     let lastScratchTimestamp = 0;
-    let startScratchX = 0, startScratchY = 0;
+    let prevScratchX = 0, prevScratchY = 0;
 
     const vinylDisk = document.getElementById('disk');
     const rotaryPlatterEl = document.getElementById('rotary-platter');
@@ -1789,14 +2028,16 @@
 
     function startScratch(e) {
       if (e.button !== undefined && e.button !== 0) return;
+      if (e.cancelable) e.preventDefault();
+
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
       cachedDiskCenter = getDiskCenter();
       lastMouseAngle = Math.atan2(clientY - cachedDiskCenter.y, clientX - cachedDiskCenter.x);
-      startScratchX = clientX;
-      startScratchY = clientY;
-      dragDistance = 0;
+      prevScratchX = clientX;
+      prevScratchY = clientY;
+      totalScratchDistance = 0;
       lastScratchTimestamp = Date.now();
       isScratching = true;
       wasPlayingBeforeScratch = isPlaying;
@@ -1814,10 +2055,15 @@
 
     function moveScratch(e) {
       if (!isScratching) return;
+      if (e.cancelable) e.preventDefault();
+
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
-      dragDistance += Math.hypot(clientX - startScratchX, clientY - startScratchY);
+      const stepDist = Math.hypot(clientX - prevScratchX, clientY - prevScratchY);
+      totalScratchDistance += stepDist;
+      prevScratchX = clientX;
+      prevScratchY = clientY;
 
       const currentAngle = Math.atan2(clientY - cachedDiskCenter.y, clientX - cachedDiskCenter.x);
       let deltaAngle = currentAngle - lastMouseAngle;
@@ -1840,13 +2086,8 @@
       updateScratchAudio(angularSpeed, isForward);
 
       // Emit dynamic celestial scratch sparks onto the starfield canvas
-      if (angularSpeed > 0.06 && typeof window.spawnScratchSparks === 'function') {
+      if (angularSpeed > 0.05 && typeof window.spawnScratchSparks === 'function') {
         window.spawnScratchSparks(cachedDiskCenter.x, cachedDiskCenter.y, angularSpeed, isForward);
-      }
-
-      // Emit celestial scratch sparks onto the starfield canvas
-      if (angularSpeed > 0.08 && typeof spawnScratchSparks === 'function') {
-        spawnScratchSparks(cachedDiskCenter.x, cachedDiskCenter.y, angularSpeed, isForward);
       }
 
       // Rotate visual vinyl platter & label directly
@@ -1857,7 +2098,7 @@
       }
 
       // Scrub track time: 1 full turn (2*PI rad) = ~8.5 seconds of song
-      if (player.duration) {
+      if (player && player.duration && !isNaN(player.duration)) {
         const timeDelta = (deltaAngle / (Math.PI * 2)) * 8.5;
         player.currentTime = Math.max(0, Math.min(player.duration, player.currentTime + timeDelta));
 
@@ -1884,8 +2125,8 @@
       if (vinylDisk) vinylDisk.classList.remove('is-scratching');
       stopScratchAudio();
 
-      // Tap/click detection (under 6px movement)
-      if (dragDistance < 6) {
+      // Tap / quick click detection (< 6px movement) -> Toggle Play
+      if (totalScratchDistance < 6) {
         togglePlayback();
         return;
       }
@@ -1906,13 +2147,555 @@
 
     if (vinylDisk) {
       vinylDisk.addEventListener('mousedown', startScratch);
-      vinylDisk.addEventListener('touchstart', startScratch, { passive: true });
+      vinylDisk.addEventListener('touchstart', startScratch, { passive: false });
     }
 
-    window.addEventListener('mousemove', moveScratch);
-    window.addEventListener('touchmove', moveScratch, { passive: true });
+    window.addEventListener('mousemove', moveScratch, { passive: false });
+    window.addEventListener('touchmove', moveScratch, { passive: false });
     window.addEventListener('mouseup', endScratch);
+
+    // =========================================================================
+    // PHYSICAL TONEARM PLAY & NEEDLE-DROP GESTURE CONTROLLER
+    // =========================================================================
+    const tonearmAssembly = document.getElementById('tonearm-moving-assembly');
+    let isDraggingTonearm = false;
+    let tonearmDragStartAngle = 0;
+    let currentTonearmAngle = 0;
+    let tonearmDragMoved = 0;
+    let tonearmPivot = { x: 0, y: 0 };
+
+    function getTonearmPivot() {
+      if (!tonearmAssembly) return { x: 0, y: 0 };
+      const r = tonearmAssembly.getBoundingClientRect();
+      // Pivot is near top-right of the assembly
+      return { x: r.left + r.width * 0.82, y: r.top + r.height * 0.15 };
+    }
+
+    function startTonearmGesture(e) {
+      if (e.button !== undefined && e.button !== 0) return;
+      e.stopPropagation();
+
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+      tonearmPivot = getTonearmPivot();
+      tonearmDragStartAngle = Math.atan2(clientY - tonearmPivot.y, clientX - tonearmPivot.x);
+      currentTonearmAngle = isPlaying ? 24 : 0;
+      tonearmDragMoved = 0;
+      isDraggingTonearm = true;
+
+      if (tonearmAssembly) {
+        tonearmAssembly.classList.add('is-dragging-arm');
+      }
+    }
+
+    function moveTonearmGesture(e) {
+      if (!isDraggingTonearm || !tonearmAssembly) return;
+
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+      const angle = Math.atan2(clientY - tonearmPivot.y, clientX - tonearmPivot.x);
+      let diff = (angle - tonearmDragStartAngle) * (180 / Math.PI);
+
+      tonearmDragMoved += Math.abs(diff);
+      let targetAngle = Math.max(-5, Math.min(32, currentTonearmAngle + diff * 0.6));
+
+      tonearmAssembly.style.transform = `rotate(${targetAngle}deg)`;
+    }
+
+    function endTonearmGesture(e) {
+      if (!isDraggingTonearm || !tonearmAssembly) return;
+      isDraggingTonearm = false;
+      tonearmAssembly.classList.remove('is-dragging-arm');
+      tonearmAssembly.style.transform = '';
+
+      // Tap / Click detection (< 10px total movement) -> Toggle Playback
+      if (tonearmDragMoved < 10) {
+        playNeedleDropSound();
+        togglePlayback();
+        return;
+      }
+
+      // Drag Gesture Release Logic:
+      // If released past threshold, drop needle and play; otherwise return to rest
+      const clientX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+      const clientY = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
+      const angle = Math.atan2(clientY - tonearmPivot.y, clientX - tonearmPivot.x);
+      let diff = (angle - tonearmDragStartAngle) * (180 / Math.PI);
+      let finalAngle = currentTonearmAngle + diff * 0.6;
+
+      if (finalAngle > 11) {
+        // Dropped on record -> Play
+        playNeedleDropSound();
+        if (!isPlaying) {
+          togglePlayback();
+        } else {
+          setPlayState(true);
+        }
+      } else {
+        // Lifted off record -> Pause
+        if (isPlaying) {
+          togglePlayback();
+        } else {
+          setPlayState(false);
+        }
+      }
+    }
+
+    const armEl = document.getElementById('arm');
+    const headEl = document.getElementById('head');
+
+    if (armEl) {
+      armEl.addEventListener('mousedown', startTonearmGesture);
+      armEl.addEventListener('touchstart', startTonearmGesture, { passive: true });
+    }
+    if (headEl) {
+      headEl.addEventListener('mousedown', startTonearmGesture);
+      headEl.addEventListener('touchstart', startTonearmGesture, { passive: true });
+    }
+    if (tonearmAssembly) {
+      tonearmAssembly.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          playNeedleDropSound();
+          togglePlayback();
+        }
+      });
+    }
+
+    window.addEventListener('mousemove', moveTonearmGesture);
+    window.addEventListener('touchmove', moveTonearmGesture, { passive: true });
+    window.addEventListener('mouseup', endTonearmGesture);
+    window.addEventListener('touchend', endTonearmGesture);
+
     window.addEventListener('touchend', endScratch);
+
+    // =========================================================================
+    // SONG REQUEST MODAL & DISCORD WEBHOOK DISPATCH
+    // =========================================================================
+    function openSongRequestModal() {
+      const modal = document.getElementById('song-request-modal');
+      const dot = document.getElementById('dock-request-dot');
+      if (modal) {
+        modal.classList.remove('hidden');
+        if (dot) dot.classList.replace('bg-transparent', 'bg-pink-400');
+        document.getElementById('song-request-form')?.classList.remove('hidden');
+        document.getElementById('req-success-view')?.classList.add('hidden');
+        document.getElementById('req-song-title')?.focus();
+      }
+    }
+
+    function closeSongRequestModal() {
+      const modal = document.getElementById('song-request-modal');
+      const dot = document.getElementById('dock-request-dot');
+      if (modal) {
+        modal.classList.add('hidden');
+        if (dot) dot.classList.replace('bg-pink-400', 'bg-transparent');
+      }
+    }
+
+    function handleSongRequestSubmit(e) {
+      e.preventDefault();
+
+      const songTitle = document.getElementById('req-song-title')?.value.trim();
+      const artistName = document.getElementById('req-song-artist')?.value.trim();
+      const versionNote = document.getElementById('req-song-version')?.value.trim() || 'Standard Version';
+      const songLink = document.getElementById('req-song-link')?.value.trim() || 'No link provided';
+
+      if (!songTitle || !artistName) return;
+
+      const submitBtn = document.getElementById('req-submit-btn');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span>⏳ Beaming into Vault...</span>';
+      }
+
+      // Format Discord Embed Payload
+      const embedPayload = {
+        embeds: [
+          {
+            title: "💿 NEW VINYL VAULT SONG REQUEST",
+            description: `**lemme know nebbie what song** — A new record was requested for **The Vinyl Vault**!`,
+            color: 0xEC4899, // Neon Pink
+            fields: [
+              { name: "🎵 Song Title", value: `**${songTitle}**`, inline: true },
+              { name: "🎤 Artist", value: `**${artistName}**`, inline: true },
+              { name: "✨ Version / Note", value: versionNote, inline: false },
+              { name: "🔗 Link / URL", value: songLink, inline: false },
+              { name: "🕒 Time", value: new Date().toLocaleString(), inline: true }
+            ],
+            footer: {
+              text: "The Vinyl Vault · Pressing Wishlist"
+            },
+            timestamp: new Date().toISOString()
+          }
+        ]
+      };
+
+      // POST to Discord Webhook
+      if (typeof DISCORD_WEBHOOK_URL !== 'undefined' && DISCORD_WEBHOOK_URL && DISCORD_WEBHOOK_URL !== 'YOUR_WEBHOOK_HERE') {
+        fetch(DISCORD_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(embedPayload)
+        }).catch(() => {});
+      }
+
+      // Play celestial sound & spawn shooting star flare
+      if (typeof spawnVaultStarFlare === 'function') {
+        spawnVaultStarFlare(window.innerWidth * 0.5, window.innerHeight * 0.4);
+      }
+
+      // Show success view
+      setTimeout(() => {
+        document.getElementById('song-request-form')?.classList.add('hidden');
+        document.getElementById('req-success-view')?.classList.remove('hidden');
+
+        setTimeout(() => {
+          closeSongRequestModal();
+          // Reset form
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<span>✨</span><span>LETSS FUCKINGGG GOO</span>';
+          }
+          document.getElementById('song-request-form')?.reset();
+        }, 2200);
+      }, 600);
+    }
+
+
+    // =========================================================================
+    // DOCK PLAYLIST & QUEUE REORDERING ENGINE (WITH LOCALSTORAGE)
+    // =========================================================================
+    const trackDurations = { 1: '4:21', 2: '3:45', 3: '4:52', 4: '5:26', 5: '4:20', 6: '1:51' };
+
+    // Default Playlists
+    const defaultPlaylists = {
+      'master': {
+        id: 'master',
+        name: '✦ Master Vault (All)',
+        trackIds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        isDefault: true
+      },
+      'custom-vibe': {
+        id: 'custom-vibe',
+        name: '🌙 My Custom Vibe',
+        trackIds: [1, 3, 6],
+        isDefault: false
+      }
+    };
+
+    let activePlaylistId = 'master';
+    let editingPlaylistId = null;
+
+    function getSavedPlaylists() {
+      try {
+        const saved = localStorage.getItem('nebbie_custom_playlists');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          // Always sync master vault track list to include all newly added records
+          if (parsed && parsed['master']) {
+            parsed['master'].trackIds = playlist.map(t => t.id);
+          }
+          return parsed;
+        }
+      } catch (e) {}
+      return defaultPlaylists;
+    }
+
+    function savePlaylistsToStorage(playlistsObj) {
+      try {
+        localStorage.setItem('nebbie_custom_playlists', JSON.stringify(playlistsObj));
+      } catch (e) {}
+    }
+
+    function getActivePlaylist() {
+      const all = getSavedPlaylists();
+      return all[activePlaylistId] || all['master'] || defaultPlaylists['master'];
+    }
+
+    function getActiveTrackObjects() {
+      const activePl = getActivePlaylist();
+      const trackMap = {};
+      playlist.forEach(t => trackMap[t.id] = t);
+      return (activePl.trackIds || []).map(id => trackMap[id]).filter(Boolean);
+    }
+
+    // --- MACOS WINDOW CONTROLS & DOCK ACTIVE DOT ---
+    function toggleMacosPlaylistWindow() {
+      const win = document.getElementById('macos-playlist-window');
+      if (win && win.classList.contains('open-window')) {
+        closeMacosPlaylistWindow();
+      } else {
+        openMacosPlaylistWindow();
+      }
+    }
+
+    function openMacosPlaylistWindow() {
+      const win = document.getElementById('macos-playlist-window');
+      const dot = document.getElementById('dock-playlist-dot');
+      if (win) {
+        win.classList.add('open-window');
+        if (dot) dot.classList.replace('bg-transparent', 'bg-pink-400');
+        renderPlaylistTabs();
+        renderActivePlaylistView();
+      }
+    }
+
+    function closeMacosPlaylistWindow() {
+      const win = document.getElementById('macos-playlist-window');
+      const dot = document.getElementById('dock-playlist-dot');
+      if (win) {
+        win.classList.remove('open-window');
+        if (dot) dot.classList.replace('bg-pink-400', 'bg-transparent');
+      }
+      closePlaylistEditor();
+    }
+
+    // --- PLAYLIST TABS RENDERING ---
+    function renderPlaylistTabs() {
+      const tabBar = document.getElementById('playlist-tab-bar');
+      if (!tabBar) return;
+      const allPlaylists = getSavedPlaylists();
+
+      let html = Object.values(allPlaylists).map(pl => {
+        const isActive = pl.id === activePlaylistId;
+        return `
+          <button type="button" onclick="selectPlaylist('${pl.id}')" class="playlist-tab-pill ${isActive ? 'active-tab' : ''}">
+            ${pl.name}
+          </button>
+        `;
+      }).join('');
+
+      html += `
+        <button type="button" onclick="openCreatePlaylistEditor()" class="playlist-tab-pill bg-pink-500/20 text-pink-300 border-pink-400/40 hover:bg-pink-500/35 hover:text-white">
+          + New Playlist
+        </button>
+      `;
+
+      tabBar.innerHTML = html;
+    }
+
+    function selectPlaylist(playlistId) {
+      activePlaylistId = playlistId;
+      closePlaylistEditor();
+      renderPlaylistTabs();
+      renderActivePlaylistView();
+    }
+
+    // --- ACTIVE PLAYLIST VIEW RENDERING ---
+    function renderActivePlaylistView(filterTerm = '') {
+      const activePl = getActivePlaylist();
+      const tracks = getActiveTrackObjects();
+
+      // Update Header Info
+      const titleEl = document.getElementById('active-playlist-title');
+      const countEl = document.getElementById('active-playlist-count');
+      const actionsEl = document.getElementById('playlist-action-btns');
+
+      if (titleEl) titleEl.innerText = activePl.name;
+      if (countEl) countEl.innerText = tracks.length + (tracks.length === 1 ? ' track' : ' tracks');
+
+      if (actionsEl) {
+        if (!activePl.isDefault) {
+          actionsEl.innerHTML = `
+            <button type="button" onclick="openEditPlaylistEditor('${activePl.id}')" class="px-2 py-0.5 rounded-md bg-pink-900/40 hover:bg-pink-900/70 border border-pink-500/30 text-pink-200 text-[10px] font-mono cursor-pointer transition-colors" title="Add / Remove Songs">
+              ✏️ Edit
+            </button>
+            <button type="button" onclick="deleteCustomPlaylist('${activePl.id}')" class="px-2 py-0.5 rounded-md bg-red-950/40 hover:bg-red-900/60 border border-red-500/30 text-red-300 text-[10px] font-mono cursor-pointer transition-colors" title="Delete Playlist">
+              🗑️
+            </button>
+          `;
+        } else {
+          actionsEl.innerHTML = `
+            <span class="text-[10px] font-mono text-pink-300/50">Official Master Vault</span>
+          `;
+        }
+      }
+
+      // Render Tracklist with Reorder Controls
+      const listEl = document.getElementById('window-track-list');
+      if (!listEl) return;
+      const term = (filterTerm || '').toLowerCase();
+
+      if (tracks.length === 0) {
+        listEl.innerHTML = `
+          <div class="text-center py-8 text-xs text-pink-300/60 font-mono space-y-2">
+            <p>This playlist is currently empty.</p>
+            <button type="button" onclick="openEditPlaylistEditor('${activePl.id}')" class="px-3 py-1 rounded-full bg-pink-500/20 text-pink-200 border border-pink-400/40 hover:bg-pink-500/30 text-xs cursor-pointer">
+              + Add Songs
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      listEl.innerHTML = tracks.map((t, index) => {
+        if (term && !t.title.toLowerCase().includes(term) && !t.artist.toLowerCase().includes(term)) return '';
+        const realIdx = playlist.findIndex(p => p.id === t.id);
+        const isCur = realIdx === currentIdx;
+        const isFirst = index === 0;
+        const isLast = index === tracks.length - 1;
+
+        return `
+          <div onclick="loadTrack(${realIdx}, true)" class="flex items-center justify-between p-2.5 rounded-xl transition-all cursor-pointer select-none ${isCur ? 'bg-pink-600/30 border border-pink-400/50 shadow-md ring-1 ring-pink-500/40' : 'hover:bg-white/[0.08] border border-white/5'}">
+            
+            <!-- Left: Reorder Arrows & Track Info -->
+            <div class="flex items-center gap-2.5 min-w-0">
+              <!-- Reorder Queue Buttons (Stops propagation so it doesn't trigger playback) -->
+              <div class="flex flex-col gap-0.5 shrink-0" onclick="event.stopPropagation()">
+                <button type="button" onclick="moveTrackInQueue(${index}, -1)" ${isFirst ? 'disabled class="reorder-btn opacity-25 cursor-not-allowed"' : 'class="reorder-btn"'} title="Move Up in Queue">▲</button>
+                <button type="button" onclick="moveTrackInQueue(${index}, 1)" ${isLast ? 'disabled class="reorder-btn opacity-25 cursor-not-allowed"' : 'class="reorder-btn"'} title="Move Down in Queue">▼</button>
+              </div>
+
+              <!-- Track Cover & Title -->
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-10 h-10 rounded-lg bg-cover bg-center shrink-0 border border-white/10 shadow" style="background-image: url('${t.cover}')"></div>
+                <div class="min-w-0">
+                  <p class="text-xs font-serif font-bold text-white truncate ${isCur ? 'text-pink-200' : ''}">
+                    ${t.title} ${t.note ? `<span class="text-[10px] font-handwriting text-pink-300 font-normal italic">${t.note}</span>` : ''}
+                  </p>
+                  <p class="text-[10px] text-pink-200/70 truncate">${t.artist}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Live EQ & Duration -->
+            <div class="flex items-center gap-2.5 shrink-0">
+              ${isCur ? '<div class="flex items-end gap-0.5 h-3"><span class="w-0.5 h-full bg-pink-400 animate-pulse"></span><span class="w-0.5 h-2 bg-pink-300 animate-pulse"></span><span class="w-0.5 h-3 bg-pink-400 animate-pulse"></span></div>' : ''}
+              <span class="text-[10px] font-mono ${isCur ? 'text-pink-300 font-bold' : 'text-pink-300/60'}">${trackDurations[t.id] || '3:30'}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterWindowPlaylist(val) {
+      renderActivePlaylistView(val);
+    }
+
+    // --- QUEUE REORDERING LOGIC ---
+    function moveTrackInQueue(index, delta) {
+      const allPlaylists = getSavedPlaylists();
+      const activePl = allPlaylists[activePlaylistId];
+      if (!activePl || !activePl.trackIds) return;
+
+      const targetIdx = index + delta;
+      if (targetIdx < 0 || targetIdx >= activePl.trackIds.length) return;
+
+      const temp = activePl.trackIds[index];
+      activePl.trackIds[index] = activePl.trackIds[targetIdx];
+      activePl.trackIds[targetIdx] = temp;
+
+      savePlaylistsToStorage(allPlaylists);
+      renderActivePlaylistView();
+    }
+
+    // --- CREATE & EDIT CUSTOM PLAYLIST ---
+    function openCreatePlaylistEditor() {
+      editingPlaylistId = null;
+      const editor = document.getElementById('custom-playlist-editor');
+      const titleEl = document.getElementById('editor-title');
+      const nameInput = document.getElementById('new-playlist-name-input');
+      if (!editor || !nameInput) return;
+
+      titleEl.innerText = 'Create New Playlist';
+      nameInput.value = '';
+      renderSongPicker([]);
+      editor.classList.remove('hidden');
+      nameInput.focus();
+    }
+
+    function openEditPlaylistEditor(playlistId) {
+      editingPlaylistId = playlistId;
+      const allPlaylists = getSavedPlaylists();
+      const pl = allPlaylists[playlistId];
+      if (!pl) return;
+
+      const editor = document.getElementById('custom-playlist-editor');
+      const titleEl = document.getElementById('editor-title');
+      const nameInput = document.getElementById('new-playlist-name-input');
+      if (!editor || !nameInput) return;
+
+      titleEl.innerText = 'Edit Playlist: ' + pl.name;
+      nameInput.value = pl.name;
+      renderSongPicker(pl.trackIds || []);
+      editor.classList.remove('hidden');
+      nameInput.focus();
+    }
+
+    function closePlaylistEditor() {
+      const editor = document.getElementById('custom-playlist-editor');
+      if (editor) editor.classList.add('hidden');
+      editingPlaylistId = null;
+    }
+
+    function renderSongPicker(selectedTrackIds = []) {
+      const picker = document.getElementById('song-picker-list');
+      if (!picker) return;
+
+      picker.innerHTML = playlist.map(t => {
+        const isChecked = selectedTrackIds.includes(t.id);
+        return `
+          <label class="flex items-center gap-2 p-1.5 rounded-lg bg-black/40 border border-white/10 hover:border-pink-500/40 cursor-pointer text-xs transition-colors">
+            <input type="checkbox" value="${t.id}" ${isChecked ? 'checked' : ''} class="song-picker-checkbox accent-pink-500 rounded cursor-pointer" />
+            <span class="text-white truncate text-[11px] font-mono">${t.title}</span>
+          </label>
+        `;
+      }).join('');
+    }
+
+    function saveCustomPlaylist() {
+      const nameInput = document.getElementById('new-playlist-name-input');
+      const name = nameInput ? nameInput.value.trim() : '';
+      if (!name) {
+        alert('Please enter a name for your playlist.');
+        return;
+      }
+
+      const checkboxes = document.querySelectorAll('.song-picker-checkbox:checked');
+      const selectedIds = Array.from(checkboxes).map(cb => parseInt(cb.value));
+
+      const allPlaylists = getSavedPlaylists();
+
+      if (editingPlaylistId) {
+        if (allPlaylists[editingPlaylistId]) {
+          allPlaylists[editingPlaylistId].name = name;
+          allPlaylists[editingPlaylistId].trackIds = selectedIds;
+        }
+      } else {
+        const newId = 'pl_' + Date.now();
+        allPlaylists[newId] = {
+          id: newId,
+          name: name,
+          trackIds: selectedIds,
+          isDefault: false
+        };
+        activePlaylistId = newId;
+      }
+
+      savePlaylistsToStorage(allPlaylists);
+      closePlaylistEditor();
+      renderPlaylistTabs();
+      renderActivePlaylistView();
+    }
+
+    function deleteCustomPlaylist(playlistId) {
+      const allPlaylists = getSavedPlaylists();
+      if (!allPlaylists[playlistId] || allPlaylists[playlistId].isDefault) return;
+
+      if (confirm(`Are you sure you want to delete "${allPlaylists[playlistId].name}"?`)) {
+        delete allPlaylists[playlistId];
+        activePlaylistId = 'master';
+        savePlaylistsToStorage(allPlaylists);
+        renderPlaylistTabs();
+        renderActivePlaylistView();
+      }
+    }
+
+
+
 
     function loadTrack(index, autoPlay = true) {
       currentIdx = (index + playlist.length) % playlist.length;
@@ -1943,7 +2726,38 @@
       }
       document.getElementById('track-badge').textContent = track.badge;
 
+      // Update Track Cover Thumbnail
+      const thumbEl = document.getElementById('track-cover-thumb');
+      if (thumbEl) {
+        if (track.cover && (track.cover.startsWith('http') || track.cover.startsWith('assets/'))) {
+          thumbEl.style.backgroundImage = `url('${track.cover}')`;
+        } else {
+          thumbEl.style.backgroundImage = 'none';
+          thumbEl.style.background = track.cover || track.fallbackCover || 'linear-gradient(135deg, #4a044e, #1e1b4b)';
+        }
+      }
+
+      // Update Turntable Center Spindle Label Artwork
+      const platterLabel = document.getElementById('label');
+      if (platterLabel) {
+        if (track.cover && (track.cover.startsWith('http') || track.cover.startsWith('assets/'))) {
+          platterLabel.style.backgroundImage = `url('${track.cover}')`;
+          platterLabel.style.backgroundSize = 'cover';
+          platterLabel.style.backgroundPosition = 'center';
+          platterLabel.style.boxShadow = `0 0 14px ${track.palette ? track.palette.glow : 'rgba(236, 72, 153, 0.6)'}`;
+        } else {
+          platterLabel.style.background = track.cover || track.fallbackCover || '#db2777';
+          platterLabel.style.backgroundImage = 'none';
+        }
+      }
+
       renderCrate();
+      if (typeof renderActivePlaylistView === 'function') {
+        const win = document.getElementById('macos-playlist-window');
+        if (win && win.classList.contains('open-window')) {
+          renderActivePlaylistView();
+        }
+      }
 
       if (autoPlay) {
         initMainAudioVisualizer();
@@ -1993,8 +2807,45 @@
       }
     }
 
-    function prevTrack() { loadTrack(currentIdx - 1, isPlaying); }
-    function nextTrack() { loadTrack(currentIdx + 1, isPlaying); }
+    function prevTrack() {
+      if (typeof getActivePlaylist === 'function') {
+        const activePl = getActivePlaylist();
+        if (activePl && activePl.trackIds && activePl.trackIds.length > 0) {
+          const currentTrackId = playlist[currentIdx].id;
+          const curPos = activePl.trackIds.indexOf(currentTrackId);
+          if (curPos !== -1) {
+            const prevPos = (curPos - 1 + activePl.trackIds.length) % activePl.trackIds.length;
+            const prevTrackId = activePl.trackIds[prevPos];
+            const prevRealIdx = playlist.findIndex(p => p.id === prevTrackId);
+            if (prevRealIdx !== -1) {
+              loadTrack(prevRealIdx, isPlaying);
+              return;
+            }
+          }
+        }
+      }
+      loadTrack((currentIdx - 1 + playlist.length) % playlist.length, isPlaying);
+    }
+
+    function nextTrack() {
+      if (typeof getActivePlaylist === 'function') {
+        const activePl = getActivePlaylist();
+        if (activePl && activePl.trackIds && activePl.trackIds.length > 0) {
+          const currentTrackId = playlist[currentIdx].id;
+          const curPos = activePl.trackIds.indexOf(currentTrackId);
+          if (curPos !== -1) {
+            const nextPos = (curPos + 1) % activePl.trackIds.length;
+            const nextTrackId = activePl.trackIds[nextPos];
+            const nextRealIdx = playlist.findIndex(p => p.id === nextTrackId);
+            if (nextRealIdx !== -1) {
+              loadTrack(nextRealIdx, isPlaying);
+              return;
+            }
+          }
+        }
+      }
+      loadTrack((currentIdx + 1) % playlist.length, isPlaying);
+    }
 
     function shufflePickRecord() {
       if (!playlist || playlist.length <= 1) return;
@@ -2083,15 +2934,23 @@
         card.setAttribute('aria-label', `Play ${track.title} by ${track.artist}`);
         card.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { loadTrack(idx, true); e.preventDefault(); } };
 
-        // Record Sleeve Background (outer casing)
-        card.style.background = track.cover;
+        // Record Sleeve Background (outer casing) with Hybrid Cover Art
+        const hasImgCover = track.cover && (track.cover.startsWith('http') || track.cover.startsWith('assets/'));
+        if (hasImgCover) {
+          card.style.backgroundImage = `url('${track.cover}')`;
+          card.style.backgroundSize = 'cover';
+          card.style.backgroundPosition = 'center';
+        } else {
+          card.style.background = track.cover || track.fallbackCover || 'linear-gradient(135deg, #333, #111)';
+          card.style.backgroundImage = 'none';
+        }
         card.style.boxShadow = isLoaded ? '' : 'inset 0 1px 1px rgba(255,255,255,0.15), 0 10px 20px rgba(0,0,0,0.5)';
 
         card.innerHTML = `
           <!-- The Physical Vinyl Record -->
           <div class="vinyl-grooves absolute top-1 left-1/2 -translate-x-1/2 w-[90%] h-[90%] rounded-full border border-zinc-700/50 flex items-center justify-center pointer-events-none">
             <!-- Center Label -->
-            <div class="w-1/3 h-1/3 rounded-full flex items-center justify-center shadow-[0_0_10px_rgba(0,0,0,0.8)]" style="background: ${track.cover}">
+            <div class="w-1/3 h-1/3 rounded-full flex items-center justify-center shadow-[0_0_10px_rgba(0,0,0,0.8)] border border-white/20 bg-cover bg-center" style="${hasImgCover ? `background-image: url('${track.cover}')` : `background: ${track.cover || track.fallbackCover}`}">
               <!-- Spindle Hole -->
               <div class="w-2 h-2 bg-[#0a0a0a] rounded-full shadow-inner border border-white/10"></div>
             </div>
@@ -3467,5 +4326,182 @@
     })();
 
   </script>
+
+  <!-- ==================== MACOS FLOATING PLAYLIST & QUEUE MANAGER WINDOW ==================== -->
+  <div id="macos-playlist-window" class="custom-scrollbar">
+    
+    <!-- 1. Window Titlebar with Traffic Lights -->
+    <div class="flex items-center justify-between px-4 py-3 border-b border-pink-500/20 bg-white/[0.03]">
+      <div class="flex items-center gap-2">
+        <button type="button" onclick="closeMacosPlaylistWindow()" class="w-3 h-3 rounded-full bg-red-500/90 hover:bg-red-600 transition-colors shadow-sm cursor-pointer" title="Close Window"></button>
+        <button type="button" onclick="closeMacosPlaylistWindow()" class="w-3 h-3 rounded-full bg-yellow-500/90 hover:bg-yellow-600 transition-colors shadow-sm cursor-pointer" title="Minimize Window"></button>
+        <button type="button" class="w-3 h-3 rounded-full bg-emerald-500/90 hover:bg-emerald-600 transition-colors shadow-sm" title="Zoom"></button>
+      </div>
+      <div class="text-xs font-serif font-bold text-pink-100 flex items-center gap-1.5">
+        <span>Vault Playlist Manager</span>
+      </div>
+      <div class="w-12"></div>
+    </div>
+
+    <!-- 2. Playlist Tabs Header (Master Vault, Custom Playlists & + New Playlist) -->
+    <div class="px-3 pt-3 pb-2 border-b border-pink-500/15">
+      <div id="playlist-tab-bar" class="flex items-center gap-1.5 overflow-x-auto custom-scrollbar pb-1">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- 3. Playlist Info & Sub-actions Bar -->
+    <div class="flex items-center justify-between px-4 py-2 border-b border-pink-500/10 bg-black/20 text-xs">
+      <div class="flex items-center gap-2">
+        <span id="active-playlist-title" class="font-serif font-bold text-pink-100">✦ Master Vault</span>
+        <span id="active-playlist-count" class="text-[10px] font-mono text-pink-400 font-medium">6 tracks</span>
+      </div>
+      <div id="playlist-action-btns" class="flex items-center gap-1.5">
+        <!-- Add/Remove Songs & Delete Playlist rendered dynamically for custom playlists -->
+      </div>
+    </div>
+
+    <!-- 4. Inline Create / Edit Custom Playlist Form (Hidden by Default) -->
+    <div id="custom-playlist-editor" class="hidden p-3.5 bg-pink-950/40 border-b border-pink-500/25 space-y-3">
+      <div class="flex items-center justify-between">
+        <span id="editor-title" class="text-xs font-serif font-bold text-pink-200">Create New Playlist</span>
+        <button type="button" onclick="closePlaylistEditor()" class="text-pink-400 hover:text-white text-xs font-mono cursor-pointer">✕ Cancel</button>
+      </div>
+      <input 
+        type="text" 
+        id="new-playlist-name-input" 
+        placeholder="Enter playlist name (e.g. Zara's 2 AM Drive)..." 
+        class="w-full px-3 py-1.5 rounded-xl bg-black/50 border border-pink-500/30 text-xs text-pink-100 placeholder-pink-300/40 focus:outline-none focus:border-pink-400 transition-all font-mono"
+      />
+      <div>
+        <p class="text-[10px] font-mono text-pink-300/80 mb-1.5 uppercase font-semibold">Select Songs to Include:</p>
+        <div id="song-picker-list" class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-36 overflow-y-auto custom-scrollbar p-1">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+      <button type="button" onclick="saveCustomPlaylist()" class="w-full py-2 rounded-xl bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white text-xs font-mono font-bold uppercase tracking-wider transition-all shadow-md active:scale-98 cursor-pointer">
+        Save Playlist
+      </button>
+    </div>
+
+    <!-- 5. Search Bar -->
+    <div class="p-3 border-b border-pink-500/15">
+      <input 
+        type="text" 
+        id="window-search-input" 
+        oninput="filterWindowPlaylist(this.value)" 
+        placeholder="Search songs or artists in playlist..." 
+        class="w-full px-3 py-1.5 rounded-xl bg-black/40 border border-pink-500/30 text-xs text-pink-100 placeholder-pink-300/40 focus:outline-none focus:border-pink-400 transition-all font-mono" 
+      />
+    </div>
+
+    <!-- 6. Interactive Track Queue (with ▲ ▼ Queue Reordering) -->
+    <div id="window-track-list" class="p-3 space-y-1.5 max-h-[360px] overflow-y-auto custom-scrollbar pr-2">
+      <!-- Rendered dynamically -->
+    </div>
+  </div>
+
+
+  <!-- ==================== SONG REQUEST & WISHLIST MODAL ==================== -->
+  <div id="song-request-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+    <!-- Backdrop to close -->
+    <div class="absolute inset-0 bg-zinc-950/75 backdrop-blur-md cursor-pointer" onclick="closeSongRequestModal()"></div>
+    
+    <!-- Modal Content -->
+    <div id="song-request-modal-content" class="relative w-full max-w-md bg-zinc-900/85 backdrop-blur-2xl rounded-2xl p-6 border border-pink-500/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_25px_50px_-10px_rgba(0,0,0,0.8),0_0_30px_rgba(236,72,153,0.2)]">
+      
+      <!-- Close Button -->
+      <button onclick="closeSongRequestModal()" class="absolute top-4 right-4 text-pink-400 hover:text-white font-mono text-sm active:scale-95 transition-transform" aria-label="Close Modal">✕</button>
+      
+      <!-- Title & Icon -->
+      <div class="flex items-center gap-2.5 mb-2">
+        <span class="text-xl">🎵</span>
+        <h3 class="text-pink-100 font-serif font-bold text-lg">Request a Record</h3>
+      </div>
+      <p class="text-pink-300/80 text-xs font-mono mb-4">lemme know nebbie what song</p>
+
+      <!-- Form Inputs -->
+      <form id="song-request-form" onsubmit="handleSongRequestSubmit(event)" class="space-y-3.5">
+        
+        <!-- Song Name (Required) -->
+        <div>
+          <label class="block text-[11px] font-mono font-bold text-pink-200/90 mb-1">
+            Song Title <span class="text-rose-400">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="req-song-title" 
+            required
+            placeholder="Song title..." 
+            class="w-full px-3 py-2 rounded-xl bg-black/60 border border-pink-500/30 text-xs text-white placeholder-pink-300/40 focus:outline-none focus:border-pink-400 transition-all font-serif"
+          />
+        </div>
+
+        <!-- Artist Name (Required) -->
+        <div>
+          <label class="block text-[11px] font-mono font-bold text-pink-200/90 mb-1">
+            Artist Name <span class="text-rose-400">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="req-song-artist" 
+            required
+            placeholder="Artist name..." 
+            class="w-full px-3 py-2 rounded-xl bg-black/60 border border-pink-500/30 text-xs text-white placeholder-pink-300/40 focus:outline-none focus:border-pink-400 transition-all font-sans"
+          />
+        </div>
+
+        <!-- Specific Version / Note (Optional) -->
+        <div>
+          <label class="block text-[11px] font-mono text-pink-200/80 mb-1">
+            Specific Version or Note (Optional)
+          </label>
+          <input 
+            type="text" 
+            id="req-song-version" 
+            placeholder="Specific version, live, slowed + reverb..." 
+            class="w-full px-3 py-2 rounded-xl bg-black/60 border border-pink-500/30 text-xs text-pink-200 placeholder-pink-300/40 focus:outline-none focus:border-pink-400 transition-all font-handwriting"
+          />
+        </div>
+
+        <!-- Link / URL (Optional) -->
+        <div>
+          <label class="block text-[11px] font-mono text-pink-200/80 mb-1">
+            Song Link (Optional)
+          </label>
+          <input 
+            type="url" 
+            id="req-song-link" 
+            placeholder="Spotify, YouTube, Apple Music, or Soundcloud link..." 
+            class="w-full px-3 py-2 rounded-xl bg-black/60 border border-pink-500/30 text-xs text-pink-100 placeholder-pink-300/40 focus:outline-none focus:border-pink-400 transition-all font-mono"
+          />
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-2">
+          <button 
+            type="submit" 
+            id="req-submit-btn" 
+            class="w-full py-2.5 rounded-xl bg-gradient-to-r from-pink-500 via-rose-600 to-pink-600 hover:from-pink-600 hover:to-rose-700 text-white text-xs font-mono font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(236,72,153,0.35)] active:scale-98 cursor-pointer flex items-center justify-center gap-2"
+          >
+            <span>✨</span>
+            <span>LETSS FUCKINGGG GOO</span>
+          </button>
+        </div>
+
+      </form>
+
+      <!-- Success Notification Overlay -->
+      <div id="req-success-view" class="hidden text-center py-6 space-y-3">
+        <div class="w-12 h-12 mx-auto rounded-full bg-pink-500/20 border border-pink-400/40 flex items-center justify-center text-2xl shadow-[0_0_20px_rgba(236,72,153,0.4)] animate-bounce">
+          ✨
+        </div>
+        <h4 class="text-base font-serif font-bold text-white">Song Request Sent!</h4>
+        <p class="text-xs font-mono text-pink-300/80">Your request has been beamed into the Vault.</p>
+      </div>
+
+    </div>
+  </div>
+
 </body>
 </html>
