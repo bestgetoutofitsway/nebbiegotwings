@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Wax & Quill · Nebbie's Letter Studio</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Caveat, Cormorant Garamond, JetBrains Mono, Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Load Current Letters Archive -->
+  <script src="letters.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'wine-bg': '#0f0514',
+            'wine-card': '#1a0a22',
+            'wine-border': 'rgba(244, 114, 182, 0.25)',
+            'parchment-light': '#fdfbf7',
+            'parchment-dark': '#241126'
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['"Cormorant Garamond"', 'serif'],
+            handwriting: ['"Caveat"', 'cursive'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #0d0312;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(219, 39, 119, 0.12), transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(147, 51, 234, 0.10), transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(13, 3, 18, 0.95), #06010a 100%);
+      color: #fae8ff;
+      min-height: 100vh;
+      user-select: none;
+    }
+
+    input, textarea {
+      user-select: text !important;
+    }
+
+    /* Glassmorphism Cards */
+    .studio-glass {
+      background: rgba(24, 10, 32, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(244, 114, 182, 0.22);
+      box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+
+    .studio-input {
+      background: rgba(14, 4, 18, 0.85);
+      border: 1.5px solid rgba(244, 114, 182, 0.28);
+      color: #fce7f3;
+      transition: all 0.2s ease;
+    }
+    .studio-input:focus {
+      border-color: #ec4899;
+      outline: none;
+      box-shadow: 0 0 16px rgba(236, 72, 153, 0.35);
+    }
+
+    /* Real 3D Wax Seal Stamp */
+    .wax-seal-btn {
+      position: relative;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.4), inset 0 -3px 5px rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+    }
+    .wax-seal-btn:hover {
+      transform: scale(1.12);
+    }
+    .wax-seal-btn.active-seal {
+      transform: scale(1.18);
+      box-shadow: 0 0 0 3px #ffffff, 0 8px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Interactive Live Parchment Preview */
+    .preview-parchment {
+      transition: all 0.3s ease;
+      box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(0, 0, 0, 0.03);
+    }
+    .preview-parchment.theme-light {
+      background: linear-gradient(175deg, #fdfbf7 0%, #f7f1e5 50%, #f2eae0 100%);
+      color: #4a2835;
+      border: 1px solid rgba(229, 215, 195, 0.9);
+    }
+    .preview-parchment.theme-dark {
+      background: linear-gradient(175deg, #241126 0%, #1a0a1c 50%, #120514 100%);
+      color: #fae8ff;
+      border: 1px solid rgba(244, 114, 182, 0.35);
+      box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.8), 0 0 30px rgba(236, 72, 153, 0.15);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(244, 114, 182, 0.3);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(244, 114, 182, 0.6);
+    }
+  </style>
+</head>
+<body class="p-3 sm:p-6 pb-20">
+
+  <!-- TOP HEADER & STATUS BAR -->
+  <header class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 studio-glass rounded-3xl p-5 sm:px-8 mb-6">
+    <div class="flex items-center gap-4">
+      <!-- 3D Realistic Swan Wax Seal Studio Logo -->
+      <div id="studio-logo-seal" class="shrink-0 flex items-center justify-center transform hover:scale-105 transition-transform duration-300">
+      </div>
+
+      <div>
+        <h1 class="font-serif text-2xl sm:text-3xl font-bold tracking-wide text-pink-100 flex items-center gap-2">
+          <span>The Wax & Quill</span>
+          <span class="text-xs font-mono px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-300 border border-pink-400/30">Letter Studio</span>
+        </h1>
+        <p class="font-serif italic text-xs sm:text-sm text-pink-300/70">Author & Archive Manager for Nebbie's Sanctuary</p>
+      </div>
+    </div>
+
+    <!-- Quick Actions & Links -->
+    <div class="flex flex-wrap items-center gap-3">
+      <!-- Direct Link back to index.html -->
+      <a href="../index.html" class="px-4 py-2 rounded-xl text-xs font-serif font-bold text-pink-200 hover:text-white bg-pink-900/30 hover:bg-pink-900/50 border border-pink-500/30 transition-all flex items-center gap-2 shadow-sm">
+        <span>🌸</span>
+        <span>Open Sanctuary</span>
+      </a>
+
+      <!-- Discord Status Badge -->
+      <div class="px-3.5 py-1.5 rounded-xl bg-purple-950/40 border border-pink-500/20 text-xs font-mono flex items-center gap-2 text-pink-300">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="text-[11px]">Discord: Connected</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN NAVIGATION TABS -->
+  <div class="max-w-7xl mx-auto flex items-center justify-between gap-2 border-b border-pink-500/20 pb-4 mb-6">
+    <div class="flex items-center gap-2 overflow-x-auto">
+      <button id="tab-btn-composer" onclick="switchTab('composer')" class="px-4 py-2 rounded-xl text-xs font-serif font-bold transition-all flex items-center gap-2 bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-md">
+        <span>✍️</span>
+        <span>Letter Composer</span>
+      </button>
+
+      <button id="tab-btn-archive" onclick="switchTab('archive')" class="px-4 py-2 rounded-xl text-xs font-serif font-bold text-pink-300 hover:text-white hover:bg-pink-900/30 transition-all flex items-center gap-2 border border-pink-500/20">
+        <span>📚</span>
+        <span>Letters Archive (<span id="tab-archive-count">0</span>)</span>
+      </button>
+
+      <button id="tab-btn-sync" onclick="switchTab('sync')" class="px-4 py-2 rounded-xl text-xs font-serif font-bold text-pink-300 hover:text-white hover:bg-pink-900/30 transition-all flex items-center gap-2 border border-pink-500/20">
+        <span>💾</span>
+        <span>Save & Sync</span>
+      </button>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="hidden md:flex items-center gap-4 text-xs font-mono text-pink-300/70">
+      <span>Total Letters: <strong id="stat-total-letters" class="text-pink-200">2</strong></span>
+      <span>•</span>
+      <span>Total Words: <strong id="stat-total-words" class="text-pink-200">0</strong></span>
+    </div>
+  </div>
+
+  <!-- ==================== TAB 1: LETTER COMPOSER (SPLIT SCREEN) ==================== -->
+  <main id="tab-composer" class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
+    
+    <!-- LEFT: COMPOSER FORM (6 COLS) -->
+    <section class="lg:col-span-6 xl:col-span-6 space-y-5 studio-glass rounded-3xl p-5 sm:p-7">
+      <div class="flex items-center justify-between border-b border-pink-500/20 pb-3">
+        <h2 id="form-heading" class="font-serif text-xl font-bold text-pink-100 flex items-center gap-2">
+          <span>📜</span>
+          <span>Compose New Letter</span>
+        </h2>
+        <button onclick="resetComposerForm()" class="text-xs font-mono text-pink-300 hover:text-white underline cursor-pointer">
+          Reset Form
+        </button>
+      </div>
+
+      <!-- Hidden Letter ID -->
+      <input type="hidden" id="letter-id" value="">
+
+      <!-- Title & Date -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-mono text-pink-300 uppercase tracking-wider mb-1">Letter Title</label>
+          <input type="text" id="input-title" placeholder="e.g. For Rainy Sunday Mornings" oninput="updateLivePreview()" class="w-full px-4 py-2.5 rounded-xl studio-input text-sm font-sans">
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="text-xs font-mono text-pink-300 uppercase tracking-wider">Date Stamp</label>
+            <button onclick="setTodayDate()" class="text-[10px] font-mono text-pink-400 hover:text-pink-200 underline">Today</button>
+          </div>
+          <input type="text" id="input-date" placeholder="e.g. September 10, 2026" oninput="updateLivePreview()" class="w-full px-4 py-2.5 rounded-xl studio-input text-sm font-sans">
+        </div>
+      </div>
+
+      <!-- Preview Teaser -->
+      <div>
+        <label class="block text-xs font-mono text-pink-300 uppercase tracking-wider mb-1">Preview Teaser (Shown on sealed envelope)</label>
+        <input type="text" id="input-preview" placeholder="e.g. A tiny thought I couldn't stop having about you..." oninput="updateLivePreview()" class="w-full px-4 py-2.5 rounded-xl studio-input text-sm font-sans">
+      </div>
+
+      <!-- Secret Unlock Riddle / Question -->
+      <div class="p-4 rounded-2xl bg-pink-950/30 border border-pink-500/30 space-y-3">
+        <div class="flex items-center gap-2">
+          <span class="text-base">🔒</span>
+          <span class="text-xs font-mono uppercase tracking-wider text-pink-300 font-bold">Secret Wax-Seal Riddle</span>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-mono text-pink-300/80 mb-1">The Question (She must answer to melt the seal)</label>
+          <input type="text" id="input-question" placeholder="e.g. What is our special secret word?" oninput="updateLivePreview()" class="w-full px-4 py-2 rounded-xl studio-input text-sm font-sans">
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-mono text-pink-300/80 mb-1">Accepted Answers (Comma-separated, e.g. angel, baby, love)</label>
+          <input type="text" id="input-answers" placeholder="angel, nebbie, love" class="w-full px-4 py-2 rounded-xl studio-input text-sm font-sans">
+          <p class="text-[10px] font-mono text-pink-300/60 mt-1">Note: Master bypass code <code class="text-pink-200 font-bold">111</code> is always accepted.</p>
+        </div>
+      </div>
+
+      <!-- Wax Seal Preset Color -->
+      <div>
+        <label class="block text-xs font-mono text-pink-300 uppercase tracking-wider mb-2">Wax Seal Stamp Color (Embossed Swan)</label>
+        <div id="wax-seal-color-palette" class="flex items-center gap-3">
+          <!-- Rendered dynamically with realistic 3D swan wax seals -->
+        </div>
+      </div>
+
+      <!-- Full Letter Content -->
+      <div>
+        <div class="flex items-center justify-between mb-1">
+          <label class="text-xs font-mono text-pink-300 uppercase tracking-wider">Letter Content (What she will read)</label>
+          <div class="text-[11px] font-mono text-pink-300/70 flex items-center gap-1.5">
+            <span id="char-counter">0 chars</span> · <span id="word-counter">0 words</span> · <span id="page-counter" class="text-pink-300 font-bold">1 page</span>
+          </div>
+        </div>
+        <textarea id="input-content" rows="9" placeholder="Write your letter from the heart..." oninput="updateLivePreview()" class="w-full p-4 rounded-xl studio-input text-sm font-serif leading-relaxed resize-y"></textarea>
+        <p class="text-[11px] font-mono text-pink-300/60 mt-1">📄 Standard page 1 holds ~90 words. Long letters automatically split into multiple parchment pages (or type <code>---</code> on a new line to force a page break).</p>
+      </div>
+
+      <!-- Save & Action Bar -->
+      <div class="pt-2 flex items-center gap-3">
+        <button onclick="saveLetterFromComposer()" class="flex-1 py-3 px-6 rounded-xl bg-gradient-to-r from-pink-700 via-rose-600 to-pink-600 hover:brightness-110 active:scale-98 text-white font-serif font-bold text-sm tracking-wide shadow-lg shadow-pink-600/30 transition-all flex items-center justify-center gap-2 cursor-pointer">
+          <span id="save-btn-icon">✨</span>
+          <span id="save-btn-text">Save Letter to Archive</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- RIGHT: LIVE INTERACTIVE SPLIT-SCREEN PREVIEW (6 COLS) -->
+    <section class="lg:col-span-6 xl:col-span-6 space-y-4">
+      
+      <!-- Preview Controls Strip -->
+      <div class="studio-glass rounded-2xl p-3 px-4 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+        <div class="flex items-center gap-1.5">
+          <span class="text-pink-300/70">View:</span>
+          <button id="view-mode-parchment" onclick="setPreviewMode('parchment')" class="px-2.5 py-1 rounded-lg bg-pink-500/20 text-pink-200 border border-pink-400/40">📜 Open Parchment</button>
+          <button id="view-mode-sealed" onclick="setPreviewMode('sealed')" class="px-2.5 py-1 rounded-lg hover:bg-white/5 text-pink-300/70">🔒 Sealed Envelope</button>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <span class="text-pink-300/70">Theme:</span>
+          <button id="theme-btn-light" onclick="setPreviewTheme('light')" class="px-2.5 py-1 rounded-lg bg-pink-500/20 text-pink-200 border border-pink-400/40">☀️ Rosé Light</button>
+          <button id="theme-btn-dark" onclick="setPreviewTheme('dark')" class="px-2.5 py-1 rounded-lg hover:bg-white/5 text-pink-300/70">🌙 Velvet Wine</button>
+        </div>
+      </div>
+
+      <!-- THE LIVE PARCHMENT LETTER DISPLAY -->
+      <div id="parchment-preview-box" class="preview-parchment theme-light rounded-3xl p-6 sm:p-8 min-h-[520px] relative overflow-hidden flex flex-col justify-between">
+        
+        <!-- MODE 1: OPEN PARCHMENT VIEW -->
+        <div id="preview-open-view" class="space-y-4">
+          <!-- Satin Ribbon Bow -->
+          <div class="flex justify-center -mt-2 mb-2">
+            <svg width="42" height="26" viewBox="0 0 40 24" fill="none" class="text-pink-400 drop-shadow-sm">
+              <path d="M20 12C16 6 8 4 6 8C4 12 12 14 20 12Z" fill="currentColor" opacity="0.85"/>
+              <path d="M20 12C24 6 32 4 34 8C36 12 28 14 20 12Z" fill="currentColor" opacity="0.85"/>
+              <circle cx="20" cy="12" r="3.5" fill="#db2777"/>
+              <path d="M19 14L15 22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M21 14L25 22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+
+          <div class="flex items-center justify-between border-b border-black/10 dark:border-white/10 pb-2">
+            <span class="text-[10.5px] font-mono uppercase tracking-wider opacity-60">Letter Preview</span>
+            <span id="preview-date" class="font-handwriting text-lg font-bold opacity-85">September 10, 2026</span>
+          </div>
+
+          <h3 id="preview-title" class="font-serif text-2xl sm:text-3xl font-bold text-center">
+            The First Letter
+          </h3>
+
+          <div id="preview-content" class="font-serif text-base sm:text-lg leading-relaxed whitespace-pre-line opacity-95 min-h-[140px] transition-opacity duration-150">
+            My sweet angel,
+
+I wanted to make sure you had a quiet corner here that was just for you and me...
+          </div>
+
+          <!-- Multi-Page Live Preview Navigator -->
+          <div id="preview-pagination-bar" class="hidden mt-3 pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-xs font-serif select-none">
+            <button onclick="changePreviewPage(-1)" id="prev-preview-btn" class="px-2.5 py-1 rounded-lg bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 text-xs font-bold disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+              ← Previous Page
+            </button>
+            <span id="preview-page-indicator" class="font-bold opacity-85 text-xs">Page 1 of 2</span>
+            <button onclick="changePreviewPage(1)" id="next-preview-btn" class="px-2.5 py-1 rounded-lg bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 text-xs font-bold disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+              Next Page →
+            </button>
+          </div>
+
+          <!-- Dummy Reply Box Preview -->
+          <div class="mt-4 p-3.5 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 space-y-2 opacity-80">
+            <p class="font-serif text-xs italic font-bold">🕊️ Leave a reply</p>
+            <div class="h-12 rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-2 text-xs opacity-50 font-serif">
+              Nebbie's reply area appears here...
+            </div>
+          </div>
+        </div>
+
+        <!-- MODE 2: SEALED ENVELOPE VIEW -->
+        <div id="preview-sealed-view" class="hidden text-center py-8 space-y-5 flex flex-col items-center justify-center">
+          <div id="preview-wax-seal-container" class="flex items-center justify-center my-1 filter hover:drop-shadow-[0_8px_20px_rgba(236,72,153,0.4)] transition-all">
+          </div>
+
+          <div>
+            <span id="sealed-preview-date" class="font-handwriting text-lg opacity-75">September 10, 2026</span>
+            <h4 id="sealed-preview-title" class="font-serif text-2xl font-bold mt-1">The First Letter</h4>
+            <p id="sealed-preview-teaser" class="font-serif text-sm italic opacity-60 mt-1 max-w-sm mx-auto">A secret question guards this wax seal...</p>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 max-w-sm w-full text-left space-y-1.5 shadow-inner">
+            <p class="text-[10.5px] font-mono uppercase tracking-wider text-pink-600 dark:text-pink-400 font-bold">🔒 Riddle to unlock:</p>
+            <p id="sealed-preview-question" class="font-serif text-base italic font-semibold">"What is the little word we always use?"</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== TAB 2: LETTERS ARCHIVE ==================== -->
+  <main id="tab-archive" class="max-w-5xl mx-auto space-y-4 hidden">
+    <div class="flex items-center justify-between studio-glass rounded-2xl p-4 px-6">
+      <div>
+        <h2 class="font-serif text-xl font-bold text-pink-100">All Letters in Sanctuary Archive</h2>
+        <p class="font-serif italic text-xs text-pink-300/70">Reorder, edit, duplicate, or manage existing letters</p>
+      </div>
+      <button onclick="switchTab('composer'); resetComposerForm();" class="px-4 py-2 rounded-xl bg-pink-600 hover:bg-pink-500 text-white text-xs font-serif font-bold shadow transition-all">
+        ➕ Add New Letter
+      </button>
+    </div>
+
+    <div id="archive-letters-list" class="space-y-3">
+      <!-- Injected dynamically via renderArchiveTable() -->
+    </div>
+  </main>
+
+  <!-- ==================== TAB 3: SAVE & SYNC ==================== -->
+  <main id="tab-sync" class="max-w-4xl mx-auto space-y-6 hidden">
+    
+    <!-- Option 1: Direct Save via Local Python Server -->
+    <div class="studio-glass rounded-3xl p-6 sm:p-8 space-y-4">
+      <div class="flex items-center gap-3">
+        <span class="text-3xl">⚡</span>
+        <div>
+          <h3 class="font-serif text-xl font-bold text-pink-100">Method 1: Instant Direct Save (via Local Server)</h3>
+          <p class="font-serif italic text-xs text-pink-300/70">Saves directly to <code class="text-pink-200">letters/letters.js</code> without touching file downloads.</p>
+        </div>
+      </div>
+
+      <p class="text-xs text-pink-200/80 leading-relaxed font-mono">
+        If you run <strong class="text-pink-300">python manage.py</strong> in your terminal, the local server handles 1-click automatic file writes.
+      </p>
+
+      <div class="flex items-center gap-3">
+        <button onclick="saveDirectlyToServer()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-serif font-bold text-xs shadow-lg transition-all flex items-center gap-2">
+          <span>💾</span>
+          <span>Save Directly to letters.js</span>
+        </button>
+        <span id="direct-save-status" class="text-xs font-mono text-pink-300/70"></span>
+      </div>
+    </div>
+
+    <!-- Option 2: Browser File Download -->
+    <div class="studio-glass rounded-3xl p-6 sm:p-8 space-y-4">
+      <div class="flex items-center gap-3">
+        <span class="text-3xl">📥</span>
+        <div>
+          <h3 class="font-serif text-xl font-bold text-pink-100">Method 2: One-Click Download letters.js</h3>
+          <p class="font-serif italic text-xs text-pink-300/70">Works 100% offline in any browser. Download and replace the file in your folder.</p>
+        </div>
+      </div>
+
+      <p class="text-xs text-pink-200/80 leading-relaxed font-mono">
+        Click below to generate and download the updated <code class="text-pink-300">letters.js</code> file. Drop it into <code class="text-pink-300">c:\Nebbiegotwings\letters\</code>.
+      </p>
+
+      <button onclick="downloadLettersJsFile()" class="px-5 py-2.5 rounded-xl bg-pink-600 hover:bg-pink-500 active:scale-95 text-white font-serif font-bold text-xs shadow-lg transition-all flex items-center gap-2">
+        <span>📥</span>
+        <span>Download letters.js</span>
+      </button>
+    </div>
+
+    <!-- Option 3: Copy JS Code -->
+    <div class="studio-glass rounded-3xl p-6 sm:p-8 space-y-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="text-3xl">📋</span>
+          <div>
+            <h3 class="font-serif text-xl font-bold text-pink-100">Method 3: Copy JavaScript Code</h3>
+            <p class="font-serif italic text-xs text-pink-300/70">Copy the full code to paste into letters.js manually</p>
+          </div>
+        </div>
+        <button onclick="copyLettersJsCode()" class="px-4 py-2 rounded-xl bg-purple-900/60 hover:bg-purple-900 border border-pink-500/30 text-xs font-serif font-bold text-pink-200 hover:text-white transition-all">
+          Copy Code
+        </button>
+      </div>
+
+      <pre id="code-preview" class="p-4 rounded-xl bg-black/60 border border-pink-500/20 text-xs font-mono text-pink-200 overflow-x-auto max-h-60"></pre>
+    </div>
+
+    <!-- Webhook Tester -->
+    <div class="studio-glass rounded-3xl p-6 sm:p-8 space-y-4">
+      <div class="flex items-center gap-3">
+        <span class="text-3xl">📡</span>
+        <div>
+          <h3 class="font-serif text-xl font-bold text-pink-100">Discord Webhook Test Ping</h3>
+          <p class="font-serif italic text-xs text-pink-300/70">Test connection to Nebbie's Letterbox bot on Discord</p>
+        </div>
+      </div>
+
+      <button onclick="sendTestWebhookPing()" class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 active:scale-95 text-white font-serif font-bold text-xs shadow-lg transition-all flex items-center gap-2">
+        <span>🕊️</span>
+        <span>Send Test Alert to Discord</span>
+      </button>
+      <span id="webhook-test-status" class="text-xs font-mono text-pink-300/80 block"></span>
+    </div>
+
+  </main>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="studio-toast" class="fixed bottom-6 right-6 z-50 pointer-events-none opacity-0 transition-all duration-300 transform translate-y-4 flex items-center gap-2.5 px-5 py-3 rounded-2xl studio-glass border border-pink-500/40 text-xs font-mono text-pink-100 shadow-2xl">
+    <span id="toast-icon">✨</span>
+    <span id="toast-text">Action completed</span>
+  </div>
+
+  <!-- Load Letters Data and Seal Asset -->
+  <script src="letters.js"></script>
+
+  <script>
+    const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1547605813877801072/zOCHrE9MSfkXA_lzHq5nx53NyuLcxFYWN3lmbFShqgvO5wqStQ3ZhdrdksxKSh-SiF1D';
+    
+    function createWaxSealSvg(color = '#881337', size = 52, showSwan = true) {
+      const sealSrc = (typeof window !== 'undefined' && window.SWAN_SEAL_B64)
+        ? window.SWAN_SEAL_B64
+        : 'assets/swan_wax_seal_256.png';
+      return `
+        <div class="wax-seal-frame shrink-0 inline-flex items-center justify-center select-none pointer-events-none" style="width:${size}px; height:${size}px;">
+          <img src="${sealSrc}" alt="Swan Wax Seal" width="${size}" height="${size}" class="w-full h-full object-contain filter drop-shadow-[0_4px_12px_rgba(45,5,15,0.45)] pointer-events-none" onerror="this.src='../letters/assets/swan_wax_seal_256.png'" />
+        </div>
+      `;
+    }
+
+    let lettersData = window.LOVE_LETTERS ? JSON.parse(JSON.stringify(window.LOVE_LETTERS)) : [];
+    let selectedSealColor = '#db2777';
+    let currentPreviewMode = 'parchment';
+    let currentPreviewTheme = 'light';
+
+    function showToast(text, icon = '✨') {
+      const toast = document.getElementById('studio-toast');
+      const iconEl = document.getElementById('toast-icon');
+      const textEl = document.getElementById('toast-text');
+      if (!toast) return;
+      if (iconEl) iconEl.innerText = icon;
+      if (textEl) textEl.innerText = text;
+
+      toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 3000);
+    }
+
+    function switchTab(tab) {
+      ['composer', 'archive', 'sync'].forEach(t => {
+        const pane = document.getElementById(`tab-${t}`);
+        const btn = document.getElementById(`tab-btn-${t}`);
+        if (pane) pane.classList.toggle('hidden', t !== tab);
+        if (btn) {
+          if (t === tab) {
+            btn.className = 'px-4 py-2 rounded-xl text-xs font-serif font-bold transition-all flex items-center gap-2 bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-md';
+          } else {
+            btn.className = 'px-4 py-2 rounded-xl text-xs font-serif font-bold text-pink-300 hover:text-white hover:bg-pink-900/30 transition-all flex items-center gap-2 border border-pink-500/20';
+          }
+        }
+      });
+
+      if (tab === 'archive') renderArchiveTable();
+      if (tab === 'sync') updateCodePreview();
+    }
+
+    const PRESET_SEAL_COLORS = [
+      { color: '#a81845', name: 'Velvet Crimson' },
+      { color: '#701a75', name: 'Velvet Plum' },
+      { color: '#9f1239', name: 'Royal Ruby' },
+      { color: '#b45309', name: 'Golden Amber' },
+      { color: '#065f46', name: 'Emerald Forest' }
+    ];
+
+    function renderSealPalette() {
+      const palette = document.getElementById('wax-seal-color-palette');
+      if (!palette) return;
+      palette.innerHTML = PRESET_SEAL_COLORS.map(p => {
+        const isSel = selectedSealColor.toLowerCase() === p.color.toLowerCase();
+        return `
+          <button type="button" onclick="selectSealColor('${p.color}')" title="${p.name}" class="group relative p-1 rounded-full cursor-pointer transition-all duration-300 ${isSel ? 'scale-110 ring-2 ring-white shadow-[0_0_15px_rgba(255,255,255,0.6)]' : 'opacity-85 hover:opacity-100 hover:scale-105'}">
+            ${createWaxSealSvg(p.color, 44, true)}
+            <span class="absolute -bottom-6 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded bg-black/90 text-[10px] font-mono text-pink-200 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20">
+              ${p.name}
+            </span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectSealColor(color) {
+      selectedSealColor = color;
+      renderSealPalette();
+      updateLivePreview();
+    }
+
+    function setTodayDate() {
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      const today = new Date().toLocaleDateString('en-US', options);
+      const dateInput = document.getElementById('input-date');
+      if (dateInput) {
+        dateInput.value = today;
+        updateLivePreview();
+      }
+    }
+
+    function setPreviewMode(mode) {
+      currentPreviewMode = mode;
+      document.getElementById('view-mode-parchment').classList.toggle('bg-pink-500/20', mode === 'parchment');
+      document.getElementById('view-mode-parchment').classList.toggle('border', mode === 'parchment');
+      document.getElementById('view-mode-sealed').classList.toggle('bg-pink-500/20', mode === 'sealed');
+      document.getElementById('view-mode-sealed').classList.toggle('border', mode === 'sealed');
+
+      document.getElementById('preview-open-view').classList.toggle('hidden', mode !== 'parchment');
+      document.getElementById('preview-sealed-view').classList.toggle('hidden', mode !== 'sealed');
+    }
+
+    function setPreviewTheme(theme) {
+      currentPreviewTheme = theme;
+      const box = document.getElementById('parchment-preview-box');
+      if (box) {
+        box.classList.toggle('theme-light', theme === 'light');
+        box.classList.toggle('theme-dark', theme === 'dark');
+      }
+      document.getElementById('theme-btn-light').classList.toggle('bg-pink-500/20', theme === 'light');
+      document.getElementById('theme-btn-light').classList.toggle('border', theme === 'light');
+      document.getElementById('theme-btn-dark').classList.toggle('bg-pink-500/20', theme === 'dark');
+      document.getElementById('theme-btn-dark').classList.toggle('border', theme === 'dark');
+    }
+
+    let currentPreviewPageIndex = 0;
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      })[m]);
+    }
+
+    function paginateLetterContent(content, page1Words = 90, subsequentWords = 110) {
+      if (!content || !content.trim()) return [''];
+
+      // 1. Manual page break markers (--- or === or ***)
+      const manualSplit = content.split(/\n\s*(?:---|===|\*\*\*)\s*\n/).map(s => s.trim()).filter(Boolean);
+      if (manualSplit.length > 1) {
+        return manualSplit;
+      }
+
+      // 2. Paragraph and sentence boundary pagination
+      const rawParagraphs = content.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+      const chunks = [];
+
+      for (const para of rawParagraphs) {
+        const pWords = para.split(/\s+/).filter(Boolean).length;
+        if (pWords > subsequentWords * 1.35) {
+          const sentences = para.split(/(?<=[.!?])\s+/);
+          let curSentences = [];
+          let curCount = 0;
+          for (const sent of sentences) {
+            const sWords = sent.split(/\s+/).filter(Boolean).length;
+            if (curCount > 0 && (curCount + sWords) > subsequentWords) {
+              chunks.push(curSentences.join(' '));
+              curSentences = [sent];
+              curCount = sWords;
+            } else {
+              curSentences.push(sent);
+              curCount += sWords;
+            }
+          }
+          if (curSentences.length > 0) {
+            chunks.push(curSentences.join(' '));
+          }
+        } else {
+          chunks.push(para);
+        }
+      }
+
+      const pages = [];
+      let curPageChunks = [];
+      let curWordCount = 0;
+      let targetWords = page1Words;
+
+      for (const chunk of chunks) {
+        const cWords = chunk.split(/\s+/).filter(Boolean).length;
+        if (curWordCount > 0 && (curWordCount + cWords) > targetWords) {
+          pages.push(curPageChunks.join('\n\n'));
+          curPageChunks = [chunk];
+          curWordCount = cWords;
+          targetWords = subsequentWords;
+        } else {
+          curPageChunks.push(chunk);
+          curWordCount += cWords;
+        }
+      }
+
+      if (curPageChunks.length > 0) {
+        pages.push(curPageChunks.join('\n\n'));
+      }
+
+      return pages.length > 0 ? pages : [content];
+    }
+
+    function changePreviewPage(delta) {
+      const content = document.getElementById('input-content').value || '';
+      const pages = paginateLetterContent(content);
+      currentPreviewPageIndex = Math.max(0, Math.min(pages.length - 1, currentPreviewPageIndex + delta));
+      updateLivePreview();
+    }
+
+    function updateLivePreview() {
+      const title = document.getElementById('input-title').value.trim() || 'Untitled Letter';
+      const date = document.getElementById('input-date').value.trim() || 'September 10, 2026';
+      const preview = document.getElementById('input-preview').value.trim() || 'A secret question guards this wax seal...';
+      const question = document.getElementById('input-question').value.trim() || 'What is our special secret word?';
+      const rawContent = document.getElementById('input-content').value || 'Your letter content will appear here...';
+
+      const pages = paginateLetterContent(rawContent);
+      if (currentPreviewPageIndex >= pages.length) currentPreviewPageIndex = Math.max(0, pages.length - 1);
+
+      // Open View Elements
+      const titleEl = document.getElementById('preview-title');
+      if (titleEl) {
+        if (pages.length > 1 && currentPreviewPageIndex > 0) {
+          titleEl.innerHTML = `${escapeHtml(title)} <span class="block sm:inline sm:ml-2 font-handwriting text-lg font-normal opacity-70">(Page ${currentPreviewPageIndex + 1})</span>`;
+        } else {
+          titleEl.innerText = title;
+        }
+      }
+
+      document.getElementById('preview-date').innerText = date;
+      document.getElementById('preview-content').innerText = pages[currentPreviewPageIndex] || '';
+
+      // Multi-page live preview navigator
+      const pageBar = document.getElementById('preview-pagination-bar');
+      const pageIndicator = document.getElementById('preview-page-indicator');
+      const prevBtn = document.getElementById('prev-preview-btn');
+      const nextBtn = document.getElementById('next-preview-btn');
+
+      if (pageBar) {
+        if (pages.length > 1) {
+          pageBar.classList.remove('hidden');
+          if (pageIndicator) pageIndicator.innerText = `Page ${currentPreviewPageIndex + 1} of ${pages.length}`;
+          if (prevBtn) prevBtn.disabled = (currentPreviewPageIndex === 0);
+          if (nextBtn) nextBtn.disabled = (currentPreviewPageIndex === pages.length - 1);
+        } else {
+          pageBar.classList.add('hidden');
+        }
+      }
+
+      // Sealed View Elements
+      document.getElementById('sealed-preview-title').innerText = title;
+      document.getElementById('sealed-preview-date').innerText = date;
+      document.getElementById('sealed-preview-teaser').innerText = preview;
+      document.getElementById('sealed-preview-question').innerText = `"${question}"`;
+
+      // 3D Realistic Swan Wax Seal
+      const sealContainer = document.getElementById('preview-wax-seal-container');
+      if (sealContainer) {
+        sealContainer.innerHTML = createWaxSealSvg(selectedSealColor, 108, true);
+      }
+      const logoSeal = document.getElementById('studio-logo-seal');
+      if (logoSeal && !logoSeal.innerHTML.trim()) {
+        logoSeal.innerHTML = createWaxSealSvg('#db2777', 48, true);
+      }
+
+      // Counters
+      const chars = rawContent.length;
+      const words = rawContent.trim() ? rawContent.trim().split(/\s+/).filter(Boolean).length : 0;
+      document.getElementById('char-counter').innerText = `${chars} chars`;
+      document.getElementById('word-counter').innerText = `${words} words`;
+      const pageCounterEl = document.getElementById('page-counter');
+      if (pageCounterEl) {
+        pageCounterEl.innerText = `${pages.length} ${pages.length === 1 ? 'page' : 'pages'}`;
+      }
+    }
+
+    function resetComposerForm() {
+      document.getElementById('letter-id').value = '';
+      document.getElementById('input-title').value = '';
+      document.getElementById('input-date').value = '';
+      document.getElementById('input-preview').value = '';
+      document.getElementById('input-question').value = '';
+      document.getElementById('input-answers').value = '';
+      document.getElementById('input-content').value = '';
+      document.getElementById('form-heading').innerHTML = '<span>📜</span><span>Compose New Letter</span>';
+      document.getElementById('save-btn-text').innerText = 'Save Letter to Archive';
+      setTodayDate();
+      updateLivePreview();
+    }
+
+    function saveLetterFromComposer() {
+      const title = document.getElementById('input-title').value.trim();
+      const content = document.getElementById('input-content').value.trim();
+      const question = document.getElementById('input-question').value.trim();
+
+      if (!title) {
+        alert('Please give your letter a title!');
+        return;
+      }
+      if (!content) {
+        alert('Please write some words in the letter content!');
+        return;
+      }
+      if (!question) {
+        alert('Please provide a secret unlock question!');
+        return;
+      }
+
+      const date = document.getElementById('input-date').value.trim() || 'September 10, 2026';
+      const preview = document.getElementById('input-preview').value.trim() || (content.slice(0, 50) + '...');
+      const rawAnswers = document.getElementById('input-answers').value.trim();
+      const answersArray = rawAnswers ? rawAnswers.split(',').map(s => s.trim().toLowerCase()).filter(Boolean) : ['angel', 'nebbie', 'love'];
+      
+      // Auto-include bypass codes
+      if (!answersArray.includes('111')) answersArray.push('111');
+      if (!answersArray.includes('1111')) answersArray.push('1111');
+
+      const existingId = document.getElementById('letter-id').value;
+      const id = existingId || ('letter_' + (Date.now()));
+
+      const letterObj = {
+        id: id,
+        date: date,
+        title: title,
+        preview: preview,
+        question: question,
+        acceptedAnswers: answersArray,
+        waxColor: selectedSealColor,
+        content: content
+      };
+
+      if (existingId) {
+        const idx = lettersData.findIndex(l => l.id === existingId);
+        if (idx !== -1) {
+          lettersData[idx] = letterObj;
+        } else {
+          lettersData.push(letterObj);
+        }
+        showToast('Letter updated in archive! 🌸');
+      } else {
+        lettersData.push(letterObj);
+        showToast('New letter added to archive! ✨');
+      }
+
+      updateStats();
+      resetComposerForm();
+      switchTab('archive');
+    }
+
+    function editLetter(id) {
+      const letter = lettersData.find(l => l.id === id);
+      if (!letter) return;
+
+      document.getElementById('letter-id').value = letter.id;
+      document.getElementById('input-title').value = letter.title || '';
+      document.getElementById('input-date').value = letter.date || '';
+      document.getElementById('input-preview').value = letter.preview || '';
+      document.getElementById('input-question').value = letter.question || '';
+      document.getElementById('input-answers').value = (letter.acceptedAnswers || []).join(', ');
+      document.getElementById('input-content').value = letter.content || '';
+
+      document.getElementById('form-heading').innerHTML = `<span>✏️</span><span>Editing: ${letter.title}</span>`;
+      document.getElementById('save-btn-text').innerText = 'Update Letter in Archive';
+
+      selectedSealColor = letter.waxColor || '#db2777';
+      const matchBtn = document.querySelector(`.wax-seal-btn[data-color="${selectedSealColor}"]`);
+      if (matchBtn) selectSealColor(matchBtn, selectedSealColor);
+
+      updateLivePreview();
+      switchTab('composer');
+    }
+
+    function duplicateLetter(id) {
+      const letter = lettersData.find(l => l.id === id);
+      if (!letter) return;
+      const copy = JSON.parse(JSON.stringify(letter));
+      copy.id = 'letter_' + Date.now();
+      copy.title = copy.title + ' (Copy)';
+      lettersData.push(copy);
+      updateStats();
+      renderArchiveTable();
+      showToast('Letter duplicated! 📋');
+    }
+
+    function deleteLetter(id) {
+      const letter = lettersData.find(l => l.id === id);
+      if (!letter) return;
+      if (!confirm(`Are you sure you want to delete "${letter.title}" from the letters archive?`)) return;
+
+      lettersData = lettersData.filter(l => l.id !== id);
+      updateStats();
+      renderArchiveTable();
+      showToast('Letter deleted.', '🗑️');
+    }
+
+    function moveLetter(id, direction) {
+      const idx = lettersData.findIndex(l => l.id === id);
+      if (idx === -1) return;
+      if (direction === -1 && idx > 0) {
+        const temp = lettersData[idx];
+        lettersData[idx] = lettersData[idx - 1];
+        lettersData[idx - 1] = temp;
+      } else if (direction === 1 && idx < lettersData.length - 1) {
+        const temp = lettersData[idx];
+        lettersData[idx] = lettersData[idx + 1];
+        lettersData[idx + 1] = temp;
+      }
+      renderArchiveTable();
+    }
+
+    function renderArchiveTable() {
+      const container = document.getElementById('archive-letters-list');
+      if (!container) return;
+
+      if (lettersData.length === 0) {
+        container.innerHTML = `
+          <div class="studio-glass rounded-2xl p-8 text-center space-y-3">
+            <span class="text-4xl">📭</span>
+            <h3 class="font-serif text-lg font-bold text-pink-200">No letters in archive yet</h3>
+            <p class="font-serif text-xs text-pink-300/70">Click "Compose New Letter" to write your very first letter!</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = lettersData.map((letter, idx) => {
+        const words = (letter.content || '').trim().split(/\s+/).filter(Boolean).length;
+        const pages = paginateLetterContent(letter.content || '');
+        const pagesCount = pages.length;
+
+        return `
+          <div class="studio-glass rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 group">
+            <div class="flex items-center gap-4 min-w-0 flex-1">
+              <div class="shrink-0 flex items-center justify-center transform group-hover:scale-105 transition-transform duration-300">
+                ${createWaxSealSvg(letter.waxColor || '#db2777', 52, true)}
+              </div>
+
+              <!-- Letter Information & Details -->
+              <div class="min-w-0 flex-1 space-y-1">
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <h3 onclick="editLetter('${letter.id}')" class="font-serif font-bold text-base text-pink-100 truncate hover:text-pink-300 cursor-pointer transition-colors" title="Click to edit">
+                    ${escapeHtml(letter.title || 'Untitled Letter')}
+                  </h3>
+                  <span class="px-2.5 py-0.5 rounded-full bg-pink-500/20 border border-pink-500/30 text-[10px] font-mono text-pink-300 font-bold shrink-0">
+                    📅 ${escapeHtml(letter.date || 'No Date')}
+                  </span>
+                  <span class="px-2.5 py-0.5 rounded-full bg-purple-500/20 border border-purple-500/30 text-[10px] font-mono text-purple-200 font-bold shrink-0">
+                    ✍️ ${words} words · ${pagesCount} ${pagesCount === 1 ? 'page' : 'pages'}
+                  </span>
+                </div>
+                <p class="font-serif italic text-xs text-pink-200/75 truncate max-w-xl">
+                  ${escapeHtml(letter.preview || (letter.content || '').slice(0, 80) + '...')}
+                </p>
+                <div class="flex items-center gap-2 text-[11px] text-pink-300/75 font-mono truncate">
+                  <span class="text-pink-400 font-bold shrink-0">🔒 Secret Question:</span>
+                  <span class="italic text-pink-100/90 truncate">"${escapeHtml(letter.question || 'None')}"</span>
+                  <span class="text-pink-400/60 font-mono text-[10px] shrink-0">(${letter.acceptedAnswers ? letter.acceptedAnswers.length : 0} keys)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-1.5 self-end sm:self-center shrink-0">
+              <button onclick="moveLetter('${letter.id}', -1)" ${idx === 0 ? 'disabled class="opacity-20 cursor-not-allowed p-2 text-pink-300 rounded-lg text-xs"' : 'class="p-2 hover:bg-white/10 text-pink-300 rounded-lg text-xs cursor-pointer"'} title="Move Up">⬆️</button>
+              <button onclick="moveLetter('${letter.id}', 1)" ${idx === lettersData.length - 1 ? 'disabled class="opacity-20 cursor-not-allowed p-2 text-pink-300 rounded-lg text-xs"' : 'class="p-2 hover:bg-white/10 text-pink-300 rounded-lg text-xs cursor-pointer"'} title="Move Down">⬇️</button>
+              <button onclick="editLetter('${letter.id}')" class="px-3.5 py-1.5 rounded-xl bg-pink-600/40 hover:bg-pink-600/70 border border-pink-500/40 text-xs font-serif font-bold text-pink-100 hover:text-white transition-all flex items-center gap-1 shadow-sm cursor-pointer">
+                <span>✏️</span><span>Edit</span>
+              </button>
+              <button onclick="duplicateLetter('${letter.id}')" class="p-2 hover:bg-white/10 text-pink-300 rounded-xl text-xs cursor-pointer" title="Duplicate">📋</button>
+              <button onclick="deleteLetter('${letter.id}')" class="p-2 hover:bg-rose-950/60 text-rose-400 rounded-xl text-xs cursor-pointer" title="Delete">🗑️</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updateStats() {
+      const totalLetters = lettersData.length;
+      let totalWords = 0;
+      lettersData.forEach(l => {
+        if (l.content) totalWords += l.content.trim().split(/\s+/).length;
+      });
+
+      const countEl = document.getElementById('tab-archive-count');
+      const totalEl = document.getElementById('stat-total-letters');
+      const wordsEl = document.getElementById('stat-total-words');
+
+      if (countEl) countEl.innerText = totalLetters;
+      if (totalEl) totalEl.innerText = totalLetters;
+      if (wordsEl) wordsEl.innerText = totalWords;
+    }
+
+    function generateLettersJsCode() {
+      const json = JSON.stringify(lettersData, null, 2);
+      const b64Part = (typeof window !== 'undefined' && window.SWAN_SEAL_B64)
+        ? `window.SWAN_SEAL_B64 = "${window.SWAN_SEAL_B64}";\n\n`
+        : '';
+      return (
+        "// =========================================================================\n" +
+        "// NEBBIE'S LETTERS ARCHIVE (Source of Truth)\n" +
+        "// Generated and managed by The Wax & Quill Studio (letters/index.html)\n" +
+        "// =========================================================================\n\n" +
+        b64Part +
+        "window.LOVE_LETTERS = " + json + ";\n"
+      );
+    }
+
+    function updateCodePreview() {
+      const previewEl = document.getElementById('code-preview');
+      if (previewEl) previewEl.innerText = generateLettersJsCode();
+    }
+
+    function copyLettersJsCode() {
+      const code = generateLettersJsCode();
+      navigator.clipboard.writeText(code).then(() => {
+        showToast('Code copied to clipboard! 📋');
+      }).catch(() => {
+        alert('Could not copy automatically. Please copy from the preview box.');
+      });
+    }
+
+    function downloadLettersJsFile() {
+      const code = generateLettersJsCode();
+      const blob = new Blob([code], { type: 'application/javascript;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'letters.js';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('letters.js downloaded! Drop it in letters/ folder ✨', '📥');
+    }
+
+    async function saveDirectlyToServer() {
+      const statusEl = document.getElementById('direct-save-status');
+      if (statusEl) statusEl.innerText = 'Connecting to local server...';
+
+      try {
+        const resp = await fetch('/api/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ letters: lettersData })
+        });
+        const data = await resp.json();
+        if (data.success) {
+          if (statusEl) statusEl.innerHTML = '<span class="text-emerald-400 font-bold">✓ Saved directly to letters/letters.js!</span>';
+          showToast('Successfully saved to file! 💾', '✨');
+          try {
+            if (typeof confetti === 'function') confetti({ particleCount: 50, spread: 60 });
+          } catch(e) {}
+        } else {
+          if (statusEl) statusEl.innerText = 'Server error: ' + (data.error || 'Failed');
+        }
+      } catch (err) {
+        if (statusEl) {
+          statusEl.innerHTML = '<span class="text-amber-300">Local server not detected. Use Method 2 (Download letters.js) or run "python manage.py".</span>';
+        }
+      }
+    }
+
+    async function sendTestWebhookPing() {
+      const statusEl = document.getElementById('webhook-test-status');
+      if (statusEl) statusEl.innerText = 'Sending test ping to Discord...';
+
+      const payload = {
+        username: 'Nebbie’s Letterbox 💌',
+        embeds: [{
+          title: "📡 Webhook Connection Verified!",
+          description: "**The Wax & Quill Studio** has successfully verified connection with Discord.",
+          color: 0xdb2777,
+          fields: [
+            { name: "📜 Letters Loaded", value: `${lettersData.length} letters`, inline: true },
+            { name: "✨ Status", value: "Ready to Deliver 🕊️", inline: true }
+          ],
+          footer: { text: "Nebbie's Sanctuary · Letters Studio" },
+          timestamp: new Date().toISOString()
+        }]
+      };
+
+      try {
+        const resp = await fetch(DISCORD_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (resp.status >= 200 && resp.status < 300) {
+          if (statusEl) statusEl.innerHTML = '<span class="text-emerald-400 font-bold">✓ Ping received on Discord! Check your channel.</span>';
+          showToast('Discord ping sent! 🕊️');
+        } else {
+          if (statusEl) statusEl.innerText = 'Discord returned code: ' + resp.status;
+        }
+      } catch(err) {
+        if (statusEl) statusEl.innerText = 'Network error: ' + err.message;
+      }
+    }
+
+    // Init on load
+    setTodayDate();
+    updateStats();
+    updateLivePreview();
+  </script>
+</body>
+</html>

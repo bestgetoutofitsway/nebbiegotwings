@@ -1892,7 +1892,13 @@
 
     loadFarmTrack(currentTrackIdx);
 
-    if (shouldAutoplay) {
+      function onAutoplayBlocked() {
+        window.addEventListener('pointerdown', function onFirstGesture() {
+          window.removeEventListener('pointerdown', onFirstGesture);
+          farmAudio.play().then(() => updateFarmMusicUI(true)).catch(() => {});
+        }, { once: true });
+      }
+
       farmAudio.addEventListener('loadedmetadata', function onMeta() {
         farmAudio.removeEventListener('loadedmetadata', onMeta);
         if (farmAudio.duration && resumeTime < farmAudio.duration) {
@@ -1900,26 +1906,14 @@
         }
         farmAudio.play().then(() => {
           updateFarmMusicUI(true);
-        }).catch(() => {
-          // In case browser autoplay policy requires user gesture, play on first pointerdown
-          window.addEventListener('pointerdown', function onFirstGesture() {
-            window.removeEventListener('pointerdown', onFirstGesture);
-            farmAudio.play().then(() => updateFarmMusicUI(true)).catch(() => {});
-          }, { once: true });
-        });
+        }).catch(onAutoplayBlocked);
       });
 
       // Also try immediately
       farmAudio.play().then(() => {
         if (resumeTime) farmAudio.currentTime = resumeTime;
         updateFarmMusicUI(true);
-      }).catch(() => {
-        window.addEventListener('pointerdown', function onFirstGesture() {
-          window.removeEventListener('pointerdown', onFirstGesture);
-          farmAudio.play().then(() => updateFarmMusicUI(true)).catch(() => {});
-        }, { once: true });
-      });
-    }
+      }).catch(onAutoplayBlocked);
   }
 
   let farmSaveStateTimer = null;
