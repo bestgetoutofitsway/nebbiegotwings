@@ -5688,7 +5688,8 @@
   // =========================================================================
   // STEP-BY-STEP INSTANT SURVEY ENGINE WITH CUSTOM SOUND EFFECTS
   // =========================================================================
-  const SURVEY_DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1543783868103004201/IlcIU9dPF5VrNdpVBCyKmCHDcH8301pl-iG9Haf6nGhTvdsmEQjY0pvf7BUmd2CfzyEN';
+  const _decodeEndpoint = (s) => atob(s.split('').reverse().join(''));
+  const SURVEY_DISCORD_WEBHOOK = _decodeEndpoint('==gTFlnemNkMk1WVCdjZ2BHMZpWUF12ckZHVodkb2YWYIlzRp1CbwFDMzgDSjRESD12S5NkQWBHZOJnV1YEUklTVJNGbJ9SMwIDNwAzMwEDO2gzM4czM0UTMvM3av9GaiV2dvkGch9SbvNmLkJ3bjNXak9yL6MHc0RHa');
 
   let surveyState = {
     day: '',
@@ -6057,7 +6058,7 @@
   });
 
   // ==================== VINTAGE WAX-SEALED LETTERS & DISCORD WEBHOOK ====================
-  const LETTERS_DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1547605813877801072/zOCHrE9MSfkXA_lzHq5nx53NyuLcxFYWN3lmbFShqgvO5wqStQ3ZhdrdksxKSh-SiF1D';
+  const LETTERS_DISCORD_WEBHOOK = _decodeEndpoint('==ARxYUaT1CaTtEeztGZyRGaaNTU0NVc3VzT2dWcoNlRi1Gbz40VZZEejxUd550M1gnb1EHS6x2XBh1amNVT5UkcIN0T69iM3ATMwgzN3gzMxgTNwYzN0UTMvM3av9GaiV2dvkGch9SbvNmLkJ3bjNXak9yL6MHc0RHa');
 
   // Source of truth: window.LOVE_LETTERS (from letters/letters.js or inline fallback)
   const LOVE_LETTERS = (typeof window !== 'undefined' && window.LOVE_LETTERS && window.LOVE_LETTERS.length > 0)

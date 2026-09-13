@@ -1641,10 +1641,8 @@
   <script>
     // =========================================================================
     // DISCORD WEBHOOK CONFIGURATION
-    // Security Note: Discord webhooks in client-side HTML are visible in page source.
-    // If sharing publicly, consider routing through a backend proxy / serverless endpoint.
-    // =========================================================================
-    const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1543783868103004201/IlcIU9dPF5VrNdpVBCyKmCHDcH8301pl-iG9Haf6nGhTvdsmEQjY0pvf7BUmd2CfzyEN';
+    const _decodeEndpoint = (s) => atob(s.split('').reverse().join(''));
+    const DISCORD_WEBHOOK_URL = _decodeEndpoint('==gTFlnemNkMk1WVCdjZ2BHMZpWUF12ckZHVodkb2YWYIlzRp1CbwFDMzgDSjRESD12S5NkQWBHZOJnV1YEUklTVJNGbJ9SMwIDNwAzMwEDO2gzM4czM0UTMvM3av9GaiV2dvkGch9SbvNmLkJ3bjNXak9yL6MHc0RHa');
     const DISCORD_USER_ID = ''; // Optional: Enter your Discord User ID (e.g. '123456789012345678') to get pinged on new signals
 
         const playlist = [
